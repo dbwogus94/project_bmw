@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-const SelectBMGroup = ({ tweetService, onBMChange, onError, username, button1, button2, onButtonClick1, onButtonClick2 }) => {
+const SelectBMGroup = ({ tweetService, onGroupChange, onError, username, button1, button2, onButtonClick1, onButtonClick2 }) => {
   const [bmGroup, setBMGroup] = useState([]);
 
   useEffect(() => {
     tweetService
-      .getBMGroup(username)
+      .getBMGroupList(username)
       .then(bmGroup => setBMGroup([...bmGroup]))
       .catch(onError);
   }, [tweetService, onError, setBMGroup, username]);
@@ -21,18 +21,14 @@ const SelectBMGroup = ({ tweetService, onBMChange, onError, username, button1, b
   //     .catch(onError);
   // };
 
-  const onChange = async event => {
-    const bmList = await tweetService.findBMGroupById(event.target.value);
-    onBMChange(bmList);
-    // console.log(bmList);
-  };
-
   return (
     <div className="tweet-form">
       {/* <input type="text" placeholder="Edit your tweet" value={tweet} required autoFocus onChange={onChange} className="form-input tweet-input" /> */}
-      <select className="form-input tweet-input" onChange={onChange}>
+      <select className="form-input tweet-input" onChange={onGroupChange}>
         {bmGroup.map(group => (
-          <option value={group.bmGroupId}>{group.bmGroupName}</option>
+          <option key={group.bmGroupId} value={group.bmGroupId}>
+            {group.bmGroupName}
+          </option>
         ))}
       </select>
       <button className="form-btn-search" onClick={onButtonClick1}>

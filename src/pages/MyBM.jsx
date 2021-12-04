@@ -1,9 +1,6 @@
 import React from 'react';
-import BMList from '../components/BMList';
+import BMCards from '../components/BMCards';
 
-const MyBM = ({ tweetService }) => (
-  //
-  <BMList tweetService={tweetService} />
-);
+const MyBM = ({ tweetService }) => <BMCards tweetService={tweetService} />;
 
 export default MyBM;

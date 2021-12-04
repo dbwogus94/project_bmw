@@ -1,7 +1,6 @@
 import React, { memo, useState } from 'react';
 import parseDate from '../util/date';
 import Avatar from './Avatar';
-import EditTweetForm from './EditTweetForm';
 
 const BMCard = memo(({ tweet, onUsernameClick, onNameClick }) => {
   // ({ tweet, owner, onDelete, onUpdate, onUsernameClick }) => {
@@ -51,7 +50,6 @@ const BMCard = memo(({ tweet, onUsernameClick, onNameClick }) => {
               <span className="tweet-feed-text">{second_text}</span>
             </p>
           </div>
-          {/* {editing && <EditTweetForm tweet={tweet} onUpdate={onUpdate} onClose={onClose} />} */}
         </div>
       </article>
       {/* {owner && (
