@@ -449,7 +449,12 @@ button {
   display: inline-block;
   width: 100%;
   font-size: 1rem;
+  font-weight: bold;
 }
+.feed-main-routeTypeName {
+  font-size: 0.7rem;
+}
+
 .feed-main-pathway {
   display: inline-block;
   width: 100%;
