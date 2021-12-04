@@ -17,7 +17,7 @@ function App({ tweetService, busService, metroService, stopService }) {
   };
   // EditBM 페이지 이동
   const onEditBM = () => {
-    history.push(`/${user.username}`);
+    history.push(`/bmgroup`);
   };
   // 로그아웃
   const onLogout = () => {
@@ -57,7 +57,7 @@ function App({ tweetService, busService, metroService, stopService }) {
           <Route exact path="/">
             <MyBM tweetService={tweetService} />
           </Route>
-          <Route exact path="/:username">
+          <Route exact path="/bmgroup">
             <EditBM tweetService={tweetService} />
           </Route>
           <Route exact path="/bus">
