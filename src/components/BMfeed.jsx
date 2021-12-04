@@ -1,19 +1,7 @@
 import React from 'react';
 
-const BMfeed = ({ tweet, edit, onInfoClick }) => {
-  const {
-    // id, //
-    // label,
-    name,
-    username,
-    // server_time,
-    // first_time,
-    // first_text,
-    // second_time,
-    // second_text,
-    // direction,
-    routeTypeName,
-  } = tweet;
+const BMFeed = ({ tweet, edit, onInfoClick, onLickClick }) => {
+  const { name, username, routeTypeName, like } = tweet;
 
   return (
     <>
@@ -25,9 +13,15 @@ const BMfeed = ({ tweet, edit, onInfoClick }) => {
               <span className="feed-main-routeTypeName">{routeTypeName || username}</span>
             </p>
           </div>
-          <div className="feed-like">{edit && <span className="feed-like-text">♥</span>}</div>
+          <div className="feed-like">
+            {edit && (
+              <span className="feed-like-text" onClick={onLickClick}>
+                {like ? '♥' : '♡'}
+              </span>
+            )}
+          </div>
           <div className="feed-info">
-            <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
+            <img src="./img/info.png" alt="info Logo" className="feed-info-img" onClick={onInfoClick} />
           </div>
         </article>
       </li>
@@ -35,4 +29,4 @@ const BMfeed = ({ tweet, edit, onInfoClick }) => {
     </>
   );
 };
-export default BMfeed;
+export default BMFeed;
