@@ -5,10 +5,12 @@ FROM node:14.18.1-alpine
 # 작업 폴더를 만들고 npm 설치
 WORKDIR /src
 
+# `/app/node_modules/.bin`을 $PATH 에 추가
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /src/package.json
 
-RUN npm install --no-cache
+#RUN npm install --no-cache
+RUN npm install
 RUN npm install react-scripts@4.0.3 -g --silent
 
 # alpine 버전 리눅스의 apt같은 패키지 매니저
