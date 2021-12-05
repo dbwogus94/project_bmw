@@ -52,7 +52,7 @@ const BMCards = memo(({ tweetService, username }) => {
 
   // 수정하기
   const onButtonClick2 = tweet => {
-    return history.push(`/${user.username}`);
+    return history.push(`/bmgroup`);
   };
 
   const onError = error => {
