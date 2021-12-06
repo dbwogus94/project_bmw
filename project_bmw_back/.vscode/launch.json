@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    // TS파일 단일 앱 디버그
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "ts one instance debug",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\src\\index.ts",
+      "preLuanchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "envFile": "${workspaceFolder}\\src\\pre-start\\env\\development.env"
+    },
+    // express 디버그 설정
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "express Debug Dev Env",
+      "runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+      "args": ["${workspaceFolder}/src/index.ts"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
+    }
+  ]
+}
