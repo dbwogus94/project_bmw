@@ -19,7 +19,8 @@ export const adminMW = async (req: Request, res: Response, next: NextFunction) =
     // Make sure user role is an admin
     const clientData = await jwtService.decodeJwt(jwt);
     if (clientData.role === UserRoles.Admin) {
-      res.sessionUser = clientData;
+      // TODO: ts 컴파일 에러로 주석 처리, res를 any로 해야 에러 안남
+      // res.sessionUser = clientData;
       next();
     } else {
       throw Error('JWT not present in signed cookie.');
