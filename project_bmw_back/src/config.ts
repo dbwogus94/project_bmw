@@ -43,7 +43,7 @@ export const config = {
     salt: required('BCRYPT_SALT'),
   },
   mysql: {
-    host: required('MYSQL_HOST', 'localhost'),
+    host: required('DB_HOST', 'localhost'),
     port: required('DB_PORT', '13306'),
     database: required('DB_DATABASE'),
     user: required('DB_USERNAME', 'root'),
