@@ -76,7 +76,9 @@
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
-    "randomstring": "^1.2.1"
+    "mysql2": "^2.3.3",
+    "randomstring": "^1.2.1",
+    "typeorm": "^0.2.41"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

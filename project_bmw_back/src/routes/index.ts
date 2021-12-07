@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import dtoValidator from '../middleware/dto.validator';
-import { SignupDto } from '../dto/signup.dto';
-import * as authController from '../controllers/auth';
+import { SignupDto } from '../user/dto/signup.dto';
+import * as authController from '../auth/auth.controller';
 
 // Auth router: /auth/*
 const authRouter = Router();
