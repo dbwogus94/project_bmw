@@ -12,7 +12,7 @@ import logger from '@shared/Logger';
 import { cookieProps } from '@shared/constants';
 
 const app = express();
-const { BAD_REQUEST, NOT_FOUND } = StatusCodes;
+const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
 
 /************************************************************************************
  *                              Set basic express settings
@@ -45,7 +45,7 @@ app.use((req: Request, res: Response) => {
 // 500 : 서버 에러 처리 미들웨어
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.err(err, true);
-  return res.status(BAD_REQUEST).json({
+  return res.status(INTERNAL_SERVER_ERROR).json({
     error: err.message,
   });
 });

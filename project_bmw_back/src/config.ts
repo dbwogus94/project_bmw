@@ -40,7 +40,7 @@ export const config = {
     issuer: required('JWT_ISSUER'),
   },
   bcrypt: {
-    salt: required('BCRYPT_SALT'),
+    salt: Number(required('BCRYPT_SALT')),
   },
   mysql: {
     host: required('DB_HOST', 'localhost'),
