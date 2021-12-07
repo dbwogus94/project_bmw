@@ -1,22 +1,22 @@
 import { Router } from 'express';
-import { adminMW } from './middleware';
-import { login, logout } from './Auth';
-import { getAllUsers, addOneUser, updateOneUser, deleteOneUser } from './Users';
+import dtoValidator from '../middleware/dto.validator';
+import { SignupDto } from '../dto/signup.dto';
+import * as authController from '../controllers/auth';
 
-// Auth router
+// Auth router: /auth/*
 const authRouter = Router();
-authRouter.post('/login', login);
-authRouter.get('/logout', logout);
+authRouter.post('/signup', dtoValidator(SignupDto), authController.signup);
+authRouter.post('/signin');
+authRouter.get('/me');
+authRouter.get('/refresh');
+authRouter.get('/signout');
 
-// User-router
+// User-router: /users/*
 const userRouter = Router();
-userRouter.get('/all', getAllUsers);
-userRouter.post('/add', addOneUser);
-userRouter.put('/update', updateOneUser);
-userRouter.delete('/delete/:id', deleteOneUser);
 
-// Export the base-router
+// base-router: /api/*
 const baseRouter = Router();
 baseRouter.use('/auth', authRouter);
-baseRouter.use('/users', adminMW, userRouter);
+baseRouter.use('/users', userRouter);
+// baseRouter.use('/users', adminMW, userRouter);
 export default baseRouter;
