@@ -2,7 +2,9 @@
   "name": "project_bmw_back",
   "version": "0.0.0",
   "scripts": {
-    "build": "./node_modules/.bin/ts-node build.ts",
+    "build:old": "./node_modules/.bin/ts-node build.ts",
+    "build": "tsc --build",
+    "build:clean": "tsc --build --clean",
     "lint": "eslint . --ext .ts",
     "start": "node -r module-alias/register ./dist --env=production",
     "start:dev": "nodemon",
@@ -20,10 +22,14 @@
     "exec": "./node_modules/.bin/ts-node --files -r tsconfig-paths/register ./src"
   },
   "_moduleAliases": {
-    "@daos": "dist/daos",
-    "@entities": "dist/entities",
-    "@shared": "dist/shared",
-    "@server": "dist/Server"
+    "@shared/*": "dist/shared/*",
+    "@server": "dist/Server",
+    "@routes/*": "dist/routes/*",
+    "@middleware/*": "dist/middleware/*",
+    "@db/*": "dist/db/*",
+    "@auth/*": "dist/auth/*",
+    "@user/*": "dist/user/*",
+    "@config": "dist/config"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

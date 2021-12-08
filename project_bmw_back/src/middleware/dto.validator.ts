@@ -1,6 +1,6 @@
 import { ClassType, transformAndValidate } from 'class-transformer-validator';
 import { NextFunction, Request, Response } from 'express';
-import { errorMessage } from '../message';
+import { errorMessage } from '@shared/message';
 
 /**
  * Dto 유효성 검사기

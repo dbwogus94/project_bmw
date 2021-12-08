@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import dtoValidator from '../middleware/dto.validator';
-import { SignupDto } from '../user/dto/signup.dto';
-import * as authController from '../auth/auth.controller';
+import dtoValidator from '@middleware/dto.validator';
+import { SignupDto } from '@user/dto/signup.dto';
+import { SigninDto } from '@user/dto/signin.dto';
+import * as authController from '@auth/auth.controller';
 
 // Auth router: /auth/*
 const authRouter = Router();
 authRouter.post('/signup', dtoValidator(SignupDto), authController.signup);
-authRouter.post('/signin');
+authRouter.post('/signin', dtoValidator(SigninDto), authController.signin);
 authRouter.get('/me');
 authRouter.get('/refresh');
 authRouter.get('/signout');
