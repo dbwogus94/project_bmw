@@ -6,7 +6,7 @@ function required(key: string | number, defaultValue: any = undefined) {
   return value;
 }
 
-export const config = {
+export const config = Object.freeze({
   environment: required('NODE_ENV', 'development'),
   server: {
     port: required('PORT', 8080),
@@ -19,25 +19,31 @@ export const config = {
     format: required('JET_LOGGER_FORMAT'),
   },
   cookie: {
-    domain: required('COOKIE_DOMAIN'),
-    path: required('COOKIE_PATH'),
-    // 쿠키 암호화 키
+    key: required('COOKIE_KEY'),
+    // cookieParser에 적용할 쿠키 암호화 키
     secret: required('COOKIE_SECRET'),
-    // https에서만 유효
-    secure: required('SECURE_COOKIE'),
-    // 만료일, accessJwt와 동일
-    exp: required('JWT_ACCESS_TOKEN_SECRET'),
+    options: {
+      httpOnly: true,
+      signed: true,
+      path: required('COOKIE_PATH'),
+      // 만료일, accessJwt와 동일
+      maxAge: Number(required('JWT_ACCESS_TOKEN_EXPIRATION_TIME')),
+      domain: required('COOKIE_DOMAIN'),
+      // https에서만 유효
+      secure: required('SECURE_COOKIE') === 'true',
+    },
   },
   jwt: {
     access: {
       secret: required('JWT_ACCESS_TOKEN_SECRET'),
-      exp: required('JWT_ACCESS_TOKEN_EXPIRATION_TIME'),
+      expiresIn: required('JWT_ACCESS_TOKEN_EXPIRATION_TIME'),
+      issuer: required('JWT_ISSUER'),
     },
     refresh: {
       secret: required('JWT_REFRESH_TOKEN_SECRET'),
-      exp: required('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
+      expiresIn: required('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
+      issuer: required('JWT_ISSUER'),
     },
-    issuer: required('JWT_ISSUER'),
   },
   bcrypt: {
     salt: Number(required('BCRYPT_SALT')),
@@ -53,4 +59,4 @@ export const config = {
     name: required('REDIS_NAME'),
     url: required('REDIS_URL'),
   },
-};
+});

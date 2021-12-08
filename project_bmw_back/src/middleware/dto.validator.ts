@@ -1,7 +1,8 @@
 import { ClassType, transformAndValidate } from 'class-transformer-validator';
 import { NextFunction, Request, Response } from 'express';
 import { errorMessage } from '@shared/message';
-
+import { StatusCodes } from 'http-status-codes';
+const { BAD_REQUEST } = StatusCodes;
 /**
  * Dto 유효성 검사기
  * 1. 요청 body(json)를 Dto로 매핑 후 유효성 검사 실행
@@ -17,16 +18,15 @@ export default function (DtoClass: ClassType<object>) {
       req.dto = dtoObject;
       next();
     } catch (errors) {
-      res.status(400).json(makeErrorMsg(errors));
+      res.status(BAD_REQUEST).json(makeErrorMsg(errors));
     }
   };
 
   function makeErrorMsg(errors: any) {
-    console.log(errors);
     const result = errors.reduce((accumulator: any, error: any) => {
       const { property, value, constraints } = error;
       accumulator.push({
-        errCode: 400,
+        errCode: BAD_REQUEST,
         property, // 오류 필드
         message: getKorMsg(constraints), // 오류 내용
         errValue: value, // 오류 값
@@ -39,7 +39,7 @@ export default function (DtoClass: ClassType<object>) {
 
     function getKorMsg(object: any) {
       return Object.keys(object).reduce((accumulator: any, key: any) => {
-        accumulator.push(errorMessage[key]);
+        accumulator.push(errorMessage.BAD_REQUEST_MESSAGE[key]);
         return accumulator;
       }, []);
     }
