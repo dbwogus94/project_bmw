@@ -1,8 +1,26 @@
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
+export enum active {
+  Y,
+  N,
+}
+
+export interface IUser {
+  id: number;
+  name: string;
+  username: string;
+  hashPassword: string;
+  email: string;
+  accessToken?: string;
+  refreshToken?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  active: active;
+}
+
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -13,7 +31,7 @@ export class User {
   name!: string;
 
   @Column('varchar', { length: 200 })
-  password!: string;
+  hashPassword!: string;
 
   @Column('varchar', { length: 100 })
   email!: string;
@@ -33,5 +51,5 @@ export class User {
   updatedAt!: Date;
 
   @Column('varchar', { length: 2, default: 'Y' })
-  active!: string;
+  active!: active;
 }
