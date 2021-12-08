@@ -9,10 +9,12 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
-import { cookieProps } from '@shared/constants';
+import { config } from '@config';
+import { errorMessage } from '@shared/message';
 
 const app = express();
-const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
+const { NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
+const { INTERNAL_SERVER_ERROR_MESSAGE } = errorMessage;
 
 /************************************************************************************
  *                              Set basic express settings
@@ -20,7 +22,7 @@ const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(cookieProps.secret));
+app.use(cookieParser(config.cookie.secret));
 app.use(cors());
 
 // Show routes called in console during development
@@ -38,16 +40,14 @@ app.use('/api', BaseRouter);
 
 // 404 처리
 app.use((req: Request, res: Response) => {
-  logger.info('[라우트 없음 : 404]');
+  logger.info('[라우트 없음 : 404] ' + req.url);
   res.sendStatus(NOT_FOUND);
 });
 
 // 500 : 서버 에러 처리 미들웨어
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.err(err, true);
-  return res.status(INTERNAL_SERVER_ERROR).json({
-    error: err.message,
-  });
+  return res.status(INTERNAL_SERVER_ERROR).json(INTERNAL_SERVER_ERROR_MESSAGE);
 });
 
 export default app;
