@@ -26,27 +26,27 @@ export const config = Object.freeze({
       httpOnly: true,
       signed: true,
       path: required('COOKIE_PATH'),
-      // 만료일, accessJwt와 동일
-      maxAge: Number(required('JWT_ACCESS_TOKEN_EXPIRATION_TIME')),
+      // 만료일, refreshJwt와 동일하게 설정 **단위 ms(밀리세컨드)
+      maxAge: Number(required('JWT_REFRESH_TOKEN_EXPIRATION_TIME', '1209600')) * 1000, // 14d
       domain: required('COOKIE_DOMAIN'),
-      // https에서만 유효
+      // https에서만 유효, **booean형으로 리턴되게 해야한다.
       secure: required('SECURE_COOKIE') === 'true',
     },
   },
   jwt: {
     access: {
       secret: required('JWT_ACCESS_TOKEN_SECRET'),
-      expiresIn: required('JWT_ACCESS_TOKEN_EXPIRATION_TIME'),
+      expiresIn: Number(required('JWT_ACCESS_TOKEN_EXPIRATION_TIME', '3600')), // 1h
       issuer: required('JWT_ISSUER'),
     },
     refresh: {
       secret: required('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn: required('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
+      expiresIn: Number(required('JWT_REFRESH_TOKEN_EXPIRATION_TIME', '1209600')), // 14d
       issuer: required('JWT_ISSUER'),
     },
   },
   bcrypt: {
-    salt: Number(required('BCRYPT_SALT')),
+    salt: Number(required('BCRYPT_SALT', '10')),
   },
   mysql: {
     host: required('DB_HOST', 'localhost'),
@@ -58,5 +58,6 @@ export const config = Object.freeze({
   redis: {
     name: required('REDIS_NAME'),
     url: required('REDIS_URL'),
+    password: required('REDIS_PASSWORD'),
   },
 });
