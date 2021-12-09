@@ -1,11 +1,11 @@
 import { ClassType, transformAndValidate } from 'class-transformer-validator';
 import { NextFunction, Request, Response } from 'express';
-import { errorMessage } from '@shared/message';
+import { errorMessages } from '@shared/message';
 import { StatusCodes } from 'http-status-codes';
 const { BAD_REQUEST } = StatusCodes;
 /**
  * Dto 유효성 검사기
- * 1. 요청 body(json)를 Dto로 매핑 후 유효성 검사 실행
+ * 1. 요청 body(json || query)를 Dto로 매핑 후 유효성 검사 실행
  * 2. 유효성 검사 통과 next() 호출
  * 3. 에러 발생 400 코드 응답
  * @param DtoClass - interface Dto를 구현한 dto 클래스
@@ -14,7 +14,8 @@ const { BAD_REQUEST } = StatusCodes;
 export default function (DtoClass: ClassType<object>) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dtoObject = await transformAndValidate(DtoClass, req.body);
+      const data = { ...req.body, ...req.query }; // 우선순위 query
+      const dtoObject = await transformAndValidate(DtoClass, data);
       req.dto = dtoObject;
       next();
     } catch (errors) {
@@ -39,7 +40,7 @@ export default function (DtoClass: ClassType<object>) {
 
     function getKorMsg(object: any) {
       return Object.keys(object).reduce((accumulator: any, key: any) => {
-        accumulator.push(errorMessage.BAD_REQUEST_MESSAGE[key]);
+        accumulator.push(errorMessages.BAD_REQUEST_MESSAGE[key]);
         return accumulator;
       }, []);
     }
