@@ -10,11 +10,11 @@ import 'express-async-errors';
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { config } from '@config';
-import { errorMessage } from '@shared/message';
+import { errorMessages } from '@shared/message';
 
 const app = express();
 const { NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
-const { INTERNAL_SERVER_ERROR_MESSAGE } = errorMessage;
+const { INTERNAL_SERVER_ERROR_MESSAGE } = errorMessages;
 
 /************************************************************************************
  *                              Set basic express settings
