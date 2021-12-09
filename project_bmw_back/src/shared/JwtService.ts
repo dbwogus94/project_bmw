@@ -36,11 +36,20 @@ export class JwtService {
    *
    * @param jwt
    */
-  public decodeJwt(jwt: string, secret: string): Promise<IJwtPayload> {
+  decodeJwt(jwt: string, secret: string): Promise<IJwtPayload> {
     return new Promise((res, rej) => {
       jsonwebtoken.verify(jwt, secret, (err: VerifyErrors | null, decoded?: object) => {
         return err ? rej(this.VALIDATION_ERROR) : res(decoded as IJwtPayload);
       });
     });
+  }
+
+  public async decodeToken(jwt: string, secret: string): Promise<IJwtPayload | boolean> {
+    try {
+      const result: IJwtPayload = await this.decodeJwt(jwt, secret);
+      return result;
+    } catch (error) {
+      return false;
+    }
   }
 }

@@ -128,7 +128,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     // 3. 리프래시 토큰 유효한지 확인
     // TODO: 버그 !! decodeJwt에서 실패시 에러를 던지는 것이 아닌 false를 리턴하도록 수정해야함
     const { id, refreshToken } = user;
-    const isActive = !!(await jwtService.decodeJwt(refreshToken!, refresh.secret));
+    const isActive = await jwtService.decodeToken(refreshToken!, refresh.secret);
     if (!isActive) {
       return res.status(UNAUTHORIZED).json(errMessage);
     }
