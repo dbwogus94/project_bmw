@@ -3,14 +3,19 @@ import dtoValidator from '@middleware/dto.validator';
 import { SignupDto } from '@user/dto/signup.dto';
 import { SigninDto } from '@user/dto/signin.dto';
 import * as authController from '@auth/auth.controller';
+import { RefreshDto } from '@user/dto/refresh.dto';
+import { isAuth } from '@middleware/auth';
 
 // Auth router: /auth/*
 const authRouter = Router();
 authRouter.post('/signup', dtoValidator(SignupDto), authController.signup);
 authRouter.post('/signin', dtoValidator(SigninDto), authController.signin);
-authRouter.get('/me');
-authRouter.get('/refresh');
-authRouter.get('/signout');
+// auth/me?username=:username
+authRouter.get('/me', dtoValidator(RefreshDto), isAuth, authController.me);
+// auth/refresh?username=:username
+authRouter.get('/refresh', dtoValidator(RefreshDto), authController.refreshToken);
+// auth/signout
+authRouter.get('/signout', isAuth, authController.signout);
 
 // User-router: /users/*
 const userRouter = Router();

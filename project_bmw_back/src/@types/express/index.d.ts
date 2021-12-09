@@ -21,6 +21,8 @@ declare global {
     // Express.Requset에 프로퍼티 추가
     interface Request {
       dto: Dto;
+      id: number;
+      username: string;
     }
   }
 }

@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 import jsonwebtoken, { VerifyErrors } from 'jsonwebtoken';
 
 export interface IJwtPayload {
-  id: number;
-  username: string;
+  id?: number;
+  username?: string;
 }
 
 export interface IJwtOptins {
   secret: string;
-  expiresIn: string;
+  expiresIn: number;
   issuer: string;
 }
 
