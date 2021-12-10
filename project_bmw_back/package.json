@@ -6,7 +6,7 @@
     "build:config": "tsc -p tsconfig.json",
     "build:clean": "tsc --build --clean",
     "lint": "eslint . --ext .ts",
-    "start": "ts-node -r tsconfig-paths/register dist/src --env=development",
+    "start": "ts-node -r tsconfig-paths/register dist/src --env=production",
     "start:dev": "nodemon",
     "test": "nodemon --config ./spec/nodemon.json",
     "test:no-reloading": "./node_modules/.bin/ts-node --files -r tsconfig-paths/register ./spec"

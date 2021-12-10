@@ -27,8 +27,8 @@ export async function getConnection() {
           ]
         : false,
     maxQueryExecutionTime: 1000, // 쿼리 시간이 1000보다 오래걸리면 기록
-    dropSchema: true, // 시작시 drop
-    synchronize: true, // 시작시 create
+    // dropSchema: true, // 시작시 drop
+    // synchronize: true, // 시작시 create
     // 한국 시간
     timezone: '+09:00',
     cli: {
