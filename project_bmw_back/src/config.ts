@@ -11,6 +11,11 @@ export const config = Object.freeze({
   server: {
     port: required('PORT', 8080),
     host: required('HOST', 'localhost'),
+    cors: {
+      // 같은 도메인 다른 포트에서 쿠키를 공유하기 위한 설정
+      origin: true,
+      credentials: true,
+    },
   },
   logger: {
     mode: required('JET_LOGGER_MODE'),

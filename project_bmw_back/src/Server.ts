@@ -15,6 +15,7 @@ import { errorMessages } from '@shared/message';
 const app = express();
 const { NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
 const { INTERNAL_SERVER_ERROR_MESSAGE } = errorMessages;
+const { credentials, origin } = config.server.cors;
 
 /************************************************************************************
  *                              Set basic express settings
@@ -23,7 +24,12 @@ const { INTERNAL_SERVER_ERROR_MESSAGE } = errorMessages;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(config.cookie.secret));
-app.use(cors());
+app.use(
+  cors({
+    origin,
+    credentials,
+  }),
+);
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
