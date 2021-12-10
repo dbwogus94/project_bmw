@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { config } from '@config';
+import { config } from '@src/config';
 import { createConnection } from 'typeorm';
-import { User } from '@user/entities/User.entity';
+import { User } from '@src/user/entities/User.entity';
 
 const { database, password, host, port, user } = config.mysql;
 

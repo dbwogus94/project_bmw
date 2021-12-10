@@ -1,6 +1,6 @@
 import { ClassType, transformAndValidate } from 'class-transformer-validator';
 import { NextFunction, Request, Response } from 'express';
-import { errorMessages } from '@shared/message';
+import { errorMessages } from '@src/shared/message';
 import { StatusCodes } from 'http-status-codes';
 const { BAD_REQUEST } = StatusCodes;
 /**

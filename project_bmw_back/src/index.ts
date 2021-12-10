@@ -1,10 +1,10 @@
 // import 'module-alias/register';
 import './pre-start'; // Must be the first import
-import app from '@server';
-import logger from '@shared/Logger';
-import { config } from '@config';
-import { getConnection } from '@db/database';
-import { createConnection } from '@db/redis';
+import app from '@src/Server';
+import logger from '@src/shared/Logger';
+import { config } from '@src/config';
+import { getConnection } from '@src/db/database';
+import { createConnection } from '@src/db/redis';
 // Start the server
 const port = Number(config.server.port || 3000);
 

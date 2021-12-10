@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { config } from '@config';
-import { IJwtPayload, JwtService } from '@shared/JwtService';
+import { config } from '@src/config';
+import { IJwtPayload, JwtService } from '@src/shared/JwtService';
 import { StatusCodes } from 'http-status-codes';
-import { errorMessages } from '@shared/message';
-import { getClient } from '@db/redis';
+import { errorMessages } from '@src/shared/message';
+import { getClient } from '@src/db/redis';
 
 const { cookie, jwt } = config;
 const { UNAUTHORIZED, MOVED_TEMPORARILY } = StatusCodes;

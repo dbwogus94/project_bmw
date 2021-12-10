@@ -8,9 +8,9 @@ import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 
 import BaseRouter from './routes';
-import logger from '@shared/Logger';
-import { config } from '@config';
-import { errorMessages } from '@shared/message';
+import logger from '@src/shared/Logger';
+import { config } from '@src/config';
+import { errorMessages } from '@src/shared/message';
 
 const app = express();
 const { NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;

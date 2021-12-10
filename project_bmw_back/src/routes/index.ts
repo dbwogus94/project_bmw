@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import dtoValidator from '@middleware/dto.validator';
-import { SignupDto } from '@user/dto/signup.dto';
-import { SigninDto } from '@user/dto/signin.dto';
-import * as authController from '@auth/auth.controller';
-import { RefreshDto } from '@user/dto/refresh.dto';
-import { isAuth } from '@middleware/auth';
+import dtoValidator from '@src/middleware/dto.validator';
+import { SignupDto } from '@src/user/dto/signup.dto';
+import { SigninDto } from '@src/user/dto/signin.dto';
+import * as authController from '@src/auth/auth.controller';
+import { RefreshDto } from '@src/user/dto/refresh.dto';
+import { isAuth } from '@src/middleware/auth';
 
 // Auth router: /auth/*
 const authRouter = Router();
