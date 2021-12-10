@@ -10,10 +10,15 @@ import StopService from './service/stop';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AuthErrorEventBus } from './context/AuthContext';
+import HttpClient from './network/http';
+import Storage from './db/storage';
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 const authErrorEventBus = new AuthErrorEventBus();
-const authService = new AuthService();
+const httpClient = new HttpClient(baseURL, authErrorEventBus);
+const userStorage = new Storage();
+
+const authService = new AuthService(httpClient, userStorage);
 const tweetService = new TweetService(baseURL);
 const busService = new BusService();
 const metroService = new MetroService();

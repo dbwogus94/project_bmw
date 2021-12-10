@@ -1,52 +1,52 @@
-import {
-  createContext,
-  createRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, createRef, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Header from '../components/Header';
 import Login from '../pages/Login';
 
 const AuthContext = createContext({});
 
-const contextRef = createRef();
+// const contextRef = createRef();
 
 export function AuthProvider({ authService, authErrorEventBus, children }) {
   const [user, setUser] = useState(undefined);
 
-  useImperativeHandle(contextRef, () => (user ? user.token : undefined));
+  // useImperativeHandle(contextRef, () => (user ? user.token : undefined));
 
   useEffect(() => {
-    authErrorEventBus.listen((err) => {
+    authErrorEventBus.listen(err => {
       console.log(err);
       setUser(undefined);
+      throw err;
     });
   }, [authErrorEventBus]);
 
   useEffect(() => {
-    authService.me().then(setUser).catch(console.error);
+    authService
+      .me() //
+      .then(setUser)
+      .catch(console.error);
   }, [authService]);
 
   const signUp = useCallback(
-    async (username, password, name, email, url) =>
+    async (username, password, name, email) =>
       authService
-        .signup(username, password, name, email, url)
-        .then((user) => setUser(user)),
+        .signup(username, password, name, email) //
+        .then(user => setUser(user)),
     [authService]
   );
 
   const logIn = useCallback(
     async (username, password) =>
-      authService.login(username, password).then((user) => setUser(user)),
+      authService
+        .login(username, password) //
+        .then(user => setUser(user)),
     [authService]
   );
 
   const logout = useCallback(
-    async () => authService.logout().then(() => setUser(undefined)),
+    async () =>
+      authService
+        .logout() //
+        .then(() => setUser(undefined)),
     [authService]
   );
 
@@ -65,7 +65,7 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
       {user ? (
         children
       ) : (
-        <div className='app'>
+        <div className="app">
           <Header />
           <Login onSignUp={signUp} onLogin={logIn} />
         </div>
@@ -84,5 +84,5 @@ export class AuthErrorEventBus {
 }
 
 export default AuthContext;
-export const fetchToken = () => contextRef.current;
+// export const fetchToken = () => contextRef.current;
 export const useAuth = () => useContext(AuthContext);

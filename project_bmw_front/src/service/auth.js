@@ -1,26 +1,39 @@
 export default class AuthService {
+  constructor(http, storage) {
+    this.http = http;
+    this.storage = storage;
+  }
+
+  async signup(username, password, name, email) {
+    const data = await this.http.fetch('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ username, password, name, email }),
+    });
+
+    this.storage.saveItem('USERNAME', username);
+    return data;
+  }
+
   async login(username, password) {
-    return {
-      username: 'ellie',
-      token: 'abc1234',
-    };
+    const data = await this.http.fetch('auth/signin', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+
+    this.storage.saveItem('USERNAME', username);
+    return data;
   }
 
   async me() {
-    return {
-      username: 'ellie',
-      token: 'abc1234',
-    };
+    const username = this.storage.getItem('USERNAME');
+    return this.http.fetch(`auth/me?username=${username}`, {
+      method: 'GET',
+    });
   }
 
   async logout() {
-    return;
-  }
-
-  async signup(username, password, name, email, url) {
-    return {
-      username: 'ellie',
-      token: 'abc1234',
-    };
+    return this.http.fetch('auth/signout', {
+      method: 'GET',
+    });
   }
 }
