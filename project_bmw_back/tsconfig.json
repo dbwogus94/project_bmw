@@ -68,7 +68,7 @@
     /* Advanced Options */
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
-    /* ts 모듈 경로 설정 +  package.json의 '_moduleAliases'에도 설정을 해야한다. */
+    /* ts 모듈 경로 설정 + tsconfig-paths/register를 사용하여 실행 */
     "paths": {
       "@shared/*": ["src/shared/*"],
       "@server": ["src/Server"],
