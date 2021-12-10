@@ -70,6 +70,7 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     /* ts 모듈 경로 설정 +  package.json의 '_moduleAliases'에도 설정을 해야한다. */
     "paths": {
+      "@src/*": ["src/*"],
       "@shared/*": ["src/shared/*"],
       "@server": ["src/Server"],
       "@routes/*": ["src/routes/*"],
