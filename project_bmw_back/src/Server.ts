@@ -1,16 +1,20 @@
+// lib
+import 'express-async-errors';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
+import express, { NextFunction, Request, Response } from 'express';
+import StatusCodes from 'http-status-codes';
 import helmet from 'helmet';
 import cors from 'cors';
-import StatusCodes from 'http-status-codes';
-import express, { NextFunction, Request, Response } from 'express';
-
-import 'express-async-errors';
-
-import BaseRouter from './routes';
-import logger from '@shared/Logger';
+// my module
+import { createLogger, getLogger } from '@shared/logger';
+import customMorgan from '@middleware/custom.morgan';
+import BaseRouter from '@routes/index';
 import { config } from '@config';
 import { errorMessages } from '@shared/message';
+
+// winston 로거 생성
+createLogger('api-server');
+const logger = getLogger();
 
 const app = express();
 const { NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
@@ -31,13 +35,10 @@ app.use(
   }),
 );
 
-// Show routes called in console during development
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+app.use(customMorgan());
 
 // Security
-if (process.env.NODE_ENV === 'production') {
+if (config.environment === 'production') {
   app.use(helmet());
 }
 
@@ -52,7 +53,7 @@ app.use((req: Request, res: Response) => {
 
 // 500 : 서버 에러 처리 미들웨어
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  logger.err(err, true);
+  logger.error(err);
   return res.status(INTERNAL_SERVER_ERROR).json(INTERNAL_SERVER_ERROR_MESSAGE);
 });
 

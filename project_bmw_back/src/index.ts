@@ -1,20 +1,20 @@
 import './pre-start'; // Must be the first import
-import app from '@server';
-import logger from '@shared/Logger';
 import { config } from '@config';
-import { getConnection } from '@db/database';
-import { createConnection } from '@db/redis';
-// Start the server
+import app from '@server';
+import { getLogger } from '@shared/logger';
+import * as typeorm from '@db/database';
+import * as redis from '@db/redis';
+// Create server
 const port = Number(config.server.port || 3000);
+const logger = getLogger();
 
-// mysql(typeOrm)
-getConnection()
-  // redis
-  .then(createConnection)
-  // express
+typeorm // mysql(typeOrm)
+  .getConnection()
+  .then(redis.createConnection)
   .then(() => {
+    // Start server
     app.listen(port, () => {
       logger.info('Express server started on port: ' + port);
     });
   })
-  .catch(console.error);
+  .catch(logger.error);

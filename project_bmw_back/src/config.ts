@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 function required(key: string | number, defaultValue: any = undefined) {
   const value = process.env[key] || defaultValue;
   if (value == null) {
@@ -17,11 +19,10 @@ export const config = Object.freeze({
       credentials: true,
     },
   },
-  logger: {
-    mode: required('JET_LOGGER_MODE'),
-    filePath: required('JET_LOGGER_FILEPATH'),
-    timestamp: required('JET_LOGGER_TIMESTAMP'),
-    format: required('JET_LOGGER_FORMAT'),
+  log: {
+    logDir: required('LOG_DIR'),
+    errLogDir: join(required('LOG_DIR'), required('ERR_LOG_DIR')),
+    httpLogDir: join(required('LOG_DIR'), required('HTTP_LOG_DIR')),
   },
   cookie: {
     key: required('COOKIE_KEY'),
