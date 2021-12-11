@@ -37,10 +37,10 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
       // 5. 블랙리스트에 없거나 아니라면? req에 디코딩 데이터 담고 통과
       req.id = id!;
       req.username = username!;
-      next();
-    } catch (error) {
-      // redis 에러
-      throw error;
+      return next();
+    } catch (error: any) {
+      error.message = '[redis] ' + error.message;
+      return next(error);
     }
   } catch (error) {
     // 2. jwt 디코딩 실패 -> refresh 호출
