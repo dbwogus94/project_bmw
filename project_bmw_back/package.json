@@ -68,7 +68,6 @@
     "express-async-errors": "^3.1.1",
     "helmet": "^4.6.0",
     "http-status-codes": "^2.1.4",
-    "jet-logger": "^1.0.6",
     "jsonfile": "^6.1.0",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
@@ -76,7 +75,9 @@
     "mysql2": "^2.3.3",
     "randomstring": "^1.2.1",
     "redis": "^4.0.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
