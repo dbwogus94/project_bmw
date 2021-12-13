@@ -1,7 +1,7 @@
 import './pre-start'; // Must be the first import
 import { config } from '@config';
 import app from '@server';
-import { createLogger, getLogger } from '@shared/Logger';
+import { getLogger } from '@shared/Logger';
 import * as typeorm from '@db/database';
 import * as redis from '@db/redis';
 // Create server

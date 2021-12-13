@@ -20,6 +20,7 @@ export const config = Object.freeze({
     },
   },
   log: {
+    logLable: required('LOG_LABLE'),
     logDir: required('LOG_DIR'),
     errLogDir: join(required('LOG_DIR'), required('ERR_LOG_DIR')),
     httpLogDir: join(required('LOG_DIR'), required('HTTP_LOG_DIR')),

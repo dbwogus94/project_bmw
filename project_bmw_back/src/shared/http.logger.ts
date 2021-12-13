@@ -9,7 +9,7 @@ import winstonDaily from 'winston-daily-rotate-file';
 
 const { environment, log } = config;
 // 로그가 저장될 폴더 : ./logs
-const { httpLogDir } = log;
+const { httpLogDir, logLable } = log;
 
 /**
  * 로그 레벨에 따라 사용할 색상 설정
@@ -26,9 +26,9 @@ const colorize = winston.format.colorize({ all: true });
  * @param path 로그에 붙일 라벨_명
  * @returns
  */
-const format = (path: string) =>
+const format = () =>
   combine(
-    label({ label: path }),
+    label({ label: logLable }),
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
     // prettyPrint(),
     printf(({ level, message, label, timestamp }) => {
@@ -58,33 +58,26 @@ const transports = () => [
  */
 const devTransports = () => [new winston.transports.Console()];
 
-let logger: Logger | null = null;
-
 /**
  * 실제 사용될 winston 로거 생성
  * @returns
  */
-export const createHttpLogger = (path: string): void => {
-  if (!logger) {
-    logger = winston.createLogger({
-      level: 'http',
-      format: format(path),
-      // 출력된 로그 어디로 보낼지 설정
-      transports:
-        environment === 'development' //
-          ? devTransports() // 콘솔
-          : transports(), // 파일
-    });
-  }
-};
+const httpLogger = (() => {
+  return winston.createLogger({
+    level: 'http',
+    format: format(),
+    // 출력된 로그 어디로 보낼지 설정
+    transports:
+      environment === 'development' //
+        ? devTransports() // 콘솔
+        : transports(), // 파일
+  });
+})();
 
 /**
  * 생성된 winston 로거 리턴
  * @returns
  */
 export const getHttpLogger = (): Logger => {
-  if (!logger) {
-    throw new Error('init error - first call createHttpLogger');
-  }
-  return logger;
+  return httpLogger;
 };

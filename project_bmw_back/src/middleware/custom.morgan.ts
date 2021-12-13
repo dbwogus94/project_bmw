@@ -1,8 +1,7 @@
 import morgan, { StreamOptions } from 'morgan';
-import { createHttpLogger, getHttpLogger } from '@shared/http.logger';
+import { getHttpLogger } from '@shared/http.logger';
 import { config } from '@config';
 
-createHttpLogger('api-server');
 const httpLogger = getHttpLogger();
 const { environment } = config;
 

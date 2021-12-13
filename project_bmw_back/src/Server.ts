@@ -6,14 +6,13 @@ import StatusCodes from 'http-status-codes';
 import helmet from 'helmet';
 import cors from 'cors';
 // my module
-import { createLogger, getLogger } from '@shared/Logger';
+import { getLogger } from '@shared/Logger';
 import customMorgan from '@middleware/custom.morgan';
 import BaseRouter from '@routes/index';
 import { config } from '@config';
 import { errorMessages } from '@shared/message';
 
 // winston 로거 생성
-createLogger('api-server');
 const logger = getLogger();
 
 const app = express();

@@ -5,7 +5,7 @@ import winstonDaily from 'winston-daily-rotate-file';
 
 const { environment, log } = config;
 // 로그가 저장될 폴더 : ./logs
-const { logDir, errLogDir, httpLogDir } = log;
+const { logDir, errLogDir, logLable } = log;
 
 /**
  * winston에 설정할 커스텀 로그 우선순위 목록 정의
@@ -50,9 +50,9 @@ const colorize = winston.format.colorize({ all: true });
  * @param path 로그에 붙일 라벨_명
  * @returns
  */
-const format = (path: string) =>
+const format = () =>
   combine(
-    label({ label: path }),
+    label({ label: logLable }),
     errors({ stack: true }), // 1) 에러 스택 모두 출력 설정
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
     // prettyPrint(),
@@ -94,37 +94,32 @@ const transports = () => [
  */
 const devTransports = () => [new winston.transports.Console()];
 
-let logger: Logger | null = null;
+// let logger: Logger | null = null;
 /**
  * 실제 사용될 winston 로거 생성
  * @param path 로그에 붙일 라벨_명
  * @returns
  */
-export const createLogger = (path: string): void => {
-  if (!logger) {
-    logger = winston.createLogger({
-      // 설정한 로그 레벨 이하만 출력
-      level: level(),
-      // 커스텀 레벨 목록 설정
-      levels,
-      // 출력 포멧
-      format: format(path),
-      // 출력된 로그 어디로 보낼지 설정
-      transports:
-        environment === 'development' //
-          ? devTransports() // 콘솔
-          : transports(), // 파일
-    });
-  }
-};
+const logger = (() => {
+  return winston.createLogger({
+    // 설정한 로그 레벨 이하만 출력
+    level: level(),
+    // 커스텀 레벨 목록 설정
+    levels,
+    // 출력 포멧
+    format: format(),
+    // 출력된 로그 어디로 보낼지 설정
+    transports:
+      environment === 'development' //
+        ? devTransports() // 콘솔
+        : transports(), // 파일
+  });
+})();
 
 /**
  * 생성된 winston 로거 리턴
  * @returns
  */
 export const getLogger = (): Logger => {
-  if (!logger) {
-    throw new Error('init error - first call createLogger');
-  }
   return logger;
 };
