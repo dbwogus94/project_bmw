@@ -6,7 +6,7 @@ import StatusCodes from 'http-status-codes';
 import helmet from 'helmet';
 import cors from 'cors';
 // my module
-import { createLogger, getLogger } from '@shared/logger';
+import { createLogger, getLogger } from '@shared/Logger';
 import customMorgan from '@middleware/custom.morgan';
 import BaseRouter from '@routes/index';
 import { config } from '@config';

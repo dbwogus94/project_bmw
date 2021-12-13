@@ -67,7 +67,8 @@
 
     /* Advanced Options */
     "skipLibCheck": true /* Skip type checking of declaration files. */,
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+    // ts 컴파일시 파일 대소문자 구분을 위해 비활성화
+    "forceConsistentCasingInFileNames": false /* Disallow inconsistently-cased references to the same file. */,
     /* ts 모듈 경로 설정 + tsconfig-paths/register를 사용하여 실행 */
     "paths": {
       "@shared/*": ["src/shared/*"],
