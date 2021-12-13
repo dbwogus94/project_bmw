@@ -18,7 +18,6 @@ import commandLineArgs from 'command-line-args';
     },
   ]);
   // Set the env file
-  console.log(__dirname);
   const result2 = dotenv.config({
     path: path.join(process.cwd(), `env/${options.env}.env`),
   });

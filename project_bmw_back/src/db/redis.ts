@@ -1,5 +1,5 @@
 import { config } from '@config';
-import { getLogger } from '@shared/logger';
+import { getLogger } from '@shared/Logger';
 import { createClient } from 'redis';
 
 let client: any = null;
