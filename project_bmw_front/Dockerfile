@@ -1,26 +1,31 @@
-# alpine 버전있어야 우분투 명령어 에러발생하지 않음 ex) apk: not found
-# alpine 버전은 클라우드를 고려한 가벼운 이미지
+# 1) node 이미지 다운로드
 FROM node:14.18.1-alpine as react-build
 
-# 작업 폴더를 만들고 npm 설치
-WORKDIR "/app"
+# 2) 작업할 폴더 설정 == cd <이동할 경로>
+WORKDIR "/usr/app"
 
-# `/app/node_modules/.bin`을 $PATH 에 추가
-#ENV PATH /app/node_modules/.bin:$PATH
-
+# 3) package.json을 복사하고 의존성 설정
 COPY ./package.json ./
-COPY . ./
-
 RUN npm install
 #RUN npm install react-scripts@4.0.3 -g --silent
+
+# 4) 설치된 파일 복사(캐시 사용)
+COPY . .
+
+# 5) 빌드 
 RUN npm run build
 
-CMD ["npm","run","start"]
+# TODO: 빌드된 파일을 nginx에 복사하는 방법을 사용한다.
+# 때문에 react를 실행하지 않는다.
+#CMD ["npm","run","start"]
 
 ## 중요! - nginx 빌드 ##
-# build된 react 파일을 nginx에서 사용하기 위한 설정
-FROM nginx:latest
+## build된 react 파일을 nginx에서 사용하기 위한 설정 ##
+# 1) nginx 이미지 다운
+#FROM nginx:latest
+FROM nginx:alpine
 
-# 위에서 빌드된 파일들 nginx에 복사
-COPY --from=react-build /app/build  /usr/share/nginx/html
-COPY --from=react-build /app/build  /etc/nginx/html
+
+# 2) 위에서 빌드된 react 파일을 nginx에 복사
+COPY --from=react-build /usr/app/build  /usr/share/nginx/html
+COPY --from=react-build /usr/app/build  /etc/nginx/html
