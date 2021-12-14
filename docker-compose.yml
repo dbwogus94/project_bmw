@@ -1,15 +1,50 @@
 version: '3'
 services:
-  # 서비스 1 - nginx + react
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    # 실행에 설정파일 주입
+    command: redis-server --include /usr/local/etc/redis/redis.conf
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./redis/data:/data/redis
+      # https://redis.io/topics/config 에서 필요한 설정 버전 다운하여 적용
+      # 필수 설정 1) requirepass, 2) bind
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    # networks:
+    #   - backend
+
+  # 서비스 - api server : ts + express
+  api:
+    container_name: api
+    build:
+      context: ./project_bmw_back
+    volumes:
+      # (필수) 컨테이너에서 모듈과 빌드된 파일을 사용할 수 있도록 알려야함.
+      - ./project_bmw_back:/usr/app
+      - /usr/app/node_modules
+      - /usr/app/dist
+      - ./logs/api:/usr/app/logs
+      # - ./logs/api:/root/.npm/_logs/
+    stdin_open: true
+    tty: true
+    ports:
+      - '8080:8080'
+    # 종속성 : client가 먼저 빌드되고 nginx가 빌드되도록 설정
+    depends_on:
+      - redis
+    # networks:
+    #   - backend
+
+  # 서비스 - nginx + react
   web-client:
     container_name: web_client
     build:
       # client와 같은 이미지 사용
       context: ./project_bmw_front
     restart: always
-    # 종속성 : client가 먼저 빌드되고 nginx가 빌드되도록 설정
-    # depends_on:
-    # - client
     ports:
       - '80:80'
     volumes:

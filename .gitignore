@@ -1,9 +1,12 @@
-#
+# api server + client 
 node_modules/
 *.env*
 /logs/*
 */dist/*
 /test/*
 
-# 
+#
 *_copy*.yml
+
+# redis
+redis.conf
