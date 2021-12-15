@@ -1,4 +1,4 @@
-import { createContext, createRef, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Header from '../components/Header';
 import Login from '../pages/Login';
 
@@ -8,12 +8,13 @@ const AuthContext = createContext({});
 
 export function AuthProvider({ authService, authErrorEventBus, children }) {
   const [user, setUser] = useState(undefined);
+  const [text, setText] = useState('');
+  const [isAlert, setIsAlert] = useState(false);
 
   // useImperativeHandle(contextRef, () => (user ? user.token : undefined));
 
   useEffect(() => {
     authErrorEventBus.listen(err => {
-      console.log(err);
       setUser(undefined);
       throw err;
     });
@@ -23,7 +24,10 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
     authService
       .me() //
       .then(setUser)
-      .catch(console.error);
+      .catch(err => {
+        console.error(err);
+        setError(err);
+      });
   }, [authService]);
 
   const signUp = useCallback(
@@ -50,6 +54,12 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
     [authService]
   );
 
+  // TODO: 개선 필요
+  const setError = error => {
+    setText(error.toString());
+    setIsAlert(true);
+  };
+
   const context = useMemo(
     () => ({
       user,
@@ -67,7 +77,7 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
       ) : (
         <div className="app">
           <Header />
-          <Login onSignUp={signUp} onLogin={logIn} />
+          <Login onSignUp={signUp} onLogin={logIn} setError={setError} text={text} isAlert={isAlert} />
         </div>
       )}
     </AuthContext.Provider>

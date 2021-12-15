@@ -1,6 +1,7 @@
 export default class HttpClient {
-  constructor(baseURL, authErrorEventBus) {
+  constructor(baseURL, storage, authErrorEventBus) {
     this.baseURL = baseURL;
+    this.storage = storage;
     this.authErrorEventBus = authErrorEventBus;
   }
 
@@ -34,6 +35,7 @@ export default class HttpClient {
 
       if (res.status === 401) {
         // 401에러 -> 로그인 페이지
+        this.storage.clearItem('USERNAME');
         this.authErrorEventBus.notify(error);
         return;
       }

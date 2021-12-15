@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Banner from '../components/Banner';
 
-const Login = ({ onSignUp, onLogin }) => {
+const Login = ({ onSignUp, onLogin, setError, text, isAlert }) => {
   const [signup, setSignup] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [text, setText] = useState('');
-  const [isAlert, setIsAlert] = useState(false);
+  // const [text, setText] = useState('');
+  // const [isAlert, setIsAlert] = useState(false);
 
   const onSubmit = event => {
     event.preventDefault();
@@ -17,11 +17,6 @@ const Login = ({ onSignUp, onLogin }) => {
     } else {
       onLogin(username, password).catch(setError);
     }
-  };
-
-  const setError = error => {
-    setText(error.toString());
-    setIsAlert(true);
   };
 
   const onChange = event => {
@@ -42,6 +37,11 @@ const Login = ({ onSignUp, onLogin }) => {
       default:
     }
   };
+
+  // const setError = error => {
+  //   setText(error.toString());
+  //   setIsAlert(true);
+  // };
 
   return (
     <>

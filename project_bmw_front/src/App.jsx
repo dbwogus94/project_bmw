@@ -21,7 +21,7 @@ function App({ tweetService, busService, metroService, stopService }) {
   };
   // 로그아웃
   const onLogout = () => {
-    if (window.confirm('Do you want to log out?')) {
+    if (window.confirm('로그아웃을 하시겠습니까?')) {
       logout();
       history.push('/');
     }

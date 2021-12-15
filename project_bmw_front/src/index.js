@@ -15,8 +15,8 @@ import Storage from './db/storage';
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 const authErrorEventBus = new AuthErrorEventBus();
-const httpClient = new HttpClient(baseURL, authErrorEventBus);
 const userStorage = new Storage();
+const httpClient = new HttpClient(baseURL, userStorage, authErrorEventBus);
 
 const authService = new AuthService(httpClient, userStorage);
 const tweetService = new TweetService(baseURL);
