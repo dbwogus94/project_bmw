@@ -22,29 +22,29 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
     return res.status(UNAUTHORIZED).json(errMessage);
   }
 
-  try {
-    // 2. jwt 디코딩
-    const payload: any = await jwtService.decodeToken(accessToken, jwt.access.secret);
-    try {
-      // 3. 유효한 토큰이면? 블랙 리스트 토큰 조회
-      const { id, username } = payload;
-      const blacklistToken = await getClient().get(username);
-
-      // 4. 블랙 리스트이면? 401 응답
-      if (blacklistToken && blacklistToken === accessToken) {
-        res.status(UNAUTHORIZED).json(errMessage);
-      }
-      // 5. 블랙리스트에 없거나 아니라면? req에 디코딩 데이터 담고 통과
-      req.id = id!;
-      req.username = username!;
-      return next();
-    } catch (error: any) {
-      error.message = '[redis] ' + error.message;
-      return next(error);
-    }
-  } catch (error) {
+  // 2. jwt 디코딩
+  const payload: any = await jwtService.decodeToken(accessToken, jwt.access.secret);
+  if (!payload) {
     // 2. jwt 디코딩 실패 -> refresh 호출
     const { username } = req.query;
     return res.redirect(MOVED_TEMPORARILY, `/api/auth/refresh?username=${username}`);
+  }
+
+  try {
+    // 3. 유효한 토큰이면? 블랙 리스트 토큰 조회
+    const { id, username } = payload;
+    const blacklistToken = await getClient().get(username);
+
+    // 4. 블랙 리스트이면? 401 응답
+    if (blacklistToken && blacklistToken === accessToken) {
+      return res.status(UNAUTHORIZED).json(errMessage);
+    }
+    // 5. 블랙리스트에 없거나 아니라면? req에 디코딩 데이터 담고 통과
+    req.id = id!;
+    req.username = username!;
+    return next();
+  } catch (error: any) {
+    error.message = '[redis] ' + error.message;
+    return next(error);
   }
 };
