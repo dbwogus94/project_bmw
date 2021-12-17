@@ -7,7 +7,7 @@ export default class HttpClient {
 
   async fetch(url, options) {
     /* ### fetch API 사용 */
-    const res = await fetch(`${this.baseURL}/${url}`, {
+    const res = await fetch(`${this.baseURL}${url}`, {
       ...options,
       // 같은 도메인 다른 포트에서 쿠키를 공유하기 위한 설정
       credentials: 'include',

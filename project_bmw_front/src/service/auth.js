@@ -27,7 +27,7 @@ export default class AuthService {
   async me() {
     const username = this.storage.getItem('USERNAME');
     return !!username
-      ? this.http.fetch(`auth/me?username=${username}`, {
+      ? this.http.fetch(`/auth/me?username=${username}`, {
           method: 'GET',
         })
       : undefined;

@@ -1,6 +1,9 @@
 # 1) node 이미지 다운로드
 FROM node:14.18.1-alpine as react-build
 
+# **리버스 프록시 서버를 호출할때는 도메인을 제외해야한다.
+ENV REACT_APP_BASE_URL '/api'
+
 # 2) 작업할 폴더 설정 == cd <이동할 경로>
 WORKDIR "/usr/app"
 
