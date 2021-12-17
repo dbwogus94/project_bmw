@@ -39,6 +39,9 @@ app.use(customMorgan());
 // Security
 if (config.environment === 'production') {
   app.use(helmet());
+  // express 프록시 설정
+  //  https://expressjs.com/ko/guide/behind-proxies.html
+  app.set('trust proxy', true);
 }
 
 // Add APIs

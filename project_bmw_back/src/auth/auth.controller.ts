@@ -54,6 +54,8 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
 // POST auth/signin
 export const signin = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.hostname);
+  console.log(req.ips);
   const { username, password }: SigninDto = req.dto;
   const userRepository: UserRepository = getCustomRepository(UserRepository);
   const errMessage = {
@@ -87,7 +89,13 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
     });
 
     // 쿠키에 엑세스 토큰 저장
-    res.cookie(key, newUser.accessToken, options);
+    res.cookie(key, newUser.accessToken, {
+      ...options,
+      sameSite: options.sameSite === 'none' ? 'none' : false,
+      // TODO: ts 컴파일 'No overload matches this call.' 에러로 인해 3항 연산자로 처리
+      // sameSite은 "boolean | 'lax' | 'strict' | 'none' | undefined" 타입만 허용된다.
+      // 여기서 문제는 options.sameSite의 타입이 'string'로 판별되기 때문에 에러가 발생한다.
+    });
 
     return res.status(CREATED).json({
       username,
@@ -140,7 +148,10 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     });
 
     // 5. 응답 쿠키에 엑세스 토큰 저장 => 응답
-    res.cookie(key, newUser.accessToken, options);
+    res.cookie(key, newUser.accessToken, {
+      ...options,
+      sameSite: options.sameSite === 'none' ? 'none' : false,
+    });
     return res.status(CREATED).json({
       username,
     });
@@ -153,7 +164,10 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 export const signout = async (req: Request, res: Response, next: NextFunction) => {
   // 1. 쿠키에서 토큰 꺼낸 후 제거
   const accessToken: string = req.signedCookies[key];
-  res.clearCookie(key, options);
+  res.clearCookie(key, {
+    ...options,
+    sameSite: options.sameSite === 'none' ? 'none' : false,
+  });
 
   const userRepository: UserRepository = getCustomRepository(UserRepository);
   try {

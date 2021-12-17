@@ -38,6 +38,11 @@ export const config = Object.freeze({
       domain: required('COOKIE_DOMAIN'),
       // https에서만 유효, **booean형으로 리턴되게 해야한다.
       secure: required('SECURE_COOKIE') === 'true',
+      sameSite: 'none',
+      /* "Strict" : 서로 다른 도메인에서 아예 전송 불가능. 보안성은 높으나 편의가 낮다.
+       * "Lax" : 서로 다른 도메인이지만 일부 예외( HTTP get method / a href / link href )에서는 전송 가능.
+       * "None" : 모든 도메인에서 전송 가능
+       */
     },
   },
   jwt: {
