@@ -54,8 +54,6 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
 // POST auth/signin
 export const signin = async (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.hostname);
-  console.log(req.ips);
   const { username, password }: SigninDto = req.dto;
   const userRepository: UserRepository = getCustomRepository(UserRepository);
   const errMessage = {
