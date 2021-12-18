@@ -10,3 +10,7 @@ node_modules/
 
 # redis
 redis.conf
+
+# nginx
+nginx/ssl/
+certbot/
