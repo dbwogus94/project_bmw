@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # 서비스 1
   redis:
     container_name: redis
     image: redis
@@ -15,16 +16,18 @@ services:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - TZ=Asia/Seoul
-    # networks:
-    #   - backend
+    networks:
+      - backend
 
-  # 서비스 - api server : ts + express
+  # 서비스 2 - api server : ts + express
   api:
     container_name: api
     build:
       context: ./project_bmw_back
-    ports:
-      - '8080:8080'
+    # ports:
+    #   - '8080:8080'
+    expose:
+      - '8080'
     depends_on:
       - redis
     volumes:
@@ -38,13 +41,12 @@ services:
       - TZ=Asia/Seoul
     stdin_open: true
     tty: true
-    # 종속성 : client가 먼저 빌드되고 nginx가 빌드되도록 설정
-    # networks:
-    #   - backend
+    networks:
+      - backend
 
-  # 서비스 - nginx + react
-  web-client:
-    container_name: web_client
+  # 서비스 3 - nginx + react
+  nginx:
+    container_name: nginx
     build:
       # client와 같은 이미지 사용
       context: ./project_bmw_front
@@ -58,15 +60,38 @@ services:
       # (필수) 로컬 설정파일 => nginx 설정파일에 마운트
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./logs/nginx:/var/log/nginx/
+      # openssl 전용
       - ./nginx/ssl/host:/etc/nginx/ssl
+      ## certbot 전용 => certbot와 동일한 디렉토리를 마운트 ##
+      # - ./certbot/conf:/etc/letsencrypt
+      # - ./certbot/www:/var/www/certbot
+    ## 인증서 자동 재발급 1. ##
+    # command : "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     environment:
       - TZ=Asia/Seoul
     stdin_open: true # docker run -i : Interactive 모드 사용으로 표준입출력 사용
     tty: true # docker run -t : 텍스트 기반의 터미널(TTY)을 애뮬레이션해주는 옵션
+    networks:
+      - backend
+
+  ## TODO: iptime ddns에서는 사용불가, 정식 도메인 구입후 적용 예정 ##
+  # 서비스 - certbot
+  # certbot:  #certbot 컨테이너 추가
+  #   container_name: certbot
+  #   image: certbot/certbot
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #     - ./logs/certbot:/var/log/letsencrypt
+  #   depends_on:
+  #     - nginx
+  ## 인증서 자동 재발급 2. ##
+  #   entrypoint : "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 # volumes:
 #   test_volume:
 
-# networks:
-#   backend:
-#     driver: bridge
+networks:
+  backend:
+    driver: bridge
