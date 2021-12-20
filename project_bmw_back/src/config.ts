@@ -14,9 +14,10 @@ export const config = Object.freeze({
     port: required('PORT', 8080),
     host: required('HOST', 'localhost'),
     cors: {
-      // 같은 도메인 다른 포트에서 쿠키를 공유하기 위한 설정
-      origin: true,
-      credentials: true,
+      // 다른 도메인 쿠키를 공유하기 위한 설정 => true 또는 구체적인 도메인을 넣는다,
+      // 와일드 카드("*") 사용불가
+      origin: required('CORS_ORIGIN'), // === Access-Control-Allow-Origin: ${origin}
+      credentials: true, // === Access-Control-Allow-Credentials: true
     },
   },
   log: {
@@ -26,23 +27,25 @@ export const config = Object.freeze({
     httpLogDir: join(required('LOG_DIR'), required('HTTP_LOG_DIR')),
   },
   cookie: {
+    // 쿠키명
     key: required('COOKIE_KEY'),
     // cookieParser에 적용할 쿠키 암호화 키
     secret: required('COOKIE_SECRET'),
     options: {
+      // 스크립트 접근 불가
       httpOnly: true,
+      // 쿠키 암호화
       signed: true,
+      // 쿠키를 적용할 도메인
+      domain: required('COOKIE_DOMAIN'),
+      // 쿠키를 적용할 도메인 path
       path: required('COOKIE_PATH'),
       // 만료일, refreshJwt와 동일하게 설정 **단위 ms(밀리세컨드)
       maxAge: Number(required('JWT_REFRESH_TOKEN_EXPIRATION_TIME', '1209600')) * 1000, // 14d
-      domain: required('COOKIE_DOMAIN'),
       // https에서만 유효, **booean형으로 리턴되게 해야한다.
-      secure: required('SECURE_COOKIE') === 'true',
-      sameSite: 'none',
-      /* "Strict" : 서로 다른 도메인에서 아예 전송 불가능. 보안성은 높으나 편의가 낮다.
-       * "Lax" : 서로 다른 도메인이지만 일부 예외( HTTP get method / a href / link href )에서는 전송 가능.
-       * "None" : 모든 도메인에서 전송 가능
-       */
+      secure: required('COOKIE_SECURE') === 'true',
+      // "none" : 쿠키 모든 도메인에서 전송 가능, https에서만 작동한다.
+      sameSite: required('COOKIE_SAMESITE', false) === 'none' ? 'none' : false,
     },
   },
   jwt: {
