@@ -1,5 +1,5 @@
 import { IUser } from '@entities/User';
-import { IClientData } from '@shared/JwtService';
+import { IClientData } from '@shared/jwt.service';
 import { Dto } from '../user/dto/dto.interface';
 
 declare module 'express' {

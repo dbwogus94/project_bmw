@@ -8,7 +8,7 @@ import { SignupDto } from '@user/dto/signup.dto';
 import { IUser } from '@user/entities/User.entity';
 import { SigninDto } from '@user/dto/signin.dto';
 import { errorMessages } from '@shared/message';
-import { JwtService } from '@shared/JwtService';
+import { JwtService } from '@shared/jwt.service';
 import { getClient } from '@db/redis';
 
 const { UNAUTHORIZED, CONFLICT, OK, CREATED, TEMPORARY_REDIRECT, NO_CONTENT, NOT_FOUND } = StatusCodes;

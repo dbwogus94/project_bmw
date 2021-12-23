@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { config } from '@config';
-import { IJwtPayload, JwtService } from '@shared/JwtService';
+import { IJwtPayload, JwtService } from '@shared/jwt.service';
 import { StatusCodes } from 'http-status-codes';
 import { errorMessages } from '@shared/message';
 import { getClient } from '@db/redis';
