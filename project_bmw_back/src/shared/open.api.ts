@@ -26,17 +26,21 @@ export class OpenApi {
    * @returns
    */
   async callApi(url: string) {
-    const res = await axios({
-      method: 'get',
-      url,
-    });
+    try {
+      const res = await axios({
+        method: 'get',
+        url,
+      });
 
-    // open API는 REST하지 않음. 요청이 잘못되어도 200으로 응답한다.
-    if (res.status !== 200) {
-      throw new Error('[OpenApi] API 서버에 장애가 있습니다.');
+      // open API는 REST하지 않음. 요청이 잘못되어도 200으로 응답한다.
+      if (res.status !== 200) {
+        throw new Error('[OpenApi] API 서버에 장애가 있습니다.');
+      }
+
+      // xml to json
+      return this.parseJson(res.data);
+    } catch (error) {
+      throw error;
     }
-
-    // xml to json
-    return this.parseJson(res.data);
   }
 }
