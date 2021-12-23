@@ -75,4 +75,18 @@ export const config = Object.freeze({
     url: required('REDIS_URL'),
     password: required('REDIS_PASSWORD'),
   },
+  openApi: {
+    gyeonggi: {
+      bus: {
+        host: required('GYEONGGI_BUS_HOST'),
+        key: required('GYEONGGI_BUS_KEY'),
+      },
+    },
+    seoul: {
+      bus: {
+        host: required('SEOUL_BUS_HOST'),
+        key: required('SEOUL_BUS_KEY'),
+      },
+    },
+  },
 });
