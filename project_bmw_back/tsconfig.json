@@ -72,13 +72,14 @@
     /* ts 모듈 경로 설정 + tsconfig-paths/register를 사용하여 실행 */
     "paths": {
       "@shared/*": ["src/shared/*"],
+      "@config": ["src/config"],
       "@server": ["src/Server"],
       "@routes/*": ["src/routes/*"],
       "@middleware/*": ["src/middleware/*"],
       "@db/*": ["src/db/*"],
       "@auth/*": ["src/auth/*"],
       "@user/*": ["src/user/*"],
-      "@config": ["src/config"]
+      "@bus/*": ["src/bus/*"]
     }
   },
   "include": ["src/**/*.ts"], // spec/**/*.ts
