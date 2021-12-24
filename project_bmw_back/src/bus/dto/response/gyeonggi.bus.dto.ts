@@ -1,4 +1,4 @@
-import { Bus, DistrictName } from '@bus/dto/response/bus.dto.interface';
+import { Bus } from '@bus/dto/response/bus.dto.interface';
 
 export class GyeonggiBusDto implements Bus {
   routeId: string | number;
@@ -6,7 +6,7 @@ export class GyeonggiBusDto implements Bus {
   routeTypeCd: number;
   routeTypeName: string;
   districtCd: number;
-  districtName: DistrictName;
+  districtName: '서울' | '경기' | '인천';
   type: 'seoul' | 'gyeonggi';
 
   constructor(gyeonggiBusData: any) {
@@ -23,11 +23,11 @@ export class GyeonggiBusDto implements Bus {
   getDistrictName(districtCd: number) {
     switch (districtCd) {
       case 1:
-        return DistrictName.서울;
+        return '서울';
       case 2:
-        return DistrictName.경기;
+        return '경기';
       case 3:
-        return DistrictName.인천;
+        return '인천';
       default:
         throw Error('[GyeonggiBusDto] 유효하지 않은 districtCd 입니다.');
     }

@@ -1,4 +1,4 @@
-import { Bus, DistrictName } from '@bus/dto/response/bus.dto.interface';
+import { Bus } from '@bus/dto/response/bus.dto.interface';
 
 export class SeoulBusDto implements Bus {
   routeId: string | number;
@@ -6,7 +6,7 @@ export class SeoulBusDto implements Bus {
   routeTypeCd: number;
   routeTypeName: string;
   districtCd: number;
-  districtName: DistrictName;
+  districtName: '서울' | '경기' | '인천';
   type: 'seoul' | 'gyeonggi';
 
   constructor(seoulBusData: any) {
@@ -16,7 +16,7 @@ export class SeoulBusDto implements Bus {
     this.routeTypeCd = routeType;
     this.routeTypeName = this.getRouteTypeName(routeType);
     this.districtCd = 1;
-    this.districtName = DistrictName.서울;
+    this.districtName = '서울';
     this.type = 'seoul';
   }
 
@@ -43,6 +43,8 @@ export class SeoulBusDto implements Bus {
         return '폐지';
       case 0:
         return '공용버스';
+      case 10:
+        return '노랑풍선시티버스';
       default:
         throw Error('[SeoulBusDto] 유효하지 않은 routeType 입니다.');
     }

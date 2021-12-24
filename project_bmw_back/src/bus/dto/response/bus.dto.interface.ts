@@ -10,13 +10,7 @@ export interface Bus {
   // 관할 지역 코드
   districtCd: number;
   // 관할 지역 이름
-  districtName: DistrictName;
+  districtName: '서울' | '경기' | '인천';
   // 서울, 경기 구분 라벨
   type: 'seoul' | 'gyeonggi';
-}
-
-export enum DistrictName {
-  서울 = 1,
-  경기 = 2,
-  인천 = 3,
 }

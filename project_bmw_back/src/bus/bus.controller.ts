@@ -22,7 +22,5 @@ export const busList = async (req: Request, res: Response, next: NextFunction) =
     seoulBusService.getBusListByRouteName(routeName),
   ]);
 
-  const busList = gyeonggiBusList.concat(seoulBusList);
-
-  return res.status(OK).json({ busList });
+  return res.status(OK).json({ gyeonggi: gyeonggiBusList, seoul: seoulBusList });
 };
