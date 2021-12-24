@@ -1,7 +1,7 @@
 import { Bus } from '@bus/dto/response/bus.dto.interface';
 
 export class GyeonggiBusDto implements Bus {
-  routeId: string | number;
+  routeId: number;
   routeName: string;
   routeTypeCd: number;
   routeTypeName: string;

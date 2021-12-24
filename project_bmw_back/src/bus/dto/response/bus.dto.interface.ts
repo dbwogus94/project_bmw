@@ -1,6 +1,6 @@
 export interface Bus {
   // 버스 ID(숫자 일련번호)
-  routeId: string | number;
+  routeId: number;
   // 버스 이름(노선 번호)
   routeName: string;
   // 노선 유형 코드
