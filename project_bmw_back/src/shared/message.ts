@@ -4,6 +4,7 @@ export const errorMessages: any = Object.freeze({
     isEmail: 'email 형식이 아닙니다.',
     isNotEmpty: '필수 값이 입력되지 않았습니다.',
     isString: '문자 형식이 아닙니다.',
+    isNumber: '숫자 형식이 아닙니다.',
   },
   CONFLICT_MESSAGE: {
     code: 409,

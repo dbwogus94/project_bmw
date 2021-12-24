@@ -14,7 +14,8 @@ const { BAD_REQUEST } = StatusCodes;
 export default function (DtoClass: ClassType<object>) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = { ...req.body, ...req.query }; // 우선순위 query
+      // TODO: params, body, query에 중복되는 데이터를 허용하지 않고 있음.
+      const data = { ...req.params, ...req.body, ...req.query }; // 최우선순위 query
       const dtoObject = await transformAndValidate(DtoClass, data);
       req.dto = dtoObject;
       next();
@@ -30,7 +31,7 @@ export default function (DtoClass: ClassType<object>) {
         errCode: BAD_REQUEST,
         property, // 오류 필드
         message: getKorMsg(constraints), // 오류 내용
-        errValue: value, // 오류 값
+        errValue: !(value == null) && isNaN(value) ? 'NaN' : value, // 오류 값
       });
 
       return accumulator;
