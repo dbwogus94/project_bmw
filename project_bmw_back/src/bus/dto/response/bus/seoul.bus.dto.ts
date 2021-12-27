@@ -1,12 +1,24 @@
-import { Bus } from '@bus/dto/response/bus.dto.interface';
-
+import { Bus } from '@bus/dto/response/bus/bus.interface';
+/**
+ * 서울시 Open API 노선번호목록조회 결과 DTO
+ *  - 서비스명: 노선정보조회 서비스
+ *  - 오퍼레이션명(국문): 노선번호목록조회
+ *  - 오퍼레이션명(영문): getBusRouteList
+ */
 export class SeoulBusDto implements Bus {
+  // 버스 ID(busRouteId)
   routeId: number;
+  // 버스 이름(busRouteNm)
   routeName: string;
+  // 노선유형코드(routeType)
   routeTypeCd: number;
+  // 노선유형명(x)
   routeTypeName: string;
+  // 관할지역코드(x)
   districtCd: number;
+  // 관할지역명(x)
   districtName: '서울' | '경기' | '인천';
+  // 서울, 경기 구분 라벨
   type: 'seoul' | 'gyeonggi';
 
   constructor(seoulBusData: any) {
