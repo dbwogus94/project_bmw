@@ -8,9 +8,11 @@ import cors from 'cors';
 // my module
 import { getLogger } from '@shared/Logger';
 import customMorgan from '@middleware/custom.morgan';
-import BaseRouter from '@routes/index';
 import { config } from '@config';
 import { errorMessages } from '@shared/message';
+// my router
+import AuthRouter from '@auth/auth.route';
+import BusRouter from '@bus/bus.route';
 
 // winston 로거 생성
 const logger = getLogger();
@@ -46,7 +48,8 @@ if (config.environment === 'production') {
 app.set('trust proxy', true);
 
 // Add APIs
-app.use('/api', BaseRouter);
+app.use('/api/auth', AuthRouter);
+app.use('/api/bus', BusRouter);
 
 // 404 처리
 app.use((req: Request, res: Response) => {
