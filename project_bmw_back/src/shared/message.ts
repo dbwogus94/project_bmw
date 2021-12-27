@@ -23,6 +23,6 @@ export const errorMessages: any = Object.freeze({
     code: 404,
     signout: '탈퇴한 유저가 입니다.',
     getBusInfo: '버스 상세정보가 없습니다. routeId를 확인하세요.',
-    getStations: '버스 상세정보와 정류장목록이 없습니다. routeId를 확인하세요.',
+    getStations: '경유 정류장 목록이 없습니다. routeId를 확인하세요.',
   },
 });

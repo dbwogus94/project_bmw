@@ -54,24 +54,17 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
 export const getStations = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, type } = req.dto;
   let stationList;
-  let info;
 
   if (type === 'gyeonggi') {
-    [info, stationList] = await Promise.all([
-      gyeonggiBusService.getBusInfoByRouteId(routeId),
-      gyeonggiBusService.getStationsByRouteId(routeId),
-    ]);
+    stationList = await gyeonggiBusService.getStationsByRouteId(routeId);
   }
 
   if (type === 'seoul') {
-    [info, stationList] = await Promise.all([
-      seoulBusService.getBusInfoByRouteId(routeId),
-      seoulBusService.getStationsByRouteId(routeId),
-    ]);
+    stationList = await seoulBusService.getStationsByRouteId(routeId);
   }
 
-  return info
-    ? res.status(OK).json({ routeId, type, info, stationList })
+  return stationList && stationList.length !== 0
+    ? res.status(OK).json({ routeId, type, stationList })
     : res.status(NOT_FOUND).json({
         errCode: NOT_FOUND_MESSAGE,
         message: NOT_FOUND_MESSAGE.getStations,
