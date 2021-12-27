@@ -56,14 +56,14 @@ export class SeoulBusInfoDto implements Info {
       edStationNm,
       routeType,
       term,
-      companyName,
+      corpNm,
       firstBusTm,
       lastBusTm,
       firstLowTm,
       lastLowTm,
     } = seoulBusInfoData;
 
-    const [companyNm, companyTel] = companyName.spilt(' ');
+    const [companyName, companyTel] = corpNm.split(' ');
     this.routeId = busRouteId;
     this.routeName = busRouteNm;
     this.startStationName = stStationNm;
@@ -76,8 +76,8 @@ export class SeoulBusInfoDto implements Info {
     this.minTerm = term;
     this.maxTerm = term;
     this.companyId = 0; // 서울은 운수업체 id를 제공하지 않음
-    this.companyName = companyNm;
-    this.companyTel = companyTel;
+    this.companyName = companyName;
+    this.companyTel = companyTel ? companyTel : '';
     this.type = 'seoul';
     this.firstBusTm = firstBusTm;
     this.lastBusTm = lastBusTm;
