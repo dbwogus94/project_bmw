@@ -1,12 +1,14 @@
 import { memo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';
 import SearchForm from './SearchForm';
 
-const BMSearch = memo(({ service, button, edit }) => {
+const BMSearch = memo(({ service, button }) => {
   const [resultList, setResultBody] = useState({});
   const [error, setError] = useState('');
+  const history = useHistory();
 
   // useEffect(() => {
   //   //
@@ -21,13 +23,11 @@ const BMSearch = memo(({ service, button, edit }) => {
       .catch(onError);
   };
 
-  // 즐겨찾기
-  const onLickClick = event => {
-    // console.log(event);
-  };
-  // BM정보 페이지 이동
-  const onInfoClick = event => {
-    // console.log(event);
+  // 정류장 리스트 페이지 이동
+  const onfeedClick = event => {
+    const routeId = event.currentTarget.dataset.routeId;
+    const type = event.currentTarget.dataset.type;
+    history.push(`/bus/${type}/${routeId}/stations`);
   };
 
   // TODO: 공통으로 빼서 외부에서 넣자
@@ -39,18 +39,26 @@ const BMSearch = memo(({ service, button, edit }) => {
   };
 
   const makeFeeds = resultList => {
-    let result = [];
+    const result = [];
     Object.keys(resultList).forEach(key => {
       const feed = resultList[key].map((bm, index) => {
-        return index !== 0 ? ( //
-          <BMFeed tweet={bm} edit={edit} onInfoClick={onInfoClick} onLickClick={onLickClick}></BMFeed>
-        ) : (
+        return index === 0 ? ( //
           <>
-            <FeedHeader label={bm.zone}></FeedHeader>
-            <BMFeed key={bm.id} tweet={bm} edit={edit} onInfoClick={onInfoClick} onLickClick={onLickClick}>
-              {' '}
-            </BMFeed>
+            <FeedHeader label={bm.districtName}></FeedHeader>
+            <BMFeed //
+              key={bm.routeId}
+              bm={bm}
+              onfeedClick={onfeedClick}
+              edit={false}
+            ></BMFeed>
           </>
+        ) : (
+          <BMFeed //
+            key={bm.routeId}
+            bm={bm}
+            onfeedClick={onfeedClick}
+            edit={false}
+          ></BMFeed>
         );
       });
       result.push(feed);
