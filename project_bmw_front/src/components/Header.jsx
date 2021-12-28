@@ -4,7 +4,7 @@ const Header = memo(({ onLogout, onMyBM, onEditBM, onBusSearch, onMetroSearch, o
   return (
     <header className="header">
       <div className="logo">
-        <img src="./img/logo2.png" alt="BMW Logo" className="logo-img" />
+        <img src={`${process.env.PUBLIC_URL}/img/logo2.png`} alt="BMW Logo" className="logo-img" />
         {/* <h1 className="logo-name">BMW</h1> */}
         {/* {username && <span className="logo-user">@{username}</span>} */}
       </div>
