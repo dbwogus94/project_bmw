@@ -20,7 +20,7 @@ const httpClient = new HttpClient(baseURL, userStorage, authErrorEventBus);
 
 const authService = new AuthService(httpClient, userStorage);
 const tweetService = new TweetService(baseURL);
-const busService = new BusService();
+const busService = new BusService(httpClient);
 const metroService = new MetroService();
 const stopService = new StopService();
 
