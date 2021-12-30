@@ -1,12 +1,9 @@
-import React, { memo, useState } from 'react';
-import parseDate from '../util/date';
+import React, { memo } from 'react';
 import Avatar from './Avatar';
 
 const BMCard = memo(({ tweet, onUsernameClick, onNameClick }) => {
-  // ({ tweet, owner, onDelete, onUpdate, onUsernameClick }) => {
   const {
-    id, //
-    label,
+    label, //
     name,
     username,
     server_time,
@@ -16,8 +13,6 @@ const BMCard = memo(({ tweet, onUsernameClick, onNameClick }) => {
     second_text,
     direction,
   } = tweet;
-  // const [editing, setEditing] = useState(false);
-  // const onClose = () => setEditing(false);
 
   return (
     <li className="tweet">

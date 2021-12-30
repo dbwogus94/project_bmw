@@ -28,7 +28,7 @@ const BMFeed = ({ bm, onfeedClick }) => {
           </div>
         </article>
       </li>
-      <div className="feed-bottom"></div>
+      {/* <div className="feed-bottom"></div> */}
     </>
   );
 };
