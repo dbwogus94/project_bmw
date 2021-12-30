@@ -42,4 +42,6 @@ export interface Info {
   companyTel: string;
   // 사용된 API 구분 라벨
   type: 'seoul' | 'gyeonggi';
+  // 버스(B), 지하철(M) 구분
+  bmType: 'B';
 }

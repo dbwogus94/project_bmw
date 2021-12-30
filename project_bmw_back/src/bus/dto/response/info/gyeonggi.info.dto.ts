@@ -37,6 +37,8 @@ export class GyeonggiBusInfoDto implements Info {
   companyTel: string;
   // 서울, 경기 구분 라벨
   type: 'seoul' | 'gyeonggi';
+  // 버스(B), 지하철(M) 구분
+  bmType: 'B';
 
   /* 경기도만 있는 데이터 */
   // 평일기점 첫차시간
@@ -85,6 +87,7 @@ export class GyeonggiBusInfoDto implements Info {
     this.companyName = companyName;
     this.companyTel = companyTel;
     this.type = 'gyeonggi';
+    this.bmType = 'B';
     // 막차 첫차 시간
     this.upFirstTime = upFirstTime;
     this.upLastTime = upLastTime;

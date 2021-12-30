@@ -37,6 +37,8 @@ export class SeoulBusInfoDto implements Info {
   companyTel: string;
   // 구분 타입
   type: 'seoul' | 'gyeonggi';
+  // 버스(B), 지하철(M) 구분
+  bmType: 'B';
 
   /* 서울시만 있는 데이터 */
   // 첫차시간
@@ -64,6 +66,7 @@ export class SeoulBusInfoDto implements Info {
     } = seoulBusInfoData;
 
     const [companyName, companyTel] = corpNm.split(' ');
+
     this.routeId = busRouteId;
     this.routeName = busRouteNm;
     this.startStationName = stStationNm;
@@ -75,10 +78,13 @@ export class SeoulBusInfoDto implements Info {
     this.districtName = '서울';
     this.minTerm = term;
     this.maxTerm = term;
+    // 운수업체
     this.companyId = 0; // 서울은 운수업체 id를 제공하지 않음
     this.companyName = companyName;
     this.companyTel = companyTel ? companyTel : '';
     this.type = 'seoul';
+    this.bmType = 'B';
+    // 막차 첫차
     this.firstBusTm = firstBusTm;
     this.lastBusTm = lastBusTm;
     this.firstLowTm = firstLowTm;
