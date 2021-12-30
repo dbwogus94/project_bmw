@@ -1,7 +1,8 @@
 import { memo, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Banner from '../Banner';
+import Footer from '../Footer';
 
 const BusInfo = memo(({ service }) => {
   const [info, setInfo] = useState({});
@@ -24,20 +25,9 @@ const BusInfo = memo(({ service }) => {
     }, 3000);
   };
 
-  const onBackClick = () => {
-    history.goBack();
-  };
-
-  const onHomeClick = () => {
-    history.push('/');
-  };
-
-  const onStationClick = () => {
-    history.push(`/bus/${type}/${routeId}/stations`);
-  };
-
   const makeInfo = info => {
     const {
+      routeName,
       startStationName, //
       endStationName,
       routeTypeName,
@@ -60,7 +50,7 @@ const BusInfo = memo(({ service }) => {
     return (
       <>
         <li className="info-header">
-          <h2>{info.routeName}</h2>
+          <h2>{routeName}</h2>
         </li>
         <li className="info-container">
           <h4>운행지역</h4>
@@ -93,6 +83,13 @@ const BusInfo = memo(({ service }) => {
           <p>업체명: {companyName}</p>
           <p>Tel: {companyTel}</p>
         </li>
+        <li className="info-container">
+          <h4>경유지</h4>
+          <p>
+            <Link to={`/bus/${type}/${routeId}/stations`}>@{routeName} </Link>
+            경유지 확인
+          </p>
+        </li>
       </>
     );
   };
@@ -101,15 +98,12 @@ const BusInfo = memo(({ service }) => {
     <>
       {error && <Banner text={error} isAlert={true} transient={true} />}
       <ul className="info">{makeInfo(info)}</ul>
-      <div className="left-btn">
-        <span onClick={onBackClick}>◀</span>
-      </div>
-      <div className="middle-btn">
-        <span onClick={onHomeClick}>home</span>
-      </div>
-      <div className="right-btn">
-        <span onClick={onStationClick}>경유지</span>
-      </div>
+      <Footer //
+        backBtn={true}
+        homeBtn={true}
+        history={history}
+        // topBtn={true}
+      ></Footer>
     </>
   );
 });

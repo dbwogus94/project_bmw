@@ -467,19 +467,6 @@ button {
   height: 1px;
 } */
 
-/* station */
-.station {
-  height: 100%;
-  overflow-y: auto;
-  color: var(--color-black);
-  padding: 16px;
-  list-style: none;
-  /* Firefox */
-  scrollbar-width: 6px;
-  scrollbar-color: var(--color-darkGrey);
-  scrollbar-face-color: var(--color-blue);
-}
-
 /* info */
 .info {
   height: 100%;
@@ -520,14 +507,114 @@ button {
   padding: 0;
 }
 
-/* 세부 설정 */
 .info-district {
   color: var(--color-darkGrey);
   font-size: 12px;
 }
 
+/* station */
+.bm-info {
+  width: 100%;
+  text-align: center;
+  color: var(--color-black);
+  padding: 16px;
+  /* border-bottom: 1px solid var(--color-grey); */
+}
+
+.bm-info > h2 {
+  margin: 0;
+}
+
+.bm-info > p {
+  margin: 5px 0 3px 0;
+  font-size: 0.7rem;
+  color: var(--color-darkGrey);
+}
+
+.stations {
+  height: 100%;
+  overflow-y: auto;
+  color: var(--color-black);
+  padding: 0 16px 16px 16px;
+  list-style: none;
+  /* Firefox */
+  scrollbar-width: 6px;
+  scrollbar-color: var(--color-darkGrey);
+  scrollbar-face-color: var(--color-blue);
+}
+
+.stations::-webkit-scrollbar {
+  /* Safari and Chrome */
+  background-color: var(--color-darkGrey);
+  width: 6px;
+}
+
+.stations::-webkit-scrollbar-thumb {
+  /* Safari and Chrome */
+  background-color: var(--color-blue);
+}
+
+.station {
+  /* box-shadow: 0 4px 8px 0 var(--color-shadow); */
+  transition: 0.3s;
+  /* margin-bottom: 16px; */
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-grey);
+}
+
+.station-container {
+  display: flex;
+  width: 100%;
+}
+
+.station-left {
+  width: 20%;
+  text-align: center;
+}
+
+.station-left > span {
+  display: inline-block;
+  font-size: 1rem;
+  /* border-radius: 50%; */
+  /* border: 1px solid var(--color-darkGrey); */
+  margin-top: 12px;
+}
+
+.station-main {
+  width: 65%;
+}
+
+.station-main > p {
+  width: 100%;
+  margin: 2px 0px;
+}
+
+.station-main-name {
+  display: inline-block;
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.station-main-id {
+  font-size: 0.7rem;
+  color: var(--color-darkGrey);
+}
+
+.station-right {
+  width: 15%;
+  text-align: center;
+  margin-top: 1.5%;
+}
+
+.station-right > span {
+  font-size: 1.5rem;
+}
+
 /* 모바일 bottom button */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 500px) {
   .left-btn {
     position: fixed;
     left: 2%;
@@ -543,7 +630,7 @@ button {
 
   .middle-btn {
     position: fixed;
-    left: 40%;
+    left: 44%;
     bottom: 2%;
     z-index: 9;
     padding: 10px;

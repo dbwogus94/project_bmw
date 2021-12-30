@@ -1,7 +1,8 @@
 import { Switch, useRouteMatch } from 'react-router-dom';
 import { Route } from 'react-router-dom';
-import BMInfo from '../components/BMInfo';
+import BusInfo from '../components/bus/BusInfo';
 import BMSearch from '../components/BMSearch';
+import Stations from '../components/Stations';
 
 const Bus = ({ busService }) => {
   const { path } = useRouteMatch();
@@ -12,10 +13,10 @@ const Bus = ({ busService }) => {
           <BMSearch service={busService} button={'버스 검색'} />
         </Route>
         <Route exact path={`${path}/:type/:routeId`}>
-          <BMInfo service={busService}></BMInfo>
+          <BusInfo service={busService}></BusInfo>
         </Route>
         <Route exact path={`${path}/:type/:routeId/stations`}>
-          <h1>stations</h1>
+          <Stations service={busService}></Stations>
         </Route>
       </Switch>
     </>
