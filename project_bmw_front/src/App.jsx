@@ -11,19 +11,24 @@ import Footer from './components/Footer';
 function App({ tweetService, busService, metroService, stopService }) {
   const history = useHistory();
   const { user, logout } = useAuth();
+  // TODO: 개선필요
+  const removeBMData = () => window.localStorage.removeItem('BMSearchResult');
 
   // MyBM 페이지 이동
   const onMyBM = () => {
+    removeBMData();
     history.push('/');
   };
   // EditBM 페이지 이동
   const onEditBM = () => {
+    removeBMData();
     history.push(`/bmgroup`);
   };
   // 로그아웃
   const onLogout = () => {
     if (window.confirm('로그아웃을 하시겠습니까?')) {
       logout();
+      removeBMData();
       history.push('/');
     }
   };
@@ -34,10 +39,12 @@ function App({ tweetService, busService, metroService, stopService }) {
   };
   // metro 검색 페이지 이동
   const onMetroSearch = () => {
+    removeBMData();
     history.push('/metro');
   };
   // stop 검색 페이지 이동
   const onStopSearch = () => {
+    removeBMData();
     history.push('/stop');
   };
 
