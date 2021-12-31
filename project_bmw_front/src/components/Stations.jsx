@@ -1,14 +1,12 @@
 import { memo, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Banner from './Banner';
-import Footer from './Footer';
 import Station from './Station';
 
 const Stations = memo(({ service }) => {
   const [stations, setStations] = useState([]);
   const [info, setInfo] = useState({});
   const [error, setError] = useState('');
-  const history = useHistory();
   const { type, routeId } = useParams();
 
   useEffect(() => {
@@ -71,10 +69,6 @@ const Stations = memo(({ service }) => {
           <Station key={station.stationId} station={station} onLikeClick={onLikeClick} />
         ))}
       </ul>
-      <Footer //
-        backBtn={true}
-        history={history}
-      ></Footer>
     </>
   );
 });

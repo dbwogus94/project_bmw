@@ -6,6 +6,7 @@ import { useAuth } from './context/AuthContext';
 import Bus from './pages/Bus';
 import Metro from './pages/Metro';
 import Stop from './pages/Stop';
+import Footer from './components/Footer';
 
 function App({ tweetService, busService, metroService, stopService }) {
   const history = useHistory();
@@ -72,6 +73,13 @@ function App({ tweetService, busService, metroService, stopService }) {
         </>
         )
       </Switch>
+      <Footer //
+        isTransparent={true}
+        backBtn={true}
+        homeBtn={true}
+        topBtn={true}
+        history={history}
+      ></Footer>
     </div>
   );
 }

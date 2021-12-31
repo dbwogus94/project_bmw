@@ -1,13 +1,11 @@
 import { memo, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Banner from '../Banner';
-import Footer from '../Footer';
 
 const BusInfo = memo(({ service }) => {
   const [info, setInfo] = useState({});
   const [error, setError] = useState('');
-  const history = useHistory();
   const { type, routeId } = useParams();
 
   useEffect(() => {
@@ -98,12 +96,6 @@ const BusInfo = memo(({ service }) => {
     <>
       {error && <Banner text={error} isAlert={true} transient={true} />}
       <ul className="info">{makeInfo(info)}</ul>
-      <Footer //
-        backBtn={true}
-        homeBtn={true}
-        history={history}
-        // topBtn={true}
-      ></Footer>
     </>
   );
 });

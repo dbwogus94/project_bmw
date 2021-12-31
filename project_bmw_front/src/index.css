@@ -9,6 +9,7 @@
   --color-red: #cc473d;
   --color-green: #7aa300;
   --color-yellow: #fff6b0;
+  --color-ghostwhite: ghostwhite;
   --color-shadow: rgba(0, 0, 0, 0.2);
   --size-avatar: 38px;
 }
@@ -615,10 +616,21 @@ button {
 
 /* 모바일 bottom button */
 @media screen and (max-width: 500px) {
+  .footer {
+    display: flex;
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background-color: var(--color-ghostwhite);
+  }
+
   .left-btn {
     position: fixed;
     left: 2%;
-    bottom: 2%;
+    bottom: 0;
     z-index: 9;
     padding: 10px;
   }
@@ -630,8 +642,8 @@ button {
 
   .middle-btn {
     position: fixed;
-    left: 44%;
-    bottom: 2%;
+    left: 46%;
+    bottom: 0.2%;
     z-index: 9;
     padding: 10px;
   }
@@ -644,7 +656,7 @@ button {
   .right-btn {
     position: fixed;
     right: 2%;
-    bottom: 2%;
+    bottom: 0.2%;
     z-index: 9;
     padding: 10px;
   }
