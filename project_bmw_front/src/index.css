@@ -173,7 +173,7 @@ button {
 .tweets-empty {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--color-grey);
+  color: var(--color-darkGrey);
   text-align: center;
 }
 
