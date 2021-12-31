@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Banner from '../Banner';
+import Spinner from '../Spinner';
 
 const BusInfo = memo(({ service }) => {
   const [info, setInfo] = useState({});
@@ -95,7 +96,11 @@ const BusInfo = memo(({ service }) => {
   return (
     <>
       {error && <Banner text={error} isAlert={true} transient={true} />}
-      <ul className="info">{makeInfo(info)}</ul>
+      {Object.keys(info).length === 0 ? (
+        Spinner() //
+      ) : (
+        <ul className="info">{makeInfo(info)}</ul>
+      )}
     </>
   );
 });

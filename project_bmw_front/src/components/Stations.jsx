@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Banner from './Banner';
+import Spinner from './Spinner';
 import Station from './Station';
 
 const Stations = memo(({ service }) => {
@@ -63,12 +64,18 @@ const Stations = memo(({ service }) => {
   return (
     <>
       {error && <Banner text={error} isAlert={true} transient={true} />}
-      <div className="bm-info">{makeInfo(info)}</div>
-      <ul className="stations">
-        {stations.map(station => (
-          <Station key={station.stationId} station={station} onLikeClick={onLikeClick} />
-        ))}
-      </ul>
+      {stations.length === 0 ? (
+        Spinner()
+      ) : (
+        <>
+          <div className="bm-info">{makeInfo(info)}</div>
+          <ul className="stations">
+            {stations.map(station => (
+              <Station key={station.stationId} station={station} onLikeClick={onLikeClick} />
+            ))}
+          </ul>
+        </>
+      )}
     </>
   );
 });

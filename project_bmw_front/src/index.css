@@ -316,6 +316,10 @@ button {
   margin: 6px 0px 5px 10px;
 }
 
+.form-btn-search:hover {
+  background: var(--color-darkGrey);
+}
+
 .tweet-top-div {
   display: flex;
   padding-bottom: 6px;
@@ -612,6 +616,7 @@ button {
 
 .station-right > span {
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 /* 모바일 bottom button */
@@ -625,6 +630,11 @@ button {
     right: 0;
     z-index: 5;
     background-color: var(--color-ghostwhite);
+  }
+
+  footer > div > span:hover {
+    color: var(--color-whiteBlack);
+    cursor: pointer;
   }
 
   .left-btn {
@@ -651,6 +661,7 @@ button {
   .middle-btn > span {
     color: black;
     font-size: 20px;
+    font-weight: bold;
   }
 
   .right-btn {
@@ -664,5 +675,18 @@ button {
   .right-btn > span {
     color: black;
     font-size: 20px;
+    font-weight: bold;
   }
+}
+
+/* spinner */
+.spinner {
+  position: fixed;
+  top: 30%;
+  left: 45%;
+}
+
+.spinner > h4 {
+  color: var(--color-darkGrey);
+  margin: 0 0 10px 0px;
 }
