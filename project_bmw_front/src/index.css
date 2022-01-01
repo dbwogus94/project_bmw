@@ -10,6 +10,7 @@
   --color-green: #7aa300;
   --color-yellow: #fff6b0;
   --color-ghostwhite: ghostwhite;
+  --color-azure: azure;
   --color-shadow: rgba(0, 0, 0, 0.2);
   --size-avatar: 38px;
 }
@@ -540,12 +541,16 @@ button {
   height: 100%;
   overflow-y: auto;
   color: var(--color-black);
-  padding: 0 16px 16px 16px;
+  padding: 0 16px 40px 16px;
   list-style: none;
   /* Firefox */
   scrollbar-width: 6px;
   scrollbar-color: var(--color-darkGrey);
   scrollbar-face-color: var(--color-blue);
+}
+
+.turnY {
+  background-color: var(--color-azure);
 }
 
 .stations::-webkit-scrollbar {

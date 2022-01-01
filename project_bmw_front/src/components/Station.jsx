@@ -1,12 +1,9 @@
 const Station = ({ station, onLikeClick }) => {
-  const { arsId, routeId, stationId, stationName, stationSeq, turnYn, type } = station;
+  const { arsId, stationId, stationName, stationSeq, turnYn, type } = station;
   const like = false;
 
   const textWrap = stationName => {
-    if (!stationName) {
-      return '';
-    }
-
+    if (!stationName) return '';
     return stationName.length > 16 //
       ? stationName.slice(0, 15) + '...'
       : stationName;
@@ -14,7 +11,7 @@ const Station = ({ station, onLikeClick }) => {
 
   return (
     <>
-      <li className="station">
+      <li className={turnYn === 'N' ? 'station' : 'station turnY'}>
         <article className="station-container">
           <div className="station-left">
             <span>{turnYn === 'N' ? stationSeq : '회차'}</span>
@@ -26,7 +23,7 @@ const Station = ({ station, onLikeClick }) => {
             </p>
           </div>
           <div className="station-right">
-            <span onClick={onLikeClick} data-route-id={routeId}>
+            <span onClick={onLikeClick} data-station-seq={stationSeq}>
               {like ? '♥' : '♡'}
             </span>
           </div>
