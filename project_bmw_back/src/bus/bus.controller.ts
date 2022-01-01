@@ -29,7 +29,7 @@ export const getBusList = async (req: Request, res: Response, next: NextFunction
   return res.status(OK).json({ gyeonggi: gyeonggiBusList, seoul: seoulBusList });
 };
 
-// GET /bus/:type/:routeId
+// GET /bus/:routeId?type=:type
 export const getBusInfo = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, type } = req.dto;
   let info;
@@ -50,7 +50,7 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
       });
 };
 
-// GET /bus/:type/:routeId/stations
+// GET /bus/:routeId/stations?type=:type
 export const getStations = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, type } = req.dto;
   let stationList;

@@ -9,10 +9,10 @@ const busRouter = Router();
 // GET /bus?routeName=:routeName
 busRouter.get('/', dtoValidator(BusSearchDto), getBusList);
 
-// GET /bus/:type/:routeId
-busRouter.get('/:type/:routeId', dtoValidator(StationDto), getBusInfo);
+// GET /bus/:routeId?type=:type
+busRouter.get('/:routeId', dtoValidator(StationDto), getBusInfo);
 
-// GET /bus/:type/:routeId/stations
-busRouter.get('/:type/:routeId/stations', dtoValidator(StationDto), getStations);
+// GET /bus/:routeId/stations?type=:type
+busRouter.get('/:routeId/stations', dtoValidator(StationDto), getStations);
 
 export default busRouter;
