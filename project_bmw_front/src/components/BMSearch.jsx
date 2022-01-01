@@ -48,7 +48,7 @@ const BMSearch = memo(({ service, button }) => {
   const onfeedClick = event => {
     const routeId = event.currentTarget.dataset.routeId;
     const type = event.currentTarget.dataset.type;
-    history.push(`/bus/${type}/${routeId}/stations`);
+    history.push(`/bus/${routeId}/stations?type=${type}`);
   };
 
   // TODO: 공통으로 빼서 외부에서 넣자

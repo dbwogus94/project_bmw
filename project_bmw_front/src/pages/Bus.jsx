@@ -12,10 +12,10 @@ const Bus = ({ busService }) => {
         <Route exact path={`${path}`}>
           <BMSearch service={busService} button={'버스 검색'} />
         </Route>
-        <Route exact path={`${path}/:type/:routeId`}>
+        <Route exact path={`${path}/:routeId`}>
           <BusInfo service={busService}></BusInfo>
         </Route>
-        <Route exact path={`${path}/:type/:routeId/stations`}>
+        <Route exact path={`${path}/:routeId/stations`}>
           <Stations service={busService}></Stations>
         </Route>
       </Switch>

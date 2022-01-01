@@ -1,13 +1,16 @@
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import useQuery from '../../util/url-query-parser';
 import Banner from '../Banner';
 import Spinner from '../Spinner';
 
 const BusInfo = memo(({ service }) => {
   const [info, setInfo] = useState({});
   const [error, setError] = useState('');
-  const { type, routeId } = useParams();
+  const { routeId } = useParams();
+  const query = useQuery();
+  const type = query.get('type');
 
   useEffect(() => {
     service
@@ -85,7 +88,7 @@ const BusInfo = memo(({ service }) => {
         <li className="info-container">
           <h4>경유지</h4>
           <p>
-            <Link to={`/bus/${type}/${routeId}/stations`}>@{routeName} </Link>
+            <Link to={`/bus/${routeId}/stations?type=${type}`}>@{routeName} </Link>
             경유지 확인
           </p>
         </li>

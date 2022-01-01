@@ -22,7 +22,7 @@ const BMFeed = ({ bm, onfeedClick }) => {
             )}
           </div> */}
           <div className="feed-info">
-            <Link to={`/bus/${type}/${routeId}`}>
+            <Link to={`/bus/${routeId}?type=${type}`}>
               <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
             </Link>
           </div>

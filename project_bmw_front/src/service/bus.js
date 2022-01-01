@@ -23,10 +23,11 @@ export default class BusService {
    * - {routeId, type, info}
    */
   async searchInfoByRouteId(routeId, type) {
-    const data = await this.http.fetch(`/bus/${type}/${routeId}`, {
+    const data = await this.http.fetch(`/bus/${routeId}?type=${type}`, {
       method: 'GET',
     });
     return data;
+    // return this.info;
   }
 
   /**
@@ -39,8 +40,8 @@ export default class BusService {
   async searchStationsByRouteId(routeId, type) {
     // 상세정보, 정류장 리스트 동시 조회
     const [infoRes, stationsRes] = await Promise.all([
-      this.http.fetch(`/bus/${type}/${routeId}`, { method: 'GET' }), //
-      this.http.fetch(`/bus/${type}/${routeId}/stations`, { method: 'GET' }),
+      this.http.fetch(`/bus/${routeId}?type=${type}`, { method: 'GET' }), //
+      this.http.fetch(`/bus/${routeId}/stations?type=${type}`, { method: 'GET' }),
     ]);
 
     const { info } = infoRes;

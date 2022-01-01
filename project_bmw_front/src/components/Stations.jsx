@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useQuery from '../util/url-query-parser';
 import Banner from './Banner';
 import Spinner from './Spinner';
 import Station from './Station';
@@ -8,7 +9,9 @@ const Stations = memo(({ service }) => {
   const [stations, setStations] = useState([]);
   const [info, setInfo] = useState({});
   const [error, setError] = useState('');
-  const { type, routeId } = useParams();
+  const { routeId } = useParams();
+  const query = useQuery();
+  const type = query.get('type');
 
   useEffect(() => {
     service
@@ -22,6 +25,7 @@ const Stations = memo(({ service }) => {
       .catch(onError);
   }, [service, routeId, type]);
 
+  // 즐겨찾기
   const onLikeClick = event => {};
 
   // TODO: 공통으로 빼서 외부에서 넣자
