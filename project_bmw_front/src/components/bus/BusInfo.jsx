@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { onError } from '../../util/on-error';
 import useQuery from '../../util/url-query-parser';
 import Banner from '../Banner';
 import Spinner from '../Spinner';
@@ -16,16 +17,8 @@ const BusInfo = memo(({ service }) => {
     service
       .searchInfoByRouteId(routeId, type)
       .then(res => setInfo(res.info))
-      .catch(onError);
+      .catch(err => onError(err, setError, true));
   }, [service, routeId, type]);
-
-  // TODO: 공통으로 빼서 외부에서 넣자
-  const onError = error => {
-    setError(error.toString());
-    setTimeout(() => {
-      setError('');
-    }, 3000);
-  };
 
   const makeInfo = info => {
     const {

@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { onError } from '../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';
@@ -41,7 +42,7 @@ const BMSearch = memo(({ service, button }) => {
         // {[],[]..} to []
         return setbmList([...Object.values(result).flat()]);
       })
-      .catch(onError);
+      .catch(err => onError(err, setError));
   };
 
   // 정류장 리스트 페이지 이동
@@ -49,15 +50,6 @@ const BMSearch = memo(({ service, button }) => {
     const routeId = event.currentTarget.dataset.routeId;
     const type = event.currentTarget.dataset.type;
     history.push(`/bus/${routeId}/stations?type=${type}`);
-  };
-
-  // TODO: 공통으로 빼서 외부에서 넣자
-  const onError = error => {
-    setError(error.toString());
-    setSpinnerActive(false);
-    setTimeout(() => {
-      setError('');
-    }, 3000);
   };
 
   const makeFeeds = bmList => {

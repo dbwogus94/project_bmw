@@ -4,6 +4,7 @@ import Banner from './Banner';
 import SelectBMGroup from './SelectBMGroup';
 import BMCard from './BMCard';
 import { useAuth } from '../context/AuthContext';
+import { onError } from '../util/on-error';
 
 const BMCards = memo(({ tweetService, username }) => {
   const [tweets, setTweets] = useState([]);
@@ -18,7 +19,7 @@ const BMCards = memo(({ tweetService, username }) => {
         tweetService
           .getBMList(bmGroup[0].bmGroupId)
           .then(tweets => setTweets([...tweets]))
-          .catch(onError);
+          .catch(err => onError(err, setError));
       });
   }, [tweetService, user]);
 
@@ -42,7 +43,7 @@ const BMCards = memo(({ tweetService, username }) => {
     tweetService
       .getBMList(bmGroupId)
       .then(bmList => setTweets([...bmList]))
-      .catch(onError);
+      .catch(err => onError(err, setError));
   };
 
   // 새로고침
@@ -55,11 +56,9 @@ const BMCards = memo(({ tweetService, username }) => {
     return history.push(`/bmgroup`);
   };
 
-  const onError = error => {
-    setError(error.toString());
-    setTimeout(() => {
-      setError('');
-    }, 3000);
+  // onError Wraaper
+  const onErrorWraaper = err => {
+    return () => onError(err, setError);
   };
 
   return (
@@ -67,7 +66,7 @@ const BMCards = memo(({ tweetService, username }) => {
       <SelectBMGroup //
         tweetService={tweetService}
         onGroupChange={onGroupChange}
-        onError={onError}
+        onError={onErrorWraaper}
         username={username}
         button1="새로고침"
         onButtonClick1={onButtonClick1}

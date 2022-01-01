@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { onError } from '../util/on-error';
 import useQuery from '../util/url-query-parser';
 import Banner from './Banner';
 import Spinner from './Spinner';
@@ -22,19 +23,11 @@ const Stations = memo(({ service }) => {
         setStations(stationList);
         return;
       })
-      .catch(onError);
+      .catch(err => onError(err, setError, true));
   }, [service, routeId, type]);
 
   // 즐겨찾기
   const onLikeClick = event => {};
-
-  // TODO: 공통으로 빼서 외부에서 넣자
-  const onError = error => {
-    setError(error.toString());
-    setTimeout(() => {
-      setError('');
-    }, 3000);
-  };
 
   const makeInfo = info => {
     return info.bmType === 'B' //

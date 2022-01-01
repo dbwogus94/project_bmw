@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { onError } from '../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';
@@ -21,7 +22,7 @@ const BMFeeds = memo(({ tweetService, edit }) => {
           .then(bmGroup => {
             return setTweets({ ...bmGroup });
           })
-          .catch(onError);
+          .catch(err => onError(err, setError));
       });
   }, [tweetService, username]);
 
@@ -31,7 +32,12 @@ const BMFeeds = memo(({ tweetService, edit }) => {
     tweetService
       .getBMGroup(bmGroupId)
       .then(bmGroup => setTweets({ ...bmGroup }))
-      .catch(onError);
+      .catch(err => onError(err, setError));
+  };
+
+  // onError Wraaper
+  const onErrorWraaper = err => {
+    return () => onError(err, setError);
   };
 
   // 즐겨찾기
@@ -43,16 +49,6 @@ const BMFeeds = memo(({ tweetService, edit }) => {
     // console.log(event);
   };
 
-  // TODO: 공통으로 빼서 외부에서 넣자
-  const onError = error => {
-    setError(error.toString());
-    setTimeout(() => {
-      setError('');
-    }, 3000);
-  };
-
-  // 리엑트(.jsx) return문에서는 for문 사용 불가함
-  // 그래서 dom를 원소로 가지는 배열을 리턴하게 하였다.
   const makeFeeds = bmGroup => {
     let result = [];
     Object.keys(bmGroup).forEach(key => {
@@ -76,14 +72,14 @@ const BMFeeds = memo(({ tweetService, edit }) => {
       <SelectBMGroup //
         tweetService={tweetService}
         onGroupChange={onGroupChange}
-        onError={onError}
+        onError={onErrorWraaper}
         username={username}
         button1="그룹 편집"
         button2="BM 편집"
       />
       {error && <Banner text={error} isAlert={true} transient={true} />}
       {Object.keys(bmGroup).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
-      <ul className="feeds">{makeFeeds(bmGroup)}</ul>
+      {/* <ul className="feeds">{makeFeeds(bmGroup)}</ul> */}
     </>
   );
 });
