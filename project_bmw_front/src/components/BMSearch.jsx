@@ -11,7 +11,7 @@ const BMSearch = memo(({ service, button }) => {
   const [bmList, setbmList] = useState([]);
   // Spinner 활성화 여부
   const [spinnerActive, setSpinnerActive] = useState(false);
-  // true = localStorage 없음
+  // localStorage 저장
   const [isEmpty, setIsEmpty] = useState(false);
   // http 에러 헨들러
   const [error, setError] = useState('');
@@ -22,7 +22,7 @@ const BMSearch = memo(({ service, button }) => {
   useEffect(() => {
     return window.localStorage.getItem('BMSearchResult') //
       ? setbmList(JSON.parse(window.localStorage.getItem('BMSearchResult')).bmList)
-      : setIsEmpty(true);
+      : setIsEmpty(false);
   }, []);
   // 2. localStorage 값 저장 (**bmList의 값이 변경되면 실행)
   useEffect(() => {
@@ -38,11 +38,26 @@ const BMSearch = memo(({ service, button }) => {
     service
       .search(event.target[0].value)
       .then(result => {
-        setSpinnerActive(false);
-        // {[],[]..} to []
-        return setbmList([...Object.values(result).flat()]);
+        /* 조회 성공시 */
+        // 1. 결과 배열로 변환
+        const bmList = Object.values(result).flat(); // {[],[]..} to []
+        // 2. react가 관리하는 bmList에 결과 세팅
+        setbmList([...bmList]);
+        // 3. 결과 없음 문구 활성화 여부
+        return bmList.length === 0 //
+          ? setIsEmpty(true) // 활성화
+          : setIsEmpty(false); // 비활성화
       })
-      .catch(err => onError(err, setError));
+      .catch(err => {
+        /* 조회 실패시 */
+        // 1. react가 관리하는 bmList에 빈 배열 전달
+        setbmList([]);
+        // 2. 문구 비활성화
+        setIsEmpty(false);
+        // 3. 에러 헨들링
+        return onError(err, setError);
+      })
+      .finally(() => setSpinnerActive(false));
   };
 
   // 정류장 리스트 페이지 이동
@@ -91,7 +106,7 @@ const BMSearch = memo(({ service, button }) => {
         Spinner()
       ) : (
         <>
-          {!isEmpty && bmList.length === 0 && <p className="tweets-empty">일치하는 노선이 없습니다.</p>}
+          {isEmpty && <p className="tweets-empty">일치하는 노선이 없습니다.</p>}
           <ul className="feeds">{makeFeeds(bmList)}</ul>
         </>
       )}
