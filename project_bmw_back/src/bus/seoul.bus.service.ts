@@ -38,11 +38,16 @@ export class SeoulBusService implements BusService {
       this.errorHandler(headerCd, headerMsg);
     }
 
-    return headerCd === 4 || headerCd === 8
-      ? []
-      : ServiceResult.msgBody.itemList.map((bus: any) => {
+    if (headerCd === 4 || headerCd === 8) {
+      return [];
+    }
+
+    const result = ServiceResult.msgBody.itemList;
+    return Array.isArray(result) //
+      ? result.map((bus: any) => {
           return new SeoulBusDto(bus);
-        });
+        })
+      : [new SeoulBusDto({ ...result })];
   }
 
   /**

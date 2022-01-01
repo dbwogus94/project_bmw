@@ -44,11 +44,16 @@ export class GyeonggiBusService implements BusService {
       this.errorHandler(resultCode, resultMessage);
     }
 
-    return resultCode === 4
-      ? []
-      : response.msgBody.busRouteList.map((bus: any) => {
+    if (resultCode === 4) {
+      return [];
+    }
+
+    const result = response.msgBody.busRouteList;
+    return Array.isArray(result)
+      ? result.map((bus: any) => {
           return new GyeonggiBusDto(bus);
-        });
+        })
+      : [new GyeonggiBusDto({ ...result })];
   }
 
   /**
