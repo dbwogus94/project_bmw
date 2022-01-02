@@ -101,7 +101,7 @@ const BMSearch = memo(({ service, button }) => {
         onSubmit={onSubmit}
         onError={onError}
         // 숫자 + 영어 + '-' 가능
-        regExp={/^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]$/}
+        regExp={/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]/}
       />
       {error && <Banner text={error} isAlert={true} transient={true} />}
       {spinnerActive ? (
