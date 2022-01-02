@@ -69,7 +69,7 @@ function App({ tweetService, busService, metroService, stopService }) {
             <EditBM tweetService={tweetService} />
           </Route>
           <Route path="/bus">
-            <Bus busService={busService} />
+            <Bus busService={busService} tweetService={tweetService} />
           </Route>
           <Route exact path="/metro">
             <Metro metroService={metroService} />
