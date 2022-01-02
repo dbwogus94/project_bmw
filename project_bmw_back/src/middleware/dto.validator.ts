@@ -31,7 +31,7 @@ export default function (DtoClass: ClassType<object>) {
         errCode: BAD_REQUEST,
         property, // 오류 필드
         message: getKorMsg(constraints), // 오류 내용
-        errValue: !(value == null) && isNaN(value) ? 'NaN' : value, // 오류 값
+        errValue: !(value === undefined) && Number.isNaN(value) ? 'NaN' : value, // 오류 값
       });
 
       return accumulator;
@@ -41,9 +41,11 @@ export default function (DtoClass: ClassType<object>) {
 
     function getKorMsg(object: any) {
       return Object.keys(object).reduce((accumulator: any, key: any) => {
-        accumulator.push(errorMessages.BAD_REQUEST_MESSAGE[key]);
+        const korMsg = errorMessages.BAD_REQUEST_MESSAGE[key];
+        const detailMsg = object[key];
+        accumulator[key] = { korMsg, detailMsg };
         return accumulator;
-      }, []);
+      }, {});
     }
   }
 }
