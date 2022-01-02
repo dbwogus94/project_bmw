@@ -580,7 +580,7 @@ button {
 }
 
 .station-left {
-  width: 20%;
+  width: 15%;
   text-align: center;
 }
 
@@ -593,7 +593,7 @@ button {
 }
 
 .station-main {
-  width: 65%;
+  width: 70%;
 }
 
 .station-main > p {
@@ -622,6 +622,17 @@ button {
 .station-right > span {
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+.like-icon {
+  pointer-events: none;
+  width: 25px;
+  height: 25px;
+}
+
+/* 500px 이상 */
+.footer {
+  display: none;
 }
 
 /* 모바일 bottom button */
@@ -686,7 +697,7 @@ button {
 
 /* spinner */
 .spinner {
-  position: fixed;
+  position: relative;
   top: 30%;
   left: 45%;
 }
@@ -694,4 +705,228 @@ button {
 .spinner > h4 {
   color: var(--color-darkGrey);
   margin: 0 0 10px 0px;
+}
+
+/* ==================== Model ==================== */
+.like-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.like-modal button {
+  outline: none;
+  cursor: pointer;
+  border: 0;
+}
+.like-modal > section {
+  /* width: 50%;
+  max-width: 300px; */
+  /* border-radius: 0.3rem; */
+  width: 250px;
+  margin: 0 auto;
+  background-color: var(--color-white);
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-show 0.3s;
+  overflow: hidden;
+}
+.like-modal > section > header {
+  position: relative;
+  padding: 12px 64px 12px 20px;
+  background-color: var(--color-grey);
+  font-weight: 700;
+  color: var(--color-black);
+}
+.like-modal > section > header button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  font-size: 21px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-darkGrey);
+  background-color: transparent;
+}
+
+.like-modal > section > main {
+  height: 300px;
+  padding: 16px;
+  border-bottom: 1px solid var(--color-grey);
+  border-top: 1px solid var(--color-grey);
+}
+
+.like-modal .bmgroups {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  color: var(--color-black);
+  list-style: none;
+  /* Firefox */
+  scrollbar-width: 6px;
+  scrollbar-color: var(--color-darkGrey);
+  scrollbar-face-color: var(--color-darkGrey);
+}
+
+.like-modal .bmgroups::-webkit-scrollbar {
+  /* Safari and Chrome */
+  background-color: var(--color-darkGrey);
+  width: 6px;
+}
+
+.like-modal .bmgroups::-webkit-scrollbar-thumb {
+  /* Safari and Chrome */
+  background-color: var(--color-darkGrey);
+}
+
+.like-modal .bmgroup {
+  transition: 0.3s;
+  padding: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.like-modal .bmgroup-container {
+  display: flex;
+  width: 100%;
+}
+
+.like-modal .bmgroup-checkbox {
+  width: 20%;
+}
+
+.bmgroup-checkbox input[type='checkbox'] {
+  display: none;
+}
+
+.bmgroup-checkbox input[type='checkbox'] + label {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-darkGrey);
+  position: relative;
+}
+
+.bmgroup-checkbox input[id='check1']:checked + label::after {
+  content: '✔';
+  font-size: 18px;
+  text-align: center;
+  position: absolute;
+  left: 1px;
+  top: -4px;
+}
+
+.like-modal .bmgroup-text {
+  width: 80%;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/**/
+.like-modal > section > footer {
+  padding: 10px 16px 5px 16px;
+  text-align: right;
+}
+
+.like-modal > section > footer > button {
+  width: 100%;
+  padding: 0;
+}
+
+.like-modal .create-bmgroup {
+  display: flex;
+}
+
+.like-modal .create-bmgroup-icon {
+  display: flex;
+  width: 30%;
+}
+
+.like-modal .create-bmgroup-icon > .yt-icon {
+  pointer-events: none;
+  cursor: pointer;
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.like-modal .create-bmgroup-text {
+  display: inline-block;
+  text-align: center;
+  width: 70%;
+  color: var(--color-black);
+}
+
+.like-modal .bmgroup-create-form {
+  height: 80px;
+  color: var(--color-black);
+}
+
+.like-modal .bmgroup-create-form p {
+  /* display: inline-block; */
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.like-modal .bmgroup-create-form input {
+  width: 100%;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  line-height: inherit;
+  text-shadow: inherit;
+  color: inherit;
+  cursor: inherit;
+  border-right: 0px;
+  border-left: 0px;
+  border-top: 0px;
+  background: var(--color-white);
+}
+
+.like-modal .bmgroup-create-form input:focus {
+  outline: none;
+}
+
+.like-modal .create-form-btn > button {
+  width: 40%;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  text-align: right;
+  padding-top: 12px;
+  color: var(--color-black);
+}
+
+.like-modal.openModal {
+  display: flex;
+  align-items: center;
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-bg-show 0.3s;
+}
+
+@keyframes modal-show {
+  from {
+    opacity: 0;
+    margin-top: -50px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+
+@keyframes modal-bg-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
