@@ -429,7 +429,7 @@ button {
   margin: 2px 0px;
 }
 
-.feed-like {
+.feed-book-mark {
   width: 15%;
   text-align: center;
 }
@@ -446,7 +446,7 @@ button {
   margin: auto; */
 }
 
-.feed-like-text {
+.feed-book-mark-text {
   display: inline-block;
   font-size: 2.5rem;
   margin-top: -6.5px;
@@ -624,7 +624,7 @@ button {
   cursor: pointer;
 }
 
-.like-icon {
+.book-mark-icon {
   pointer-events: none;
   width: 25px;
   height: 25px;
@@ -708,7 +708,7 @@ button {
 }
 
 /* ==================== Model ==================== */
-.like-modal {
+.book-mark-modal {
   display: none;
   position: fixed;
   top: 0;
@@ -718,12 +718,12 @@ button {
   z-index: 99;
   background-color: rgba(0, 0, 0, 0.6);
 }
-.like-modal button {
+.book-mark-modal button {
   outline: none;
   cursor: pointer;
   border: 0;
 }
-.like-modal > section {
+.book-mark-modal > section {
   /* width: 50%;
   max-width: 300px; */
   /* border-radius: 0.3rem; */
@@ -734,14 +734,14 @@ button {
   animation: modal-show 0.3s;
   overflow: hidden;
 }
-.like-modal > section > header {
+.book-mark-modal > section > header {
   position: relative;
   padding: 12px 64px 12px 20px;
   background-color: var(--color-grey);
   font-weight: 700;
   color: var(--color-black);
 }
-.like-modal > section > header button {
+.book-mark-modal > section > header button {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -753,14 +753,14 @@ button {
   background-color: transparent;
 }
 
-.like-modal > section > main {
+.book-mark-modal > section > main {
   height: 300px;
   padding: 16px;
   border-bottom: 1px solid var(--color-grey);
   border-top: 1px solid var(--color-grey);
 }
 
-.like-modal .bmgroups {
+.book-mark-modal .bmgroups {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -773,30 +773,30 @@ button {
   scrollbar-face-color: var(--color-darkGrey);
 }
 
-.like-modal .bmgroups::-webkit-scrollbar {
+.book-mark-modal .bmgroups::-webkit-scrollbar {
   /* Safari and Chrome */
   background-color: var(--color-darkGrey);
   width: 6px;
 }
 
-.like-modal .bmgroups::-webkit-scrollbar-thumb {
+.book-mark-modal .bmgroups::-webkit-scrollbar-thumb {
   /* Safari and Chrome */
   background-color: var(--color-darkGrey);
 }
 
-.like-modal .bmgroup {
+.book-mark-modal .bmgroup {
   transition: 0.3s;
   padding: 4px;
   display: flex;
   justify-content: space-between;
 }
 
-.like-modal .bmgroup-container {
+.book-mark-modal .bmgroup-container {
   display: flex;
   width: 100%;
 }
 
-.like-modal .bmgroup-checkbox {
+.book-mark-modal .bmgroup-checkbox {
   width: 20%;
 }
 
@@ -821,59 +821,59 @@ button {
   top: -4px;
 }
 
-.like-modal .bmgroup-text {
+.book-mark-modal .bmgroup-text {
   width: 80%;
   font-size: 1rem;
   font-weight: 500;
 }
 
 /**/
-.like-modal > section > footer {
+.book-mark-modal > section > footer {
   padding: 10px 16px 5px 16px;
   text-align: right;
 }
 
-.like-modal > section > footer > button {
+.book-mark-modal > section > footer > button {
   width: 100%;
   padding: 0;
 }
 
-.like-modal .create-bmgroup {
+.book-mark-modal .create-bmgroup {
   display: flex;
 }
 
-.like-modal .create-bmgroup-icon {
+.book-mark-modal .create-bmgroup-icon {
   display: flex;
   width: 30%;
 }
 
-.like-modal .create-bmgroup-icon > .yt-icon {
+.book-mark-modal .create-bmgroup-icon > .yt-icon {
   pointer-events: none;
   cursor: pointer;
   display: block;
   width: 20px;
   height: 20px;
 }
-.like-modal .create-bmgroup-text {
+.book-mark-modal .create-bmgroup-text {
   display: inline-block;
   text-align: center;
   width: 70%;
   color: var(--color-black);
 }
 
-.like-modal .bmgroup-create-form {
+.book-mark-modal .bmgroup-create-form {
   height: 80px;
   color: var(--color-black);
 }
 
-.like-modal .bmgroup-create-form p {
+.book-mark-modal .bmgroup-create-form p {
   /* display: inline-block; */
   padding: 0;
   margin: 0;
   text-align: left;
 }
 
-.like-modal .bmgroup-create-form input {
+.book-mark-modal .bmgroup-create-form input {
   width: 100%;
   font-family: inherit;
   font-weight: inherit;
@@ -890,11 +890,11 @@ button {
   background: var(--color-white);
 }
 
-.like-modal .bmgroup-create-form input:focus {
+.book-mark-modal .bmgroup-create-form input:focus {
   outline: none;
 }
 
-.like-modal .create-form-btn > button {
+.book-mark-modal .create-form-btn > button {
   width: 40%;
   font-family: inherit;
   font-weight: inherit;
@@ -904,7 +904,7 @@ button {
   color: var(--color-black);
 }
 
-.like-modal.openModal {
+.book-mark-modal.openModal {
   display: flex;
   align-items: center;
   /* 팝업이 열릴때 스르륵 열리는 효과 */

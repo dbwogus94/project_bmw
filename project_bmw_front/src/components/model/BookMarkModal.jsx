@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import NewBmGroupForm from './NewBmGroupForm';
 
-const LikeModal = ({ tweetService, onUpdateLike, isOpen, onClose, routeId, stationId }) => {
+const BookMarkModal = memo(({ tweetService, onUpdateBookMark, isOpen, onClose, routeId, stationSeq }) => {
   const [bmGroups, setBmGroups] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
 
+  // 로드시만 실행
   useEffect(() => {
-    console.log(routeId);
-    console.log(stationId);
     // 유저의 그룹 리스트 조회
     // TODO: 유저 그룹 리스트 조회시 그룹의 즐겨찾기 여부도 같이 조회
-    // 조회에 필요한 데이터: 유저id, 루트Id(routeId), 정류소Id(stationId)
+    // 조회에 필요한 데이터: 유저id, 루트Id(routeId), 경유정류소순번(stationSeq)
     tweetService
-      .getBMGroupList('jay') // 유저이름은 서비스로직에서 로컬 스토리지에 있는것 사용
+      .getBMGroupList()
       .then(bmGroups => setBmGroups(bmGroups))
       .catch(console.error);
-  }, [tweetService, bmGroups, routeId, stationId]);
+  }, [tweetService, routeId, stationSeq]);
 
   // 그룹 추가 form 활성화
   const onActiveCreateForm = event => {
@@ -27,7 +26,7 @@ const LikeModal = ({ tweetService, onUpdateLike, isOpen, onClose, routeId, stati
     event.preventDefault();
     tweetService
       .createBMGroup(bmGroupName)
-      .then(bmGroups => setBmGroups([]))
+      .then(bmGroups => setBmGroups([...bmGroups]))
       .catch(console.error);
     setIsCreate(false);
   };
@@ -36,11 +35,11 @@ const LikeModal = ({ tweetService, onUpdateLike, isOpen, onClose, routeId, stati
     const { bmGroupId, bmGroupName, checked } = bmGroup;
     return (
       <>
-        <li className="bmgroup">
+        <li className="bmgroup" key={bmGroupId}>
           <article className="bmgroup-container">
             <span className="bmgroup-checkbox">
-              <input type="checkbox" id="check1" value={bmGroupId} checked={checked ? true : false} onChange={onUpdateLike} />
-              {/* <input type="checkbox" id="check1" value={bmGroupId} data-bm-group-name={bmGroupName} onChange={onUpdateLike} checked={checked ? true : false} /> */}
+              <input type="checkbox" id="check1" value={bmGroupId} checked={checked ? true : false} onChange={onUpdateBookMark} />
+              {/* <input type="checkbox" id="check1" value={bmGroupId} data-bm-group-name={bmGroupName} onChange={onUpdateBookMark} checked={checked ? true : false} /> */}
               <label htmlFor="check1"></label>
             </span>
             <span className="bmgroup-text">{bmGroupName}</span>
@@ -52,7 +51,7 @@ const LikeModal = ({ tweetService, onUpdateLike, isOpen, onClose, routeId, stati
 
   return (
     // 모달이 열릴때 openModal 부여
-    <div className={isOpen ? 'openModal like-modal' : 'like-modal'}>
+    <div className={isOpen ? 'openModal book-mark-modal' : 'book-mark-modal'}>
       {isOpen ? (
         <section>
           <header>
@@ -89,6 +88,6 @@ const LikeModal = ({ tweetService, onUpdateLike, isOpen, onClose, routeId, stati
       ) : null}
     </div>
   );
-};
+});
 
-export default LikeModal;
+export default BookMarkModal;

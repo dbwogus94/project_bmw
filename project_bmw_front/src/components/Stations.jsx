@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { onError } from '../util/on-error';
 import useQuery from '../util/url-query-parser';
 import Banner from './Banner';
-import LikeModal from './model/LikeModal';
+import BookMarkModal from './model/BookMarkModal';
 import Spinner from './Spinner';
 import Station from './Station';
 
@@ -18,11 +18,31 @@ const Stations = memo(({ service, tweetService }) => {
   const query = useQuery();
   const type = query.get('type');
 
+  // TODO: 노선이 중복되는 정류소를 지나가는지 체크하기 위한 임시 함수
+  // const chkOverlap = stationList => {
+  //   for (let i in stationList) {
+  //     let chk = stationList[i].stationId;
+  //     let temp = 0;
+  //     let result = stationList.some((station, index) => {
+  //       if (index === Number(i)) return false;
+  //       temp = station;
+  //       return station.stationId === chk;
+  //     });
+  //     if (result) {
+  //       console.log('===============================================================================================');
+  //       console.log(`${result}: ${stationList[i].stationSeq}번째 정류장과 ${temp.stationSeq}번째 정류장이 중복됩니다.`);
+  //       console.log(`${stationList[i].stationSeq}번 정류장 정보:`, stationList[i]);
+  //       console.log(`${temp.stationSeq}번 정류장 정보:`, temp);
+  //     }
+  //   }
+  // };
+
   useEffect(() => {
     service
       .searchStationsByRouteId(routeId, type)
       .then(res => {
         const { info, stationList } = res;
+        // chkOverlap(stationList);
         setInfo(info);
         setStations(stationList);
         return;
@@ -31,7 +51,7 @@ const Stations = memo(({ service, tweetService }) => {
   }, [service, routeId, type]);
 
   // 즐겨찾기 모달 오픈
-  const onLikeClick = event => {
+  const onBookMarkClick = event => {
     const stationSeq = event.currentTarget.dataset.stationSeq;
     const station = stations.find(station => {
       return station.stationSeq === Number(stationSeq);
@@ -46,20 +66,20 @@ const Stations = memo(({ service, tweetService }) => {
   };
 
   // 모달 체크박스에 전달할 이벤트
-  const onUpdateLike = event => {
+  const onUpdateBookMark = event => {
     // 체크된 그룹 id
     const bmGroupId = event.target.value;
     // 체크 여부
     const checked = event.target.checked;
 
-    const { stationSeq, stationId } = station;
+    const { stationSeq } = station;
     const direction = getDirection(stationSeq);
     const { routeName } = info;
 
     if (!checked) {
       // 즐겨찾기 제거
       return tweetService
-        .deleteLike({ bmGroupId, routeId, stationId })
+        .deleteBookMark({ bmGroupId, routeId, stationSeq })
         .then(() => {
           return true;
         })
@@ -67,7 +87,7 @@ const Stations = memo(({ service, tweetService }) => {
     }
     // 즐겨찾기 추가
     return tweetService
-      .insertLike({ bmGroupId, routeName, ...station, direction })
+      .insertBookMark({ bmGroupId, routeName, ...station, direction })
       .then()
       .catch(err => onError(err, setError, true));
 
@@ -123,19 +143,21 @@ const Stations = memo(({ service, tweetService }) => {
           <div className="bm-info">{makeInfo(info)}</div>
           <ul className="stations">
             {stations.map(station => (
-              <Station key={station.stationId} station={station} onLikeClick={onLikeClick} />
+              <Station key={station.stationId} station={station} onBookMarkClick={onBookMarkClick} />
             ))}
           </ul>
         </>
       )}
-      <LikeModal
-        tweetService={tweetService} //
-        onUpdateLike={onUpdateLike}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        routeId={routeId}
-        stationId={station.stationId}
-      ></LikeModal>
+      {isModalOpen && (
+        <BookMarkModal
+          tweetService={tweetService} //
+          onUpdateBookMark={onUpdateBookMark}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          routeId={routeId}
+          stationSeq={station.stationSeq}
+        ></BookMarkModal>
+      )}
     </>
   );
 });
