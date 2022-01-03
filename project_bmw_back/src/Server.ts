@@ -13,6 +13,8 @@ import { errorMessages } from '@shared/message';
 // my router
 import AuthRouter from '@auth/auth.route';
 import BusRouter from '@bus/bus.route';
+import bmGroupRouter from '@bmGroup/bm.group.route';
+import bookMarkRouter from '@bookMark/book.mark.route';
 
 // winston 로거 생성
 const logger = getLogger();
@@ -50,6 +52,8 @@ app.set('trust proxy', true);
 // Add APIs
 app.use('/api/auth', AuthRouter);
 app.use('/api/bus', BusRouter);
+app.use('/api/bmgroups', bmGroupRouter);
+app.use('/api/bookmarks', bookMarkRouter);
 
 // 404 처리
 app.use((req: Request, res: Response) => {

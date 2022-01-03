@@ -79,7 +79,9 @@
       "@db/*": ["src/db/*"],
       "@auth/*": ["src/auth/*"],
       "@user/*": ["src/user/*"],
-      "@bus/*": ["src/bus/*"]
+      "@bus/*": ["src/bus/*"],
+      "@bmGroup/*": ["src/bm-group/*"],
+      "@bookMark/*": ["src/book-mark/*"]
     }
   },
   "include": ["src/**/*.ts"], // spec/**/*.ts
