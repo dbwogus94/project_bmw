@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom/cjs/react-router-dom.min';
 
 const BMFeed = ({ bm, onfeedClick }) => {
   const { routeId, routeName, routeTypeName, type } = bm;
+  const { path } = useRouteMatch();
 
   return (
     <>
@@ -14,15 +16,8 @@ const BMFeed = ({ bm, onfeedClick }) => {
               <span className="feed-main-routeTypeName">{routeTypeName}</span>
             </p>
           </div>
-          {/* <div className="feed-like">
-            {edit && (
-              <span className="feed-like-text" onClick={onfeedClick}>
-                {edit && like ? '♥' : '♡'}
-              </span>
-            )}
-          </div> */}
           <div className="feed-info">
-            <Link to={`/bus/${routeId}?type=${type}`}>
+            <Link to={`${path}/${routeId}?type=${type}`}>
               <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
             </Link>
           </div>

@@ -81,7 +81,7 @@ const BusInfo = memo(({ service }) => {
         <li className="info-container">
           <h4>경유지</h4>
           <p>
-            <Link to={`/bus/${routeId}/stations?type=${type}`}>@{routeName} </Link>
+            <Link to={`/buses/${routeId}/stations?type=${type}`}>@{routeName} </Link>
             경유지 확인
           </p>
         </li>

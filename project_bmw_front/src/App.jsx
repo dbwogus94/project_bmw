@@ -22,7 +22,7 @@ function App({ tweetService, busService, metroService, stopService }) {
   // EditBM 페이지 이동
   const onEditBM = () => {
     removeBMData();
-    history.push(`/bmgroup`);
+    history.push(`/bmgroups`);
   };
   // 로그아웃
   const onLogout = () => {
@@ -35,17 +35,17 @@ function App({ tweetService, busService, metroService, stopService }) {
 
   // bus 검색 페이지 이동
   const onBusSearch = () => {
-    history.push('/bus');
+    history.push('/buses');
   };
   // metro 검색 페이지 이동
   const onMetroSearch = () => {
     removeBMData();
-    history.push('/metro');
+    history.push('/metros');
   };
   // stop 검색 페이지 이동
   const onStopSearch = () => {
     removeBMData();
-    history.push('/stop');
+    history.push('/stops');
   };
 
   return (
@@ -65,16 +65,16 @@ function App({ tweetService, busService, metroService, stopService }) {
           <Route exact path="/">
             <MyBM tweetService={tweetService} />
           </Route>
-          <Route exact path="/bmgroup">
+          <Route exact path="/bmgroups">
             <EditBM tweetService={tweetService} />
           </Route>
-          <Route path="/bus">
+          <Route path="/buses">
             <Bus busService={busService} tweetService={tweetService} />
           </Route>
-          <Route exact path="/metro">
+          <Route exact path="/metros">
             <Metro metroService={metroService} />
           </Route>
-          <Route exact path="/stop">
+          <Route exact path="/stops">
             <Stop stopService={stopService} />
           </Route>
         </>

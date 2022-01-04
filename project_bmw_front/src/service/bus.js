@@ -1,4 +1,5 @@
 export default class BusService {
+  apiName = '/buses';
   constructor(http) {
     this.http = http;
   }
@@ -10,7 +11,7 @@ export default class BusService {
    * - { gyeonggi: gyeonggiBusList, seoul: seoulBusList }
    */
   async search(routeName) {
-    return this.http.fetch(`/bus?routeName=${routeName}`, {
+    return this.http.fetch(`${this.apiName}?routeName=${routeName}`, {
       method: 'GET',
     });
   }
@@ -23,7 +24,7 @@ export default class BusService {
    * - {routeId, type, info}
    */
   async searchInfoByRouteId(routeId, type) {
-    const data = await this.http.fetch(`/bus/${routeId}?type=${type}`, {
+    const data = await this.http.fetch(`${this.apiName}/${routeId}?type=${type}`, {
       method: 'GET',
     });
     return data;
@@ -40,8 +41,8 @@ export default class BusService {
   async searchStationsByRouteId(routeId, type) {
     // 상세정보, 정류장 리스트 동시 조회
     const [infoRes, stationsRes] = await Promise.all([
-      this.http.fetch(`/bus/${routeId}?type=${type}`, { method: 'GET' }), //
-      this.http.fetch(`/bus/${routeId}/stations?type=${type}`, { method: 'GET' }),
+      this.http.fetch(`${this.apiName}/${routeId}?type=${type}`, { method: 'GET' }), //
+      this.http.fetch(`${this.apiName}/${routeId}/stations?type=${type}`, { method: 'GET' }),
     ]);
 
     const { info } = infoRes;

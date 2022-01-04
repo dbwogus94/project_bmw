@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom/cjs/react-router-dom.min';
 import { onError } from '../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
@@ -16,6 +17,7 @@ const BMSearch = memo(({ service, button }) => {
   // http 에러 헨들러
   const [error, setError] = useState('');
   const history = useHistory();
+  const { path } = useRouteMatch();
 
   /* 조회 상태 유지: useEffect + localStorage */
   // 1. localStorage 값 가져오기 (**빈 배열을 전달하면 의존하는 값이 없어, 최초 화면에 렌더링 때만 실행)
@@ -64,7 +66,7 @@ const BMSearch = memo(({ service, button }) => {
   const onfeedClick = event => {
     const routeId = event.currentTarget.dataset.routeId;
     const type = event.currentTarget.dataset.type;
-    history.push(`/bus/${routeId}/stations?type=${type}`);
+    history.push(`${path}/${routeId}/stations?type=${type}`);
   };
 
   const makeFeeds = bmList => {

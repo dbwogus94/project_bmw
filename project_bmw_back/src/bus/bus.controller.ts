@@ -17,7 +17,7 @@ const openApi = new OpenApi(parser);
 const gyeonggiBusService = new GyeonggiBusService(openApi, gyeonggi);
 const seoulBusService = new SeoulBusService(openApi, seoul);
 
-// GET /bus?routeName=:routeName
+// GET /api/buses?routeName=:routeName
 export const getBusList = async (req: Request, res: Response, next: NextFunction) => {
   const { routeName } = req.dto;
   // 경기도, 서울시 동시 조회
@@ -29,7 +29,7 @@ export const getBusList = async (req: Request, res: Response, next: NextFunction
   return res.status(OK).json({ gyeonggi: gyeonggiBusList, seoul: seoulBusList });
 };
 
-// GET /bus/:routeId?type=:type
+// GET /api/buses/:routeId?type=:type
 export const getBusInfo = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, type } = req.dto;
   let info;
@@ -50,7 +50,7 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
       });
 };
 
-// GET /bus/:routeId/stations?type=:type
+// GET /api/buses/:routeId/stations?type=:type
 export const getStations = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, type } = req.dto;
   let stationList;

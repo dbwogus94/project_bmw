@@ -51,7 +51,7 @@ app.set('trust proxy', true);
 
 // Add APIs
 app.use('/api/auth', AuthRouter);
-app.use('/api/bus', BusRouter);
+app.use('/api/buses', BusRouter);
 app.use('/api/bmgroups', bmGroupRouter);
 app.use('/api/bookmarks', bookMarkRouter);
 
