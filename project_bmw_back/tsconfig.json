@@ -81,7 +81,8 @@
       "@user/*": ["src/user/*"],
       "@bus/*": ["src/bus/*"],
       "@bmGroup/*": ["src/bm-group/*"],
-      "@bookMark/*": ["src/book-mark/*"]
+      "@bookMark/*": ["src/book-mark/*"],
+      "@bmGroupBookMark/*": ["src/bmgroup-bookmark/*"]
     }
   },
   "include": ["src/**/*.ts"], // spec/**/*.ts
