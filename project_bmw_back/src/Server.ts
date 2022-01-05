@@ -53,7 +53,7 @@ app.set('trust proxy', true);
 app.use('/api/auth', AuthRouter);
 app.use('/api/buses', BusRouter);
 app.use('/api/bmgroups', bmGroupRouter);
-app.use('/api/bookmarks', bookMarkRouter);
+app.use('/api/bmgroups/:bmGroupId/bookmarks', bookMarkRouter);
 
 // 404 처리
 app.use((req: Request, res: Response) => {
