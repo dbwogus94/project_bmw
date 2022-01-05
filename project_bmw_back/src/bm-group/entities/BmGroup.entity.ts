@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -25,6 +26,7 @@ export class BmGroup implements IBmGroup {
   bmGroupId!: number;
 
   @ManyToOne(type => User, user => user.bmGroups, { nullable: false }) // FK: user 테이블과 bmGroup 테이블 N:1 관계설정
+  @JoinColumn({ name: 'userId' })
   user!: User;
 
   @Column('varchar', { length: 90, comment: 'BM그룹명' })
