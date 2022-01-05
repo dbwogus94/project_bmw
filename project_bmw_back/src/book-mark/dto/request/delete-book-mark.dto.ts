@@ -1,7 +1,12 @@
 import { Dto } from '@user/dto/dto.interface';
-import { IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class DeleteBookMarkDto implements Dto {
+  @IsNotEmpty()
+  @IsNumber()
+  public bmGroupId!: number;
+
+  @IsNotEmpty()
   @IsNumber()
   public bookMarkId!: number; // pk
 }

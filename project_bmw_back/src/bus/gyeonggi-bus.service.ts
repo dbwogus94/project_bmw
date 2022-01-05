@@ -1,8 +1,8 @@
-import { OpenApi } from '@shared/open.api';
+import { OpenApi } from '@shared/open-api';
 import { BusService } from '@bus/bus.service.interface';
-import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi.bus.dto';
-import { GyeonggiBusInfoDto } from '@bus/dto/response/info/gyeonggi.info.dto';
-import { GyeonggiBusStationDto } from '@bus/dto/response/station/gyeonggi.station.dto';
+import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi-bus.dto';
+import { GyeonggiBusInfoDto } from '@bus/dto/response/info/gyeonggi-info.dto';
+import { GyeonggiBusStationDto } from '@bus/dto/response/station/gyeonggi-station.dto';
 
 export class GyeonggiBusService implements BusService {
   private openApi: OpenApi;

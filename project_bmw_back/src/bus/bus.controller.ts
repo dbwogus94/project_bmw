@@ -3,9 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 import { XMLParser } from 'fast-xml-parser';
 import { config } from '@config';
 import { errorMessages } from '@shared/message';
-import { OpenApi } from '@shared/open.api';
-import { GyeonggiBusService } from '@bus/gyeonggi.bus.service';
-import { SeoulBusService } from './seoul.bus.service';
+import { OpenApi } from '@shared/open-api';
+import { GyeonggiBusService } from '@bus/gyeonggi-bus.service';
+import { SeoulBusService } from './seoul-bus.service';
 
 const { OK, NOT_FOUND } = StatusCodes;
 const { NOT_FOUND_MESSAGE } = errorMessages;

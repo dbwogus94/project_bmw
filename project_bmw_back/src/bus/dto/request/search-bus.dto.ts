@@ -2,7 +2,7 @@ import { Dto } from '@user/dto/dto.interface';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 
-export class BusSearchDto implements Dto {
+export class SearchBusDto implements Dto {
   @IsNotEmpty()
   @IsString()
   @Transform(params => params.value.trim()) // 위생화

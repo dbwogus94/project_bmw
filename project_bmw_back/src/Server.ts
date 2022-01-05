@@ -7,14 +7,14 @@ import helmet from 'helmet';
 import cors from 'cors';
 // my module
 import { getLogger } from '@shared/Logger';
-import customMorgan from '@middleware/custom.morgan';
+import customMorgan from '@middleware/custom-morgan';
 import { config } from '@config';
 import { errorMessages } from '@shared/message';
 // my router
 import AuthRouter from '@auth/auth.route';
 import BusRouter from '@bus/bus.route';
-import bmGroupRouter from '@bmGroup/bm.group.route';
-import bookMarkRouter from '@bookMark/book.mark.route';
+import bmGroupRouter from '@bmGroup/bm-group.route';
+import bookMarkRouter from '@bookMark/book-mark.route';
 
 // winston 로거 생성
 const logger = getLogger();

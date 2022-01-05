@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorMessages } from '@shared/message';
 import { StatusCodes } from 'http-status-codes';
-import { BmGroupRepository } from './repository/bm.group.repository';
+import { BmGroupRepository } from './repository/bm-group.repository';
 import { getCustomRepository } from 'typeorm';
 import { UserRepository } from '@user/repository/user.repositroy';
 
@@ -45,3 +45,5 @@ export const createBmGroup = async (req: Request, res: Response, next: NextFunct
 
   return res.status(CREATED).json({ bmGroup });
 };
+
+// GET /api/bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq

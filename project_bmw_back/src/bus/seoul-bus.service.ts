@@ -1,8 +1,8 @@
-import { OpenApi } from '@shared/open.api';
+import { OpenApi } from '@shared/open-api';
 import { BusService } from '@bus/bus.service.interface';
-import { SeoulBusDto } from '@bus/dto/response/bus/seoul.bus.dto';
-import { SeoulBusInfoDto } from '@bus/dto/response/info/seoul.info.dto';
-import { SeoulBusStationDto } from '@bus/dto/response/station/seoul.station.dto';
+import { SeoulBusDto } from '@bus/dto/response/bus/seoul-bus.dto';
+import { SeoulBusInfoDto } from '@bus/dto/response/info/seoul-info.dto';
+import { SeoulBusStationDto } from '@bus/dto/response/station/seoul-station.dto';
 
 export class SeoulBusService implements BusService {
   private openApi: OpenApi;

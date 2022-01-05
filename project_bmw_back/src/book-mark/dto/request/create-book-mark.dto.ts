@@ -4,7 +4,7 @@ import { IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator';
 export class CreateBookMarkDto implements Dto {
   @IsNotEmpty()
   @IsNumber()
-  public bookMarkId!: number; // pk
+  public bmGroupId!: number;
 
   @IsNotEmpty()
   @IsNumber()
