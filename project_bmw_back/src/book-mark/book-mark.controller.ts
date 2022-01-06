@@ -5,17 +5,47 @@ import { getConnection, getCustomRepository } from 'typeorm';
 import { BookMarkRepository } from '@bookMark/repository/book-mark.repository';
 import { BmGroupBookMarkRepository } from '@bmGroupBookMark/repository/bmgroup-bookmark.repository';
 import { getLogger } from '@shared/Logger';
-import { BmGroupBookMark } from '@bmGroupBookMark/entities/BmGroupBookMark.entity';
 import { BmGroupRepository } from '@bmGroup/repository/bm-group.repository';
 
-const { CREATED, NO_CONTENT, BAD_REQUEST } = StatusCodes;
+const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND } = StatusCodes;
 const { BAD_REQUEST_MESSAGE } = errorMessages;
 const logger = getLogger();
 
-// POST /bmgroups/:bmGroupId/bookmarks
+const getBmGroup = async (userId: number, bmGroupId: number) => {
+  const bmGroupRepo: BmGroupRepository = getCustomRepository(BmGroupRepository);
+  return bmGroupRepo.findOneById(userId, bmGroupId);
+};
+
+/**
+ * GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&statonId
+ * - 로그인한 유저의 그룹(bmGroupId)에 속한 북마크 조회
+ */
+export const searchBookMark = async (req: Request, res: Response, next: NextFunction) => {
+  const bookMarkRepo: BookMarkRepository = getCustomRepository(BookMarkRepository);
+  const { bmGroupId, routeId, stationSeq, stationId } = req.dto;
+  // 검색용 키 생성(유니크)
+  const checkColumn = `${routeId}${stationSeq}${stationId}`;
+
+  const isBmGroup = !!(await getBmGroup(req.id, bmGroupId));
+  if (!isBmGroup) {
+    return res.status(BAD_REQUEST).json({
+      errCode: BAD_REQUEST,
+      message: BAD_REQUEST_MESSAGE.createBookMark,
+    });
+  }
+
+  const bookMark = await bookMarkRepo.findTreeByCheckColumn(req.id, bmGroupId, checkColumn);
+  return bookMark //
+    ? res.status(OK).json([bookMark])
+    : res.status(OK).json([]);
+};
+
+/**
+ * POST /bmgroups/:bmGroupId/bookmarks
+ * - 북마크 생성
+ */
 export const createBookMark = async (req: Request, res: Response, next: NextFunction) => {
   const bookMarkRepo: BookMarkRepository = getCustomRepository(BookMarkRepository);
-  const bmGroupRepo: BmGroupRepository = getCustomRepository(BmGroupRepository);
   const bmGroupBookMarkRepo: BmGroupBookMarkRepository = getCustomRepository(BmGroupBookMarkRepository);
   const { bmGroupId, routeId, stationSeq, stationId } = req.dto;
 
@@ -24,7 +54,7 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
   await queryRunner.startTransaction();
   await queryRunner.commitTransaction();
   try {
-    // 중복확인 키 생성
+    // 검색용 키 생성(유니크)
     const checkColumn = `${routeId}${stationSeq}${stationId}`;
 
     // 1. Insert book_mark
@@ -38,7 +68,7 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
     }
 
     // 2. Select bm_group
-    const bmGroup = await bmGroupRepo.findOneById(req.id, bmGroupId);
+    const bmGroup = await getBmGroup(req.id, bmGroupId);
     if (!bmGroup) {
       return res.status(BAD_REQUEST).json({
         errCode: BAD_REQUEST,
@@ -66,14 +96,16 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
   return res.sendStatus(CREATED);
 };
 
-// DELECT /bmgroups/:bmGroupId/bookmarks:bookMarkId
+/**
+ * DELECT /bmgroups/:bmGroupId/bookmarks:bookMarkId
+ * - 북마크 삭제
+ */
 export const deleteBookMark = async (req: Request, res: Response, next: NextFunction) => {
-  const bmGroupRepo: BmGroupRepository = getCustomRepository(BmGroupRepository);
   const bmGroupBookMarkRepo: BmGroupBookMarkRepository = getCustomRepository(BmGroupBookMarkRepository);
   const { bmGroupId, bookMarkId } = req.dto;
 
-  const bmGroup = await bmGroupRepo.findOneById(req.id, bmGroupId);
-  if (!bmGroup) {
+  const isBmGroup = !!(await getBmGroup(req.id, bmGroupId));
+  if (!isBmGroup) {
     return res.status(BAD_REQUEST).json({
       errCode: BAD_REQUEST,
       message: BAD_REQUEST_MESSAGE.createBookMark,
