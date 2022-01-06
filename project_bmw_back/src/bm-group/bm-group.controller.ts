@@ -12,19 +12,19 @@ const { NOT_FOUND_MESSAGE } = errorMessages;
  * GET /bmgroups
  * - 로그인한 유저의 전체 그룹 리스트 조회
  *
- * GET /api/bmgroups?routeId=:routeId&stationSeq=:stationSeq&statonId=:statonId
+ * GET /api/bmgroups?routeId=:routeId&stationSeq=:stationSeq&stationId=:stationId
  * - 로그인한 유저의 전체 그룹 리스트에서 조건으로 검색
  */
 export const getBmGroups = async (req: Request, res: Response, next: NextFunction) => {
   const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
-  const { routeId, stationSeq, statonId } = req.dto;
+  const { routeId, stationSeq, stationId } = req.dto;
 
   const bmGroups =
-    routeId && stationSeq && statonId
-      ? await bmGroupRepository.findAllEntityTree(req.id, `${routeId}${stationSeq}${statonId}`)
-      : await bmGroupRepository.findAll(req.id);
+    routeId && stationSeq && stationId
+      ? await bmGroupRepository.searchBmGroupsWithEntityTree(req.id, `${routeId}${stationSeq}${stationId}`)
+      : await bmGroupRepository.gatBmGroupsWithEntityTree(req.id);
 
-  return res.status(OK).json({ bmGroups });
+  return res.status(OK).json(bmGroups);
 };
 
 /**
@@ -43,7 +43,7 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
     });
   }
 
-  return res.status(OK).json({ bmGroup });
+  return res.status(OK).json(bmGroup);
 };
 
 /**
@@ -62,5 +62,5 @@ export const createBmGroup = async (req: Request, res: Response, next: NextFunct
   });
   await bmGroupRepository.save(bmGroup);
 
-  return res.status(CREATED).json({ bmGroup });
+  return res.status(CREATED).json(bmGroup);
 };

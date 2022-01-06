@@ -17,7 +17,7 @@ const getBmGroup = async (userId: number, bmGroupId: number) => {
 };
 
 /**
- * GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&statonId
+ * GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&stationId
  * - 로그인한 유저의 그룹(bmGroupId)에 속한 북마크 조회
  */
 export const searchBookMark = async (req: Request, res: Response, next: NextFunction) => {

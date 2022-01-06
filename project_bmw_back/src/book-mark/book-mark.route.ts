@@ -10,7 +10,7 @@ import { createBookMark, deleteBookMark, searchBookMark } from './book-mark.cont
 /* book mark router: api/bmgroups/:bmGroupId/bookmarks */
 const bookMarkRouter = Router({ mergeParams: true });
 
-// GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&statonId
+// GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&stationId
 bookMarkRouter.get('/', dtoValidator(SearchBookMarkDto), isAuth, searchBookMark);
 
 // POST /bmgroups/:bmGroupId/bookmarks

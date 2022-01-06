@@ -2,13 +2,13 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, ValidateIf } from 'class-validator';
 
 export class SearchBmGroupDto {
-  @ValidateIf((dto, v) => !!(dto.stationSeq || dto.statonId))
+  @ValidateIf((dto, v) => !!(dto.stationSeq || dto.stationId))
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   routeId!: number;
 
-  @ValidateIf((dto, v) => !!(dto.routeId || dto.statonId))
+  @ValidateIf((dto, v) => !!(dto.routeId || dto.stationId))
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
@@ -18,5 +18,5 @@ export class SearchBmGroupDto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  statonId!: number;
+  stationId!: number;
 }

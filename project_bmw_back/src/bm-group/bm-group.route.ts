@@ -11,7 +11,7 @@ import { SearchBmGroupDto } from './dto/request/search-bm-group.dto';
 const bmGroupRouter = Router();
 
 // GET /api/bmgroups
-// GET /api/bmgroups?routeId=:routeId&stationSeq=:stationSeq&statonId=:statonId
+// GET /api/bmgroups?routeId=:routeId&stationSeq=:stationSeq&stationId=:stationId
 bmGroupRouter.get('/', isAuth, dtoValidator(SearchBmGroupDto), getBmGroups);
 
 // GET /api/bmgroups/:bmGroupId

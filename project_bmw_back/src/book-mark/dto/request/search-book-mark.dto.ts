@@ -21,5 +21,5 @@ export class SearchBookMarkDto implements Dto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  statonId!: number; // 정류소 Id
+  stationId!: number; // 정류소 Id
 }
