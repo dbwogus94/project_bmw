@@ -8,7 +8,7 @@ import Metro from './pages/Metro';
 import Stop from './pages/Stop';
 import Footer from './components/Footer';
 
-function App({ tweetService, busService, metroService, stopService }) {
+function App({ bmGroupService, busService, metroService, stopService }) {
   const history = useHistory();
   const { user, logout } = useAuth();
   // TODO: 개선필요
@@ -63,13 +63,13 @@ function App({ tweetService, busService, metroService, stopService }) {
         (
         <>
           <Route exact path="/">
-            <MyBM tweetService={tweetService} />
+            <MyBM bmGroupService={bmGroupService} />
           </Route>
           <Route exact path="/bmgroups">
-            <EditBM tweetService={tweetService} />
+            <EditBM bmGroupService={bmGroupService} />
           </Route>
           <Route path="/buses">
-            <Bus busService={busService} tweetService={tweetService} />
+            <Bus busService={busService} bmGroupService={bmGroupService} />
           </Route>
           <Route exact path="/metros">
             <Metro metroService={metroService} />

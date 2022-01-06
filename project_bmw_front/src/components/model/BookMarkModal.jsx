@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import NewBmGroupForm from './NewBmGroupForm';
 
-const BookMarkModal = memo(({ tweetService, onUpdateBookMark, isOpen, onClose, routeId, stationSeq }) => {
+const BookMarkModal = memo(({ bmGroupService, onUpdateBookMark, isOpen, onClose, routeId, stationSeq }) => {
   const [bmGroups, setBmGroups] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
 
@@ -10,11 +10,11 @@ const BookMarkModal = memo(({ tweetService, onUpdateBookMark, isOpen, onClose, r
     // 유저의 그룹 리스트 조회
     // TODO: 유저 그룹 리스트 조회시 그룹의 즐겨찾기 여부도 같이 조회
     // 조회에 필요한 데이터: 유저id, 루트Id(routeId), 경유정류소순번(stationSeq)
-    tweetService
+    bmGroupService
       .getBMGroupList()
       .then(bmGroups => setBmGroups(bmGroups))
       .catch(console.error);
-  }, [tweetService, routeId, stationSeq]);
+  }, [bmGroupService, routeId, stationSeq]);
 
   // 그룹 추가 form 활성화
   const onActiveCreateForm = event => {
@@ -24,8 +24,8 @@ const BookMarkModal = memo(({ tweetService, onUpdateBookMark, isOpen, onClose, r
   // 신규 그룹 추가
   const onCreateBmGroup = (bmGroupName, event) => {
     event.preventDefault();
-    tweetService
-      .createBMGroup(bmGroupName)
+    bmGroupService
+      .createBmGroup(bmGroupName)
       .then(bmGroups => setBmGroups([...bmGroups]))
       .catch(console.error);
     setIsCreate(false);

@@ -6,7 +6,7 @@ import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';
 import SelectBMGroup from './SelectBMGroup';
 
-const BMFeeds = memo(({ tweetService, edit }) => {
+const BMFeeds = memo(({ bmGroupService, edit }) => {
   const { username } = useParams();
   const [bmGroup, setTweets] = useState({});
   const [error, setError] = useState('');
@@ -14,22 +14,22 @@ const BMFeeds = memo(({ tweetService, edit }) => {
   // const { user } = useAuth();
 
   useEffect(() => {
-    tweetService //
+    bmGroupService //
       .getBMGroupList(username)
       .then(bmGroup => {
-        tweetService
+        bmGroupService
           .getBMGroup(bmGroup[0].bmGroupId)
           .then(bmGroup => {
             return setTweets({ ...bmGroup });
           })
           .catch(err => onError(err, setError));
       });
-  }, [tweetService, username]);
+  }, [bmGroupService, username]);
 
   // SelectBMGroup에서 사용
   const onGroupChange = async event => {
     const bmGroupId = event.target.value;
-    tweetService
+    bmGroupService
       .getBMGroup(bmGroupId)
       .then(bmGroup => setTweets({ ...bmGroup }))
       .catch(err => onError(err, setError));
@@ -70,7 +70,7 @@ const BMFeeds = memo(({ tweetService, edit }) => {
   return (
     <>
       <SelectBMGroup //
-        tweetService={tweetService}
+        bmGroupService={bmGroupService}
         onGroupChange={onGroupChange}
         onError={onErrorWraaper}
         username={username}

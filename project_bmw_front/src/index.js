@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import AuthService from './service/auth';
-import TweetService from './service/tweet';
+import BmGroupService from './service/bm-group';
 import BusService from './service/bus';
 import MetroService from './service/metro';
 import StopService from './service/stop';
@@ -19,7 +19,7 @@ const userStorage = new Storage();
 const httpClient = new HttpClient(baseURL, userStorage, authErrorEventBus);
 
 const authService = new AuthService(httpClient, userStorage);
-const tweetService = new TweetService(baseURL);
+const bmGroupService = new BmGroupService(baseURL, userStorage);
 const busService = new BusService(httpClient);
 const metroService = new MetroService();
 const stopService = new StopService();
@@ -29,7 +29,7 @@ ReactDOM.render(
     <BrowserRouter>
       <AuthProvider authService={authService} authErrorEventBus={authErrorEventBus}>
         <App //
-          tweetService={tweetService}
+          bmGroupService={bmGroupService}
           busService={busService}
           metroService={metroService}
           stopService={stopService}

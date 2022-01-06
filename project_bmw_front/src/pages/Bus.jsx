@@ -4,7 +4,7 @@ import BusInfo from '../components/bus/BusInfo';
 import BMSearch from '../components/BMSearch';
 import Stations from '../components/Stations';
 
-const Bus = ({ busService, tweetService }) => {
+const Bus = ({ busService, bmGroupService }) => {
   const { path } = useRouteMatch();
   return (
     <>
@@ -16,7 +16,7 @@ const Bus = ({ busService, tweetService }) => {
           <BusInfo service={busService}></BusInfo>
         </Route>
         <Route exact path={`${path}/:routeId/stations`}>
-          <Stations service={busService} tweetService={tweetService}></Stations>
+          <Stations service={busService} bmGroupService={bmGroupService}></Stations>
         </Route>
       </Switch>
     </>

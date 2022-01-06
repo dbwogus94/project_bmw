@@ -6,22 +6,22 @@ import BMCard from './BMCard';
 import { useAuth } from '../context/AuthContext';
 import { onError } from '../util/on-error';
 
-const BMCards = memo(({ tweetService, username }) => {
+const BMCards = memo(({ bmGroupService, username }) => {
   const [tweets, setTweets] = useState([]);
   const [error, setError] = useState('');
   const history = useHistory();
   const { user } = useAuth();
 
   useEffect(() => {
-    tweetService //
+    bmGroupService //
       .getBMGroupList(user.username)
       .then(bmGroup => {
-        tweetService
+        bmGroupService
           .getBMList(bmGroup[0].bmGroupId)
           .then(tweets => setTweets([...tweets]))
           .catch(err => onError(err, setError));
       });
-  }, [tweetService, user]);
+  }, [bmGroupService, user]);
 
   // 정류장 클릭, TODO: API 정해지면 API URL 적용
   const onUsernameClick = tweet => {
@@ -40,7 +40,7 @@ const BMCards = memo(({ tweetService, username }) => {
   // 그룹 select box 변경 이벤트
   const onGroupChange = async event => {
     const bmGroupId = event.target.value;
-    tweetService
+    bmGroupService
       .getBMList(bmGroupId)
       .then(bmList => setTweets([...bmList]))
       .catch(err => onError(err, setError));
@@ -64,7 +64,7 @@ const BMCards = memo(({ tweetService, username }) => {
   return (
     <>
       <SelectBMGroup //
-        tweetService={tweetService}
+        bmGroupService={bmGroupService}
         onGroupChange={onGroupChange}
         onError={onErrorWraaper}
         username={username}

@@ -7,7 +7,7 @@ import BookMarkModal from './model/BookMarkModal';
 import Spinner from './Spinner';
 import Station from './Station';
 
-const Stations = memo(({ service, tweetService }) => {
+const Stations = memo(({ service, bmGroupService }) => {
   const [stations, setStations] = useState([]);
   const [info, setInfo] = useState({});
   const [error, setError] = useState('');
@@ -78,7 +78,7 @@ const Stations = memo(({ service, tweetService }) => {
 
     if (!checked) {
       // 즐겨찾기 제거
-      return tweetService
+      return bmGroupService
         .deleteBookMark({ bmGroupId, routeId, stationSeq })
         .then(() => {
           return true;
@@ -86,7 +86,7 @@ const Stations = memo(({ service, tweetService }) => {
         .catch(err => onError(err, setError, true));
     }
     // 즐겨찾기 추가
-    return tweetService
+    return bmGroupService
       .insertBookMark({ bmGroupId, routeName, ...station, direction })
       .then()
       .catch(err => onError(err, setError, true));
@@ -150,7 +150,7 @@ const Stations = memo(({ service, tweetService }) => {
       )}
       {isModalOpen && (
         <BookMarkModal
-          tweetService={tweetService} //
+          bmGroupService={bmGroupService} //
           onUpdateBookMark={onUpdateBookMark}
           isOpen={isModalOpen}
           onClose={closeModal}

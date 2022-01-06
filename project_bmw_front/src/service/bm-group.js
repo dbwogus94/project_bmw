@@ -1,4 +1,57 @@
-export default class TweetService {
+export default class BmGroupService {
+  constructor(http, storage) {
+    this.http = http;
+    this.storage = storage;
+  }
+
+  //
+  async getBmGroups(username) {
+    return username ? this.tweets.filter(tweet => tweet.username === username) : this.tweets;
+  }
+
+  // 유저의 전체 그룹 리스트
+  async getBMGroupList(username) {
+    return this.bmGroup;
+  }
+
+  //
+  /**
+   *  bmGroupId에 해당하는 BMGroup 조회
+   * 서버에서 전달받아야 하는 데이터 형태
+   * @param {*} bmGroupId
+   * @returns { bus: [], metro: [] }
+   */
+  async getBMGroup(bmGroupId) {
+    const bmList = this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
+    const bus = bmList.filter(bm => bm.label === 'B');
+    const metro = bmList.filter(bm => bm.label === 'M');
+    return !!(bus.length || metro.length) //
+      ? { bus, metro }
+      : {};
+  }
+
+  /**
+   * 전달받은 bmGroupId에 속하는 BMList 조회
+   * -> 서버에서 도착시간이 빠른순 정렬하여 전달받아야 한다.
+   * @param {*} bmGroupId
+   * @returns list
+   */
+  async getBMList(bmGroupId) {
+    return this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
+  }
+
+  async createBmGroup(bmGroupName) {
+    const newBmGroup = { userId: '1', username: 'jay', bmGroupId: '40', bmGroupName };
+    this.bmGroup = [...this.bmGroup, newBmGroup];
+    return this.bmGroup;
+  }
+
+  // 즐겨찾기 추가
+  async insertBookMark() {}
+
+  // 즐겨찾기 제거
+  async deleteBookMark() {}
+
   tweets = [
     {
       id: 1, // 버스 번호
@@ -86,44 +139,4 @@ export default class TweetService {
       bmGroupName: '우리집',
     },
   ];
-
-  // 서버에서 도착정보가 가장 빠른 순으로 데이터가 와야함
-  //bmlist = [...this.tweets];
-  // 버스, 지하철로 데이터가 묶여서 들어와야한다.
-  //bmGroup = {bus: [], metro: []};
-
-  async getTweets(username) {
-    return username ? this.tweets.filter(tweet => tweet.username === username) : this.tweets;
-  }
-
-  // 유저의 전체 그룹 리스트
-  async getBMGroupList(username) {
-    return this.bmGroup;
-  }
-
-  //
-  /**
-   *  bmGroupId에 해당하는 BMGroup 조회
-   * 서버에서 전달받아야 하는 데이터 형태
-   * @param {*} bmGroupId
-   * @returns { bus: [], metro: [] }
-   */
-  async getBMGroup(bmGroupId) {
-    const bmList = this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
-    const bus = bmList.filter(bm => bm.label === 'B');
-    const metro = bmList.filter(bm => bm.label === 'M');
-    return !!(bus.length || metro.length) //
-      ? { bus, metro }
-      : {};
-  }
-
-  /**
-   * 전달받은 bmGroupId에 속하는 BMList 조회
-   * -> 서버에서 도착시간이 빠른순 정렬하여 전달받아야 한다.
-   * @param {*} bmGroupId
-   * @returns list
-   */
-  async getBMList(bmGroupId) {
-    return this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
-  }
 }

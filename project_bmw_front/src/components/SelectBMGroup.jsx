@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-const SelectBMGroup = ({ tweetService, onGroupChange, onError, username, button1, button2, onButtonClick1, onButtonClick2 }) => {
+const SelectBMGroup = ({ bmGroupService, onGroupChange, onError, username, button1, button2, onButtonClick1, onButtonClick2 }) => {
   const [bmGroup, setBMGroup] = useState([]);
 
   useEffect(() => {
-    tweetService
+    bmGroupService
       .getBMGroupList(username)
       .then(bmGroup => setBMGroup([...bmGroup]))
       .catch(onError);
-  }, [tweetService, onError, setBMGroup, username]);
+  }, [bmGroupService, onError, setBMGroup, username]);
   // 그룹 변경에 사용
   // const onSubmit = async event => {
   //   event.preventDefault();
-  //   tweetService
+  //   bmGroupService
   //     .postTweet(tweet)
   //     .then(created => {
   //       setTweet('');
