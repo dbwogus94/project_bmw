@@ -7,7 +7,7 @@ export const errorMessages: any = Object.freeze({
     isNumber: '숫자 형식이 아닙니다.',
     matches: '정규식에 일치하지 않습니다.',
     maxLength: '최대 길이를 초과했습니다.',
-    createBookMark: 'bmGroupId이 잘못되었습니다.',
+    createBookMark: 'bmGroupId이 잘못되었습니다. ex) 로그인된 user의 bmGroup이 아닙니다.',
   },
   CONFLICT_MESSAGE: {
     code: 409,
