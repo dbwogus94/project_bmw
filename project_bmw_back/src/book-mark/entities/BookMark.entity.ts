@@ -82,7 +82,7 @@ export class BookMark implements IBookMark {
   @Column('varchar', { length: 300, comment: '종점정류소명', select: false })
   endStationName!: string;
 
-  @Column('int', { comment: '노선종류코드' })
+  @Column('int', { comment: '노선종류코드', select: false })
   routeTypeCd!: number;
 
   @Column('varchar', { length: 60, comment: '노선종류이름', select: false })
