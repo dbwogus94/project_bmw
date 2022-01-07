@@ -30,6 +30,7 @@ export class CreateBookMarkDto implements Dto {
 
   @IsNotEmpty()
   @IsString()
+  @Type(type => String)
   @Transform(params => params.value.trim())
   public routeName!: string; // 노선 이름
 
