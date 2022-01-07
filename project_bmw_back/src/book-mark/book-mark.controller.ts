@@ -7,8 +7,8 @@ import { BmGroupBookMarkRepository } from '@bmGroupBookMark/repository/bmgroup-b
 import { getLogger } from '@shared/Logger';
 import { BmGroupRepository } from '@bmGroup/repository/bm-group.repository';
 
-const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND } = StatusCodes;
-const { BAD_REQUEST_MESSAGE } = errorMessages;
+const { OK, CREATED, NO_CONTENT, BAD_REQUEST, CONFLICT } = StatusCodes;
+const { BAD_REQUEST_MESSAGE, CONFLICT_MESSAGE } = errorMessages;
 const logger = getLogger();
 
 const getBmGroup = async (userId: number, bmGroupId: number) => {
@@ -83,6 +83,10 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
     } catch (error) {
       // bmGroupId, bookMarkId 중복되면? => 그룹에 이미 추가된 bookMake이다.
       // => ALTER TABLE bmgroup_bookmark ADD UNIQUE(bmGroupId, bookMarkId)
+      return res.status(CONFLICT).json({
+        errCode: CONFLICT,
+        message: CONFLICT_MESSAGE.createBookMark,
+      });
     }
   } catch (error) {
     await queryRunner.rollbackTransaction();

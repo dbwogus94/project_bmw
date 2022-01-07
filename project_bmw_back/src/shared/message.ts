@@ -12,6 +12,7 @@ export const errorMessages: any = Object.freeze({
   CONFLICT_MESSAGE: {
     code: 409,
     signup: '중복된 username 입니다.',
+    createBookMark: '이미 추가된 book mark 입니다.',
   },
   UNAUTHORIZED_MESSAGE: {
     code: 401,
