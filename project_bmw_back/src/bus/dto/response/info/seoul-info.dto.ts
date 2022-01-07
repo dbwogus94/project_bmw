@@ -38,7 +38,7 @@ export class SeoulBusInfoDto implements Info {
   // 구분 타입
   type: 'seoul' | 'gyeonggi';
   // 버스(B), 지하철(M) 구분
-  bmType: 'B';
+  label: 'B';
 
   /* 서울시만 있는 데이터 */
   // 첫차시간
@@ -83,7 +83,7 @@ export class SeoulBusInfoDto implements Info {
     this.companyName = companyName;
     this.companyTel = companyTel ? companyTel : '';
     this.type = 'seoul';
-    this.bmType = 'B';
+    this.label = 'B';
     // 막차 첫차
     this.firstBusTm = firstBusTm;
     this.lastBusTm = lastBusTm;
