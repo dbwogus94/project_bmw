@@ -1,52 +1,34 @@
 import React, { memo, useEffect, useState } from 'react';
+import BmGroup from './BmGroup';
 import NewBmGroupForm from './NewBmGroupForm';
 
-const BookMarkModal = memo(({ bmGroupService, onUpdateBookMark, isOpen, onClose, routeId, stationSeq }) => {
+const BookMarkModal = memo(({ bmGroupService, onBookMarkChange, isOpen, onClose, station }) => {
   const [bmGroups, setBmGroups] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
 
-  // 로드시만 실행
+  // 두번째 인자에 []을 전달해 로드시만 실행
   useEffect(() => {
-    // 유저의 그룹 리스트 조회
-    // TODO: 유저 그룹 리스트 조회시 그룹의 즐겨찾기 여부도 같이 조회
-    // 조회에 필요한 데이터: 유저id, 루트Id(routeId), 경유정류소순번(stationSeq)
+    const { routeId, stationSeq, stationId } = station;
     bmGroupService
-      .getBMGroupList()
-      .then(bmGroups => setBmGroups(bmGroups))
+      .searchBmGroups(routeId, stationSeq, stationId)
+      .then(bmGroups => setBmGroups([...bmGroups]))
       .catch(console.error);
-  }, [bmGroupService, routeId, stationSeq]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // 그룹 추가 form 활성화
+  // 그룹 추가 NewBmGroupForm 활성화
   const onActiveCreateForm = event => {
     setIsCreate(true);
   };
 
-  // 신규 그룹 추가
+  // 신규 그룹 추가 이벤트
   const onCreateBmGroup = (bmGroupName, event) => {
     event.preventDefault();
     bmGroupService
       .createBmGroup(bmGroupName)
-      .then(bmGroups => setBmGroups([...bmGroups]))
+      .then(bmGroup => setBmGroups([...bmGroups, { ...bmGroup, bmGroupBookMarks: [] }]))
       .catch(console.error);
     setIsCreate(false);
-  };
-
-  const makeBmgroup = bmGroup => {
-    const { bmGroupId, bmGroupName, checked } = bmGroup;
-    return (
-      <>
-        <li className="bmgroup" key={bmGroupId}>
-          <article className="bmgroup-container">
-            <span className="bmgroup-checkbox">
-              <input type="checkbox" id="check1" value={bmGroupId} checked={checked ? true : false} onChange={onUpdateBookMark} />
-              {/* <input type="checkbox" id="check1" value={bmGroupId} data-bm-group-name={bmGroupName} onChange={onUpdateBookMark} checked={checked ? true : false} /> */}
-              <label htmlFor="check1"></label>
-            </span>
-            <span className="bmgroup-text">{bmGroupName}</span>
-          </article>
-        </li>
-      </>
-    );
   };
 
   return (
@@ -62,7 +44,15 @@ const BookMarkModal = memo(({ bmGroupService, onUpdateBookMark, isOpen, onClose,
             </button>
           </header>
           <main>
-            <ul className="bmgroups">{bmGroups.map(bmGroup => makeBmgroup(bmGroup))}</ul>
+            <ul className="bmgroups">
+              {bmGroups.map(bmGroup => (
+                <BmGroup //
+                  key={bmGroup.bmGroupId}
+                  bmGroup={bmGroup}
+                  onBookMarkChange={onBookMarkChange}
+                ></BmGroup>
+              ))}
+            </ul>
           </main>
           <footer>
             {!isCreate ? (

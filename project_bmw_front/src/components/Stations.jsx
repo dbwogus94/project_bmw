@@ -42,7 +42,6 @@ const Stations = memo(({ service, bmGroupService }) => {
       .searchStationsByRouteId(routeId, type)
       .then(res => {
         const { info, stationList } = res;
-        // chkOverlap(stationList);
         setInfo(info);
         setStations(stationList);
         return;
@@ -66,30 +65,27 @@ const Stations = memo(({ service, bmGroupService }) => {
   };
 
   // 모달 체크박스에 전달할 이벤트
-  const onUpdateBookMark = event => {
-    // 체크된 그룹 id
-    const bmGroupId = event.target.value;
-    // 체크 여부
-    const checked = event.target.checked;
-
+  const onBookMarkChange = (isChecked, bmGroupId, bookMarkId) => {
     const { stationSeq } = station;
     const direction = getDirection(stationSeq);
-    const { routeName } = info;
 
-    if (!checked) {
-      // 즐겨찾기 제거
-      return bmGroupService
-        .deleteBookMark({ bmGroupId, routeId, stationSeq })
-        .then(() => {
-          return true;
-        })
-        .catch(err => onError(err, setError, true));
+    if (isChecked) {
+      // 즐겨찾기 추가
+      bmGroupService
+        .createBookMark({ bmGroupId, ...info, ...station, direction })
+        .then(() => false)
+        .catch(console.error);
+      return false;
     }
-    // 즐겨찾기 추가
-    return bmGroupService
-      .insertBookMark({ bmGroupId, routeName, ...station, direction })
-      .then()
-      .catch(err => onError(err, setError, true));
+
+    if (bookMarkId) {
+      // 즐겨찾기 제거
+      bmGroupService
+        .deleteBookMark(bmGroupId, bookMarkId)
+        .then(() => false)
+        .catch(console.error);
+    }
+    return false;
 
     // 진행 방향 찾기
     function getDirection(selectSeq) {
@@ -103,13 +99,14 @@ const Stations = memo(({ service, bmGroupService }) => {
     }
   };
 
-  /* make element */
+  /* =================== Make Component =================== */
   const makeInfo = info => {
-    return info.bmType === 'B' //
+    return info.label === 'B' //
       ? makeBusInfo(info)
       : makeMetroInfo(info);
   };
 
+  // label(B): 버스 정보 생성
   const makeBusInfo = info => {
     const {
       routeName,
@@ -131,6 +128,7 @@ const Stations = memo(({ service, bmGroupService }) => {
     );
   };
 
+  // label(M): 지하철 정보 생성
   const makeMetroInfo = info => {};
 
   return (
@@ -151,11 +149,10 @@ const Stations = memo(({ service, bmGroupService }) => {
       {isModalOpen && (
         <BookMarkModal
           bmGroupService={bmGroupService} //
-          onUpdateBookMark={onUpdateBookMark}
-          isOpen={isModalOpen}
+          onBookMarkChange={onBookMarkChange}
           onClose={closeModal}
-          routeId={routeId}
-          stationSeq={station.stationSeq}
+          isOpen={isModalOpen}
+          station={station}
         ></BookMarkModal>
       )}
     </>
