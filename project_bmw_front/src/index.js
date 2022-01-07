@@ -19,7 +19,7 @@ const userStorage = new Storage();
 const httpClient = new HttpClient(baseURL, userStorage, authErrorEventBus);
 
 const authService = new AuthService(httpClient, userStorage);
-const bmGroupService = new BmGroupService(baseURL, userStorage);
+const bmGroupService = new BmGroupService(httpClient);
 const busService = new BusService(httpClient);
 const metroService = new MetroService();
 const stopService = new StopService();

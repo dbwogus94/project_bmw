@@ -1,18 +1,127 @@
 export default class BmGroupService {
-  constructor(http, storage) {
+  constructor(http) {
     this.http = http;
-    this.storage = storage;
   }
 
-  //
-  async getBmGroups(username) {
-    return username ? this.tweets.filter(tweet => tweet.username === username) : this.tweets;
+  getBmGroupApi() {
+    return `/bmgroups`;
   }
 
-  // 유저의 전체 그룹 리스트
-  async getBMGroupList(username) {
-    return this.bmGroup;
+  getBookMarkApi(bmGroupId) {
+    return `${this.getBmGroupApi()}/${bmGroupId}/bookmarks`;
   }
+
+  /**
+   * 유저의 모든 그룹 리스트 조회
+   * - API: GET /api/bmgroups
+   * @returns {Promise<BmGroup[]>}
+   * - bmGroups:
+    ```
+    [
+      {
+        bmGroupId: 1,
+        bmGroupName: jay_group_1,
+        user: {
+            username: jay
+        },
+        bmGroupBookMarkId: 1,
+        bmGroupBookMarks: [
+          bookMark: {...}
+        ]
+      },
+    ]
+    ```
+   */
+  async getBmGroups() {
+    const url = this.getBmGroupApi();
+    return this.http.fetch(url, { method: 'GET' });
+  }
+
+  /**
+   * 조건에 일치하는 bookMark를 가진 그룹리스트를 조회한다.
+   * - API: GET /api/bmgroups?routeId=:routeId&stationSeq=:stationSeq&statonId=:statonId
+   * - 조건: 노선Id(routeId), 경유지순번(stationSeq), 정류소Id(stationId)
+   * @param {number} routeId
+   * @param {number} stationSeq
+   * @param {number} stationId
+   * @returns {Promise<BmGroup[]>}
+   * - bmGroups 
+   ```
+   [
+      bmGroup {
+          bmGroupBookMarks: [
+            bmGroupBookMark { 
+              bookMark 
+            }
+          ]
+      }
+    ]
+    ```
+   */
+  async searchBmGroups(routeId, stationSeq, stationId) {
+    const url = `${this.getBmGroupApi()}?routeId=${routeId}&stationSeq=${stationSeq}&stationId=${stationId}`;
+    const data = this.http.fetch(url, { method: 'GET' });
+    return data;
+  }
+
+  /**
+   * 신규 BM그룹 생성
+   * - API: POST /api/bmgroups
+   * @param {string} bmGroupName
+   * @returns {Promise<BmGroup>}
+   */
+  async createBmGroup(bmGroupName) {
+    const url = this.getBmGroupApi();
+    return this.http.fetch(url, { method: 'POST', body: JSON.stringify({ bmGroupName }) });
+  }
+
+  /* ===================================================================================== */
+  /* =================================== bookmarks api =================================== */
+  /* ===================================================================================== */
+
+  // GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&statonId
+
+  /**
+   * 조건에 일치하는 bookmakes를 조회한다.
+   * - API: GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&statonId
+   * - 조건: 노선Id(routeId), 경유지순번(stationSeq), 정류소Id(stationId)
+   * @param {number} bmGroupId
+   * @param {number} routeId
+   * @param {number} stationSeq
+   * @param {number} stationId
+   * @returns {Promise<Bookmake[]>}
+   */
+  async searchBookMarks(bmGroupId, routeId, stationSeq, stationId) {
+    const url = `${this.getBookMarkApi(bmGroupId)}?routeId=${routeId}&stationSeq=${stationSeq}&stationId=${stationId}`;
+    const data = await this.http.fetch(url, { method: 'GET' });
+    return data;
+  }
+
+  /**
+   * bookMark 추가
+   * - API: POST /bmgroups/:bmGroupId/bookmarks
+   * @param {object} data - { ...info, ...station, bmGroupId, direction }
+   * @returns {Promise<void>}
+   */
+  async createBookMark(data) {
+    const { bmGroupId } = data;
+    const url = this.getBookMarkApi(bmGroupId);
+    await this.http.fetch(url, { method: 'POST', body: JSON.stringify(data) });
+  }
+
+  /**
+   * bookMark 제거
+   * - API: DELECT /bmgroups/:bmGroupId/bookmarks:bookMarkId
+   * @param {number} bmGroupId
+   * @param {number} bookMarkId
+   * @returns {Promise<void>}
+   */
+  async deleteBookMark(bmGroupId, bookMarkId) {
+    const url = `${this.getBookMarkApi(bmGroupId)}/${bookMarkId}`;
+    await this.http.fetch(url, { method: 'DELETE' });
+  }
+
+  // ========================= 제거 예정 ===========================
 
   //
   /**
@@ -39,104 +148,4 @@ export default class BmGroupService {
   async getBMList(bmGroupId) {
     return this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
   }
-
-  async createBmGroup(bmGroupName) {
-    const newBmGroup = { userId: '1', username: 'jay', bmGroupId: '40', bmGroupName };
-    this.bmGroup = [...this.bmGroup, newBmGroup];
-    return this.bmGroup;
-  }
-
-  // 즐겨찾기 추가
-  async insertBookMark() {}
-
-  // 즐겨찾기 제거
-  async deleteBookMark() {}
-
-  tweets = [
-    {
-      id: 1, // 버스 번호
-      label: 'B',
-      name: '600',
-      username: '야당과선교',
-      username_id: '31652', // 정류장 번호
-      server_time: '10:20', // 마지막으로 서버에서 가져온 시간
-      first_time: '5 분전',
-      first_text: '한빛마을 5단지 도착',
-      second_time: '3 전',
-      second_text: '해솔마을6.7단지 출발',
-      direction: '서울 방면',
-      routeTypeName: '파주시 일반버스',
-      bmGroupId: '10',
-      like: true,
-    },
-    {
-      id: 2,
-      label: 'B',
-      name: 'G7426',
-      username: '야당과선교',
-      username_id: '31652',
-      server_time: '10:20',
-      first_time: '6 분전',
-      first_text: '한길육교',
-      second_time: '',
-      second_text: '도착정보 없음',
-      direction: '서울 방면',
-      routeTypeName: '경기도 광역버스',
-      bmGroupId: '10',
-      like: true,
-    },
-    {
-      id: 3,
-      label: 'M',
-      name: '야당역',
-      username: '경의중앙선',
-      username_id: '??',
-      server_time: '10:20',
-      first_time: '10 분전',
-      first_text: '금촌 출발',
-      second_time: '5 전',
-      second_text: '월롱 도착',
-      direction: '서울 방면',
-      routeTypeName: '',
-      bmGroupId: '20',
-      like: true,
-    },
-    {
-      id: 4,
-      label: 'M',
-      name: '운정역',
-      username: '경의중앙선',
-      username_id: '??',
-      server_time: '10:20',
-      first_time: '10 분전',
-      first_text: '금촌 출발',
-      second_time: '5 전',
-      second_text: '월롱 도착',
-      direction: '서울 방면',
-      routeTypeName: '',
-      bmGroupId: '10',
-      like: true,
-    },
-  ];
-
-  bmGroup = [
-    {
-      userId: '1',
-      username: 'jay',
-      bmGroupId: '10',
-      bmGroupName: '출근',
-    },
-    {
-      userId: '1',
-      username: 'jay',
-      bmGroupId: '20',
-      bmGroupName: '퇴근',
-    },
-    {
-      userId: '1',
-      username: 'jay',
-      bmGroupId: '30',
-      bmGroupName: '우리집',
-    },
-  ];
 }
