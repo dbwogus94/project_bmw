@@ -5,7 +5,7 @@ const SelectBMGroup = ({ bmGroupService, onGroupChange, onError, username, butto
 
   useEffect(() => {
     bmGroupService
-      .getBMGroupList(username)
+      .getBmGroups(username)
       .then(bmGroup => setBMGroup([...bmGroup]))
       .catch(onError);
   }, [bmGroupService, onError, setBMGroup, username]);

@@ -15,7 +15,7 @@ const BMFeeds = memo(({ bmGroupService, edit }) => {
 
   useEffect(() => {
     bmGroupService //
-      .getBMGroupList(username)
+      .getBmGroups(username)
       .then(bmGroup => {
         bmGroupService
           .getBMGroup(bmGroup[0].bmGroupId)

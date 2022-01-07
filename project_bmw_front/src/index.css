@@ -812,7 +812,7 @@ button {
   position: relative;
 }
 
-.bmgroup-checkbox input[id='check1']:checked + label::after {
+.bmgroup-checkbox input[type='checkbox']:checked + label::after {
   content: '✔';
   font-size: 18px;
   text-align: center;

@@ -14,7 +14,7 @@ const BMCards = memo(({ bmGroupService, username }) => {
 
   useEffect(() => {
     bmGroupService //
-      .getBMGroupList(user.username)
+      .getBmGroups()
       .then(bmGroup => {
         bmGroupService
           .getBMList(bmGroup[0].bmGroupId)
