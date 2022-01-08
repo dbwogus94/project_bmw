@@ -46,17 +46,31 @@ export default class BmGroupService {
    * @param {number} stationId
    * @returns {Promise<BmGroup[]>}
    * - bmGroups 
-   ```
-   [
-      bmGroup {
-          bmGroupBookMarks: [
-            bmGroupBookMark { 
-              bookMark 
+  ```
+    [
+      { 
+          "bmGroupId": 1,
+          "bmGroupName": "jay_group_1",
+          "bmGroupBookMarks": [
+            {
+              "bmGroupBookMarkId": 180,
+              "bookMark": {
+                "bookMarkId": 29,
+                "checkColumn": "2290001114229000968",
+                "routeId": 229000111,
+                "stationSeq": 4,
+                "stationId": 229000968,
+                "label": "B",
+                "routeName": "G7426",
+                "stationName": "야당역.한빛마을5.9단지",
+                "direction": "양재역.양재1동민원분소",
+                "type": "gyeonggi"
+              }
             }
           ]
       }
     ]
-    ```
+  ```
    */
   async searchBmGroups(routeId, stationSeq, stationId) {
     const url = `${this.getBmGroupApi()}?routeId=${routeId}&stationSeq=${stationSeq}&stationId=${stationId}`;
@@ -101,12 +115,31 @@ export default class BmGroupService {
    * bookMark 추가
    * - API: POST /bmgroups/:bmGroupId/bookmarks
    * @param {object} data - { ...info, ...station, bmGroupId, direction }
-   * @returns {Promise<void>}
+   * @returns {Promise<bmGroupBookMark>}
+   *
+   * - bmGroupBookMark
+   ```
+    {
+      "bmGroupBookMarkId": 180,
+      "bookMark": {
+          "bookMarkId": 29,
+          "checkColumn": "2290001114229000968",
+          "routeId": 229000111,
+          "stationSeq": 4,
+          "stationId": 229000968,
+          "label": "B",
+          "routeName": "G7426",
+          "stationName": "야당역.한빛마을5.9단지",
+          "direction": "양재역.양재1동민원분소",
+          "type": "gyeonggi"
+        }
+    }
+   ```
    */
   async createBookMark(data) {
     const { bmGroupId } = data;
     const url = this.getBookMarkApi(bmGroupId);
-    await this.http.fetch(url, { method: 'POST', body: JSON.stringify(data) });
+    return this.http.fetch(url, { method: 'POST', body: JSON.stringify(data) });
   }
 
   /**
@@ -118,7 +151,7 @@ export default class BmGroupService {
    */
   async deleteBookMark(bmGroupId, bookMarkId) {
     const url = `${this.getBookMarkApi(bmGroupId)}/${bookMarkId}`;
-    await this.http.fetch(url, { method: 'DELETE' });
+    return this.http.fetch(url, { method: 'DELETE' });
   }
 
   // ========================= 제거 예정 ===========================

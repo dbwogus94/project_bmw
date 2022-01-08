@@ -20,7 +20,7 @@ export default class HttpClient {
     let data;
 
     try {
-      data = await res.json();
+      data = res.status !== 204 ? await res.json() : undefined;
     } catch (error) {
       console.error(error);
     }
