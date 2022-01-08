@@ -71,21 +71,14 @@ const Stations = memo(({ service, bmGroupService }) => {
 
     if (isChecked) {
       // 즐겨찾기 추가
-      bmGroupService
-        .createBookMark({ bmGroupId, ...info, ...station, direction })
-        .then(() => false)
-        .catch(console.error);
-      return false;
+      return bmGroupService.createBookMark({ bmGroupId, ...info, ...station, direction });
     }
 
     if (bookMarkId) {
       // 즐겨찾기 제거
-      bmGroupService
-        .deleteBookMark(bmGroupId, bookMarkId)
-        .then(() => false)
-        .catch(console.error);
+      return bmGroupService.deleteBookMark(bmGroupId, bookMarkId);
     }
-    return false;
+    return;
 
     // 진행 방향 찾기
     function getDirection(selectSeq) {

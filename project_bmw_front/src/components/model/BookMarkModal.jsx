@@ -2,6 +2,33 @@ import React, { memo, useEffect, useState } from 'react';
 import BmGroup from './BmGroup';
 import NewBmGroupForm from './NewBmGroupForm';
 
+/* 
+  bmGroups = [
+    { 
+      "bmGroupId": 1,
+      "bmGroupName": "jay_group_1",
+      "bmGroupBookMarks": [
+        {
+          "bmGroupBookMarkId": 180,
+          "bookMark": {
+            "bookMarkId": 29,
+            "checkColumn": "2290001114229000968",
+            "routeId": 229000111,
+            "stationSeq": 4,
+            "stationId": 229000968,
+            "label": "B",
+            "routeName": "G7426",
+            "stationName": "야당역.한빛마을5.9단지",
+            "direction": "양재역.양재1동민원분소",
+            "type": "gyeonggi"
+          }
+        }
+      ]
+    },
+  ]
+    
+ */
+
 const BookMarkModal = memo(({ bmGroupService, onBookMarkChange, isOpen, onClose, station }) => {
   const [bmGroups, setBmGroups] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
