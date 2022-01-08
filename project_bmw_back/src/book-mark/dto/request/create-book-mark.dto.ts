@@ -96,15 +96,15 @@ export class CreateBookMarkDto implements Dto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  public companyId!: number;
+  public companyId!: number; // 운수회사 id
 
   @IsNotEmpty()
   @IsString()
-  @Transform(params => params.value.trim())
+  @Transform(params => params.value.trim()) // 운수회사명
   public companyName!: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @Transform(params => params.value.trim())
+  @Transform(params => params.value.trim()) // 운수회사 번호
   public companyTel!: string;
 }

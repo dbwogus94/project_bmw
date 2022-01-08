@@ -48,6 +48,8 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
   const bookMarkRepo: BookMarkRepository = getCustomRepository(BookMarkRepository);
   const bmGroupBookMarkRepo: BmGroupBookMarkRepository = getCustomRepository(BmGroupBookMarkRepository);
   const { bmGroupId, routeId, stationSeq, stationId } = req.dto;
+  let bookMark: any;
+  let bmGroupBookMark: any;
 
   const queryRunner = getConnection().createQueryRunner();
   await queryRunner.connect();
@@ -58,7 +60,6 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
     const checkColumn = `${routeId}${stationSeq}${stationId}`;
 
     // 1. Insert book_mark
-    let bookMark: any;
     try {
       const newBookMark = bookMarkRepo.create({ ...req.dto, checkColumn });
       bookMark = await bookMarkRepo.save(newBookMark);
@@ -78,7 +79,7 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
 
     // 3. Insert bmgroup_bookmark
     try {
-      const bmGroupBookMark = bmGroupBookMarkRepo.create({ bmGroup, bookMark });
+      bmGroupBookMark = bmGroupBookMarkRepo.create({ bmGroup, bookMark });
       await bmGroupBookMarkRepo.save(bmGroupBookMark);
     } catch (error) {
       // bmGroupId, bookMarkId 중복되면? => 그룹에 이미 추가된 bookMake이다.
@@ -97,7 +98,7 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
     await queryRunner.release();
   }
 
-  return res.sendStatus(CREATED);
+  return res.status(CREATED).json(bmGroupBookMark);
 };
 
 /**

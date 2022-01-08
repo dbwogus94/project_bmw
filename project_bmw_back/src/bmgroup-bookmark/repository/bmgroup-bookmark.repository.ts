@@ -12,7 +12,7 @@ export class BmGroupBookMarkRepository extends Repository<BmGroupBookMark> imple
       .delete()
       .from(BmGroupBookMark)
       .where('bmGroupId = :bmGroupId', { bmGroupId })
-      .where('bookMarkId = :bookMarkId', { bookMarkId })
+      .andWhere('bookMarkId = :bookMarkId', { bookMarkId })
       .execute();
   }
 }
