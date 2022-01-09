@@ -1,22 +1,27 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, ValidateIf } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches, ValidateIf } from 'class-validator';
 
 export class SearchBmGroupDto {
+  @IsOptional()
+  @IsString()
+  @Matches(/book-marks/i)
+  public include!: string;
+
   @ValidateIf((dto, v) => !!(dto.stationSeq || dto.stationId))
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  routeId!: number;
+  public routeId!: number;
 
   @ValidateIf((dto, v) => !!(dto.routeId || dto.stationId))
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  stationSeq!: number;
+  public stationSeq!: number;
 
   @ValidateIf((dto, v) => !!(dto.routeId || dto.stationSeq))
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  stationId!: number;
+  public stationId!: number;
 }

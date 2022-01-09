@@ -17,7 +17,7 @@ const getBmGroup = async (userId: number, bmGroupId: number) => {
 };
 
 /**
- * GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&stationId
+ * GET /bm-groups/:bmGroupId/bookmakes?q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId
  * - 로그인한 유저의 그룹(bmGroupId)에 속한 북마크 조회
  */
 export const searchBookMark = async (req: Request, res: Response, next: NextFunction) => {
@@ -41,7 +41,7 @@ export const searchBookMark = async (req: Request, res: Response, next: NextFunc
 };
 
 /**
- * POST /bmgroups/:bmGroupId/bookmarks
+ * POST /bm-groups/:bmGroupId/book-marks
  * - 북마크 생성
  */
 export const createBookMark = async (req: Request, res: Response, next: NextFunction) => {
@@ -102,7 +102,7 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
 };
 
 /**
- * DELECT /bmgroups/:bmGroupId/bookmarks:bookMarkId
+ * DELECT /bm-groups/:bmGroupId/book-marks/:bookMarkId
  * - 북마크 삭제
  */
 export const deleteBookMark = async (req: Request, res: Response, next: NextFunction) => {

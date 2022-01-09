@@ -16,7 +16,9 @@ export default function (DtoClass: ClassType<object>) {
     try {
       // TODO: params, body, query에 중복되는 데이터를 허용하지 않고 있음.
       const data = { ...req.params, ...req.body, ...req.query }; // 최우선순위 query
-      const dtoObject = await transformAndValidate(DtoClass, data);
+      // 검색 키워드가 q에 담겨온 경우 파싱
+      const searchQuery = getSearchQuery(req.query);
+      const dtoObject = await transformAndValidate(DtoClass, { ...data, ...searchQuery });
       req.dto = dtoObject;
       next();
     } catch (errors) {
@@ -47,5 +49,28 @@ export default function (DtoClass: ClassType<object>) {
         return accumulator;
       }, {});
     }
+  }
+
+  /**
+   * 검색용 쿼리 파싱
+   * - 요청 query에서 key 'q'의 값은 검색에 사용하는 키워드이다.
+   * - ex) GET url?q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId
+   * @param query
+   * @returns
+   */
+  function getSearchQuery(query: any): object {
+    const { q } = query;
+    if (!q) {
+      return {};
+    }
+    // 1) ,를 기준으로 split
+    const queryStrings = q.split(',');
+    // 2) = 기준으로 key 값으로 변환
+    return queryStrings.reduce((pre: any, cur: any) => {
+      const obj: any = {};
+      const temp = cur.split('=');
+      obj[temp[0]] = temp[1];
+      return { ...pre, ...obj };
+    }, {});
   }
 }

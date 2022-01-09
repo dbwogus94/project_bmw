@@ -1,13 +1,14 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { BmGroup, IBmGroup } from '@bmGroup/entities/BmGroup.entity';
-import { BookMark } from '@bookMark/entities/BookMark.entity';
 import { transformAndValidate } from 'class-transformer-validator';
 import { BookMarkDto } from '@bookMark/dto/response/book-mark.dto';
 
 export interface IBmGroupRepository {
   gatBmGroupsWithEntityTree(userId: number): Promise<IBmGroup[]>;
   searchBmGroupsWithEntityTree(userId: number, checkColumn: string): Promise<any[]>;
+  findById(userId: number): Promise<IBmGroup[]>;
   findOneById(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
+  findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
 }
 
 @EntityRepository(BmGroup)
@@ -149,7 +150,36 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
   }
 
   /**
-   * 로그인한 유저Id + bmGroupId를 사용하여 BM 그룹 하나를 조회
+   * 로그인한 유저의 그룹 리스트를 조회 (연관관계 Entity 포함 x)
+   * @param userId
+   * @returns
+   */
+  async findById(userId: number): Promise<IBmGroup[]> {
+    return this.createQueryBuilder('bg')
+      .select(['bg.bmGroupId', 'bg.bmGroupName'])
+      .innerJoin('bg.user', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
+  }
+
+  /**
+   * 로그인한 유저Id + bmGroupId를 사용하여 BM 그룹을 조회(연관 Entity 포함 o)
+   * @param userId
+   * @param bmGroupId
+   */
+  findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined> {
+    return this.createQueryBuilder('bg')
+      .select(['bg.bmGroupId', 'bg.bmGroupName'])
+      .innerJoin('bg.user', 'user')
+      .innerJoinAndSelect('bg.bmGroupBookMarks', 'bgbm')
+      .innerJoinAndSelect('bgbm.bookMark', 'bm')
+      .where('user.id = :userId', { userId })
+      .andWhere('bg.bmGroupId = :bmGroupId', { bmGroupId })
+      .getOne();
+  }
+
+  /**
+   * 로그인한 유저Id + bmGroupId를 사용하여 BM 그룹을 조회
    * @param userId
    * @param bmGroupId
    * @returns
@@ -157,7 +187,7 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
    */
   async findOneById(userId: number | string, bmGroupId: string | number): Promise<IBmGroup | undefined> {
     return this.createQueryBuilder('bg')
-      .select(['bg.bmGroupId', 'bg.bmGroupName', 'user.username'])
+      .select(['bg.bmGroupId', 'bg.bmGroupName'])
       .innerJoin('bg.user', 'user')
       .where('user.id = :userId', { userId })
       .andWhere('bg.bmGroupId = :bmGroupId', { bmGroupId })
