@@ -1,14 +1,16 @@
 export default class BmGroupService {
+  include = 'include=book-marks';
+
   constructor(http) {
     this.http = http;
   }
 
   getBmGroupApi() {
-    return `/bmgroups`;
+    return '/bm-groups';
   }
 
   getBookMarkApi(bmGroupId) {
-    return `${this.getBmGroupApi()}/${bmGroupId}/bookmarks`;
+    return `${this.getBmGroupApi()}/${bmGroupId}/book-marks`;
   }
 
   /**
@@ -33,7 +35,7 @@ export default class BmGroupService {
     ```
    */
   async getBmGroups() {
-    const url = this.getBmGroupApi();
+    const url = `${this.getBmGroupApi()}?${this.include}`;
     return this.http.fetch(url, { method: 'GET' });
   }
 
@@ -73,7 +75,8 @@ export default class BmGroupService {
   ```
    */
   async searchBmGroups(routeId, stationSeq, stationId) {
-    const url = `${this.getBmGroupApi()}?routeId=${routeId}&stationSeq=${stationSeq}&stationId=${stationId}`;
+    const searchQuery = `q=routeId=${routeId},stationSeq=${stationSeq},stationId=${stationId}`;
+    const url = `${this.getBmGroupApi()}?${this.include}&${searchQuery}`;
     const data = this.http.fetch(url, { method: 'GET' });
     return data;
   }
@@ -106,7 +109,8 @@ export default class BmGroupService {
    * @returns {Promise<Bookmake[]>}
    */
   async searchBookMarks(bmGroupId, routeId, stationSeq, stationId) {
-    const url = `${this.getBookMarkApi(bmGroupId)}?routeId=${routeId}&stationSeq=${stationSeq}&stationId=${stationId}`;
+    const searchQuery = `q=routeId=${routeId},stationSeq=${stationSeq},stationId=${stationId}`;
+    const url = `${this.getBookMarkApi(bmGroupId)}?${searchQuery}`;
     const data = await this.http.fetch(url, { method: 'GET' });
     return data;
   }
