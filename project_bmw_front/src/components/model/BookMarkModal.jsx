@@ -7,21 +7,19 @@ import NewBmGroupForm from './NewBmGroupForm';
     { 
       "bmGroupId": 1,
       "bmGroupName": "jay_group_1",
-      "bmGroupBookMarks": [
+      "bookMarks": [
         {
-          "bmGroupBookMarkId": 180,
-          "bookMark": {
-            "bookMarkId": 29,
-            "checkColumn": "2290001114229000968",
-            "routeId": 229000111,
-            "stationSeq": 4,
-            "stationId": 229000968,
-            "label": "B",
-            "routeName": "G7426",
-            "stationName": "야당역.한빛마을5.9단지",
-            "direction": "양재역.양재1동민원분소",
-            "type": "gyeonggi"
-          }
+          "bookMarkId": 29,
+          "checkColumn": "2290001114229000968",
+          "routeId": 229000111,
+          "stationSeq": 4,
+          "stationId": 229000968,
+          "label": "B",
+          "routeName": "G7426",
+          "stationName": "야당역.한빛마을5.9단지",
+          "direction": "양재역.양재1동민원분소",
+          "createdAt": "2022-01-06T13:05:07.487Z",
+          "updatedAt": "2022-01-06T13:05:07.487Z"
         }
       ]
     },
@@ -53,7 +51,7 @@ const BookMarkModal = memo(({ bmGroupService, onBookMarkChange, isOpen, onClose,
     event.preventDefault();
     bmGroupService
       .createBmGroup(bmGroupName)
-      .then(bmGroup => setBmGroups([...bmGroups, { ...bmGroup, bmGroupBookMarks: [] }]))
+      .then(bmGroup => setBmGroups([...bmGroups, { ...bmGroup, bookMarks: [] }]))
       .catch(console.error);
     setIsCreate(false);
   };

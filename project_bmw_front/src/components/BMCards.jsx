@@ -16,10 +16,7 @@ const BMCards = memo(({ bmGroupService, username }) => {
     bmGroupService //
       .getBmGroups()
       .then(bmGroup => {
-        bmGroupService
-          .getBMList(bmGroup[0].bmGroupId)
-          .then(tweets => setTweets([...tweets]))
-          .catch(err => onError(err, setError));
+        // bmGroup => setTweets([...bmGroup])
       });
   }, [bmGroupService, user]);
 
