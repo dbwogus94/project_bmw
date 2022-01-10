@@ -1,11 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { BmGroup, IBmGroup } from '@bmGroup/entities/BmGroup.entity';
-import { transformAndValidate } from 'class-transformer-validator';
-import { BookMarkDto } from '@bookMark/dto/response/book-mark.dto';
 
 export interface IBmGroupRepository {
   gatBmGroupsWithEntityTree(userId: number): Promise<IBmGroup[]>;
-  searchBmGroupsWithEntityTree(userId: number, checkColumn: string): Promise<any[]>;
+  searchBmGroupsWithEntityRowData(userId: number, checkColumn: string): Promise<any[]>;
   findById(userId: number): Promise<IBmGroup[]>;
   findOneById(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
   findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
@@ -13,33 +11,6 @@ export interface IBmGroupRepository {
 
 @EntityRepository(BmGroup)
 export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRepository {
-  /**
-   * rawData로 리턴된 쿼리 결과를 BmGroup Entity로 변환
-   * - TODO: 바로 BmGroup에 매핑할 수 있도록 개선필요
-   * @param rawDatas
-   * @returns
-   */
-  async rawDataToEntity(rawDatas: any[]): Promise<any[]> {
-    return Promise.all(
-      rawDatas.map(async rawData => {
-        const { bmGroupId, bmGroupName, bmGroupBookMarkId } = rawData;
-        const bmGroupBookMarks: any = [];
-        return rawData.bookMarkId
-          ? {
-              bmGroupId,
-              bmGroupName,
-              bmGroupBookMarks: [
-                {
-                  bmGroupBookMarkId, //
-                  bookMark: await transformAndValidate(BookMarkDto, rawData),
-                },
-              ],
-            }
-          : { bmGroupId, bmGroupName, bmGroupBookMarks };
-      }),
-    );
-  }
-
   /**
    * 로그인한 유저의 BmGroups 리턴
    * - User를 제외한 Entity Tree를 모두 포함하여 조회
@@ -73,24 +44,13 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
   }
 
   /**
-   * 로그인한 유저의 그룹 리스트가 가진 bookMark 리스트중 checkColumn와 일치하는 모든 bmGroup조회
+   * 로그인한 유저의 그룹 리스트가 가진 bookMark 리스트와 checkColumn와 일치하는 모든 bmGroup조회
    * @param userId
    * @param checkColumn - String(routeId) + String(stationSeq) + String(stationId)
-   * @returns 
-   * - 리턴되는 bmGroups
-   ```
-   bmGroups [
-      bmGroup {
-          bmGroupBookMarks: [
-            bmGroupBookMark { 
-              bookMark 
-            }
-          ]
-      }
-    ]
-  ```
+   * @returns
+   * - RowData
    */
-  async searchBmGroupsWithEntityTree(userId: string | number, checkColumn: string): Promise<any[]> {
+  async searchBmGroupsWithEntityRowData(userId: string | number, checkColumn: string): Promise<any[]> {
     /* TODO: 원래는 bg테이블에 A를 inner join하면 안된다.
       - 적용하려 했던 쿼리는 SubQuery A에 SubQuery B Left join하는 것이다.
       - 하지만 typeOrm에서는 Entity를 사용하지 않고 바로 SubQuery를 사용하는 방법을 지원하지 않는다.
@@ -98,55 +58,56 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
       **요점: typeOrm에 특성 때문에 한번의 join이 더 발생하게 됨.
     */
 
-    const rawDatas = await this.createQueryBuilder('bg')
-      .select('A.bmGroupId', 'bmGroupId')
-      .addSelect('A.bmGroupName', 'bmGroupName')
-      // .addSelect('B.*') // 자동으로 호출
-      .innerJoin(
-        subQuery => {
-          // 1. 로그인 유저의 그룹 리스트 조회한다.
-          return subQuery
-            .select('bg.bmGroupId', 'bmGroupId')
-            .addSelect('bg.bmGroupName', 'bmGroupName')
-            .from(BmGroup, 'bg')
-            .innerJoin('bg.user', 'user')
-            .where('user.id = :userId', { userId })
-            .groupBy('bg.bmGroupId');
-        },
-        'A',
-        'A.bmGroupId = bg.bmGroupId',
-      )
-      .leftJoinAndSelect(
-        subQuery => {
-          // 2. checkColumn로 북마크를 조회하고 그 북마크를 가진 그룹을 조회한다.
-          return subQuery
-            .select('bg.bmGroupId', 'bmGroupId')
-            .addSelect('bgbm.bmGroupBookMarkId', 'bmGroupBookMarkId')
-            .addSelect('bm.bookMarkId', 'bookMarkId')
-            .addSelect('bm.checkColumn', 'checkColumn')
-            .addSelect('bm.routeId', 'routeId')
-            .addSelect('bm.stationSeq', 'stationSeq')
-            .addSelect('bm.stationId', 'stationId')
-            .addSelect('bm.label', 'label')
-            .addSelect('bm.routeName', 'routeName')
-            .addSelect('bm.stationName', 'stationName')
-            .addSelect('bm.direction', 'direction')
-            .addSelect('bm.type', 'type')
-            .from(BmGroup, 'bg')
-            .innerJoin('bg.user', 'user')
-            .innerJoin('bg.bmGroupBookMarks', 'bgbm')
-            .innerJoin('bgbm.bookMark', 'bm')
-            .where('user.id = :userId', { userId })
-            .andWhere('bm.checkColumn = :checkColumn', { checkColumn });
-        },
-        'B',
-        'A.bmGroupId = B.bmGroupId',
-      )
-      .orderBy('A.bmGroupId', 'ASC')
-      .getRawMany(); // 서브쿼리 사용하면 getMany() 정상 사용불가
-
-    // BmGroup Entity로 변환
-    return this.rawDataToEntity(rawDatas);
+    return (
+      this.createQueryBuilder('bg')
+        .select('A.bmGroupId', 'bmGroupId')
+        .addSelect('A.bmGroupName', 'bmGroupName')
+        // .addSelect('B.*') // 자동으로 호출
+        .innerJoin(
+          subQuery => {
+            // 1. 로그인 유저의 그룹 리스트 조회한다.
+            return subQuery
+              .select('bg.bmGroupId', 'bmGroupId')
+              .addSelect('bg.bmGroupName', 'bmGroupName')
+              .from(BmGroup, 'bg')
+              .innerJoin('bg.user', 'user')
+              .where('user.id = :userId', { userId })
+              .groupBy('bg.bmGroupId');
+          },
+          'A',
+          'A.bmGroupId = bg.bmGroupId',
+        )
+        .leftJoinAndSelect(
+          subQuery => {
+            // 2. checkColumn로 북마크를 조회하고 그 북마크를 가진 그룹을 조회한다.
+            return subQuery
+              .select('bg.bmGroupId', 'bmGroupId')
+              .addSelect('bgbm.bmGroupBookMarkId', 'bmGroupBookMarkId')
+              .addSelect('bm.bookMarkId', 'bookMarkId')
+              .addSelect('bm.checkColumn', 'checkColumn')
+              .addSelect('bm.routeId', 'routeId')
+              .addSelect('bm.stationSeq', 'stationSeq')
+              .addSelect('bm.stationId', 'stationId')
+              .addSelect('bm.label', 'label')
+              .addSelect('bm.routeName', 'routeName')
+              .addSelect('bm.stationName', 'stationName')
+              .addSelect('bm.direction', 'direction')
+              .addSelect('bm.type', 'type')
+              .addSelect('bm.createdAt', 'createdAt')
+              .addSelect('bm.updatedAt', 'updatedAt')
+              .from(BmGroup, 'bg')
+              .innerJoin('bg.user', 'user')
+              .innerJoin('bg.bmGroupBookMarks', 'bgbm')
+              .innerJoin('bgbm.bookMark', 'bm')
+              .where('user.id = :userId', { userId })
+              .andWhere('bm.checkColumn = :checkColumn', { checkColumn });
+          },
+          'B',
+          'A.bmGroupId = B.bmGroupId',
+        )
+        .orderBy('A.bmGroupId', 'ASC')
+        .getRawMany()
+    ); // 서브쿼리 사용하면 getMany() 정상 사용불가
   }
 
   /**
@@ -171,8 +132,8 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
     return this.createQueryBuilder('bg')
       .select(['bg.bmGroupId', 'bg.bmGroupName'])
       .innerJoin('bg.user', 'user')
-      .innerJoinAndSelect('bg.bmGroupBookMarks', 'bgbm')
-      .innerJoinAndSelect('bgbm.bookMark', 'bm')
+      .leftJoinAndSelect('bg.bmGroupBookMarks', 'bgbm')
+      .leftJoinAndSelect('bgbm.bookMark', 'bm')
       .where('user.id = :userId', { userId })
       .andWhere('bg.bmGroupId = :bmGroupId', { bmGroupId })
       .getOne();

@@ -9,19 +9,10 @@ export const errorMessages: any = Object.freeze({
     maxLength: '최대 길이를 초과했습니다.',
     createBookMark: 'bmGroupId이 잘못되었습니다. ex) 로그인된 user의 bmGroup이 아닙니다.',
   },
-  CONFLICT_MESSAGE: {
-    code: 409,
-    signup: '중복된 username 입니다.',
-    createBookMark: '이미 추가된 book mark 입니다.',
-  },
   UNAUTHORIZED_MESSAGE: {
     code: 401,
     signin: '등록된 사용자가 아니거나, 정보가 일치하지 않습니다.',
     isAuth: '엑세스 토큰이 없거나, 만료되었습니다. 다시 로그인 하세요',
-  },
-  INTERNAL_SERVER_ERROR_MESSAGE: {
-    code: 500,
-    serverError: 'INTERNAL_SERVER_ERROR',
   },
   NOT_FOUND_MESSAGE: {
     code: 404,
@@ -29,5 +20,15 @@ export const errorMessages: any = Object.freeze({
     getBusInfo: '버스 상세정보가 없습니다. routeId를 확인하세요.',
     getStations: '경유 정류장 목록이 없습니다. routeId를 확인하세요.',
     getBmGroup: '요청한 bmGroupId에 일치하는 BM그룹이 없습니다.',
+    deleteBookMark: '요청한 bmGroupId 그룹에는 bookMarkId를 가진 북마크가 없습니다.',
+  },
+  CONFLICT_MESSAGE: {
+    code: 409,
+    signup: '중복된 username 입니다.',
+    createBookMark: '이미 추가된 book mark 입니다.',
+  },
+  INTERNAL_SERVER_ERROR_MESSAGE: {
+    code: 500,
+    serverError: 'INTERNAL_SERVER_ERROR',
   },
 });

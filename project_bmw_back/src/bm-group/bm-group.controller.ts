@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorMessages } from '@shared/message';
 import { StatusCodes } from 'http-status-codes';
-import { BmGroupRepository } from './repository/bm-group.repository';
-import { getCustomRepository } from 'typeorm';
-import { UserRepository } from '@user/repository/user.repositroy';
+import { BmGroupService, IBmGroupService } from './bm-group.service';
 
 const { OK, CREATED, NOT_FOUND } = StatusCodes;
 const { NOT_FOUND_MESSAGE } = errorMessages;
+const bmGroupService: IBmGroupService = new BmGroupService();
 
 /**
  * GET /bm-groups
@@ -20,23 +19,25 @@ const { NOT_FOUND_MESSAGE } = errorMessages;
  * - 로그인한 유저의 전체 그룹 리스트에서 조건으로 검색(book-mark 포함 o)
  */
 export const getBmGroups = async (req: Request, res: Response, next: NextFunction) => {
-  const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
   const { include, routeId, stationSeq, stationId } = req.dto;
   const { id } = req;
   let bmGroups;
 
+  // GET /api/bm-groups?include
   if (include && !(routeId && stationSeq && stationId)) {
-    bmGroups = await bmGroupRepository.gatBmGroupsWithEntityTree(req.id);
+    bmGroups = await bmGroupService.findBmGroupsWithEntityTree(req.id);
     return res.status(OK).json(bmGroups);
   }
 
+  // GET /api/bm-groups?include=book-mark&q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId // q 검색쿼리 사용
   if (include && !!(routeId && stationSeq && stationId)) {
     const searchKey = `${routeId}${stationSeq}${stationId}`;
-    bmGroups = await bmGroupRepository.searchBmGroupsWithEntityTree(id, searchKey);
+    bmGroups = await bmGroupService.searchBmGroupsWithEntityTree(id, searchKey);
     return res.status(OK).json(bmGroups);
   }
 
-  bmGroups = await bmGroupRepository.findById(id);
+  // GET /bm-groups
+  bmGroups = await bmGroupService.findById(id);
   return res.status(OK).json(bmGroups);
 };
 
@@ -48,15 +49,16 @@ export const getBmGroups = async (req: Request, res: Response, next: NextFunctio
  * - id가 ${bmGroupId}인 그룹 조회 (book-marks 포함 o)
  */
 export const getBmGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
   const { include, bmGroupId } = req.dto;
   const { id } = req;
   let bmGroup;
 
   if (include) {
-    bmGroup = await bmGroupRepository.findOneByIdWithEntityTree(id, bmGroupId);
+    // GET /api/bm-groups/:bmGroupId?include=book-marks
+    bmGroup = await bmGroupService.findOneByIdWithEntityTree(id, bmGroupId);
   } else {
-    bmGroup = await bmGroupRepository.findOneById(id, bmGroupId);
+    // GET /bm-groups/:bmGroupId
+    bmGroup = await bmGroupService.findOneById(id, bmGroupId);
   }
 
   if (!bmGroup) {
@@ -71,19 +73,9 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
 
 /**
  * POST /bm-groups
- * - 그룹생성
  */
 export const createBmGroup = async (req: Request, res: Response, next: NextFunction) => {
   const { bmGroupName } = req.dto;
-  const userRepository: UserRepository = getCustomRepository(UserRepository);
-  const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
-
-  const user = await userRepository.findByUserId(req.id);
-  const bmGroup = bmGroupRepository.create({
-    user,
-    bmGroupName,
-  });
-  await bmGroupRepository.save(bmGroup);
-
+  const bmGroup = await bmGroupService.createBmGroup(req.id, bmGroupName);
   return res.status(CREATED).json(bmGroup);
 };
