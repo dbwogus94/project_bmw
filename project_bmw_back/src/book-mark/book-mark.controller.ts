@@ -1,43 +1,36 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorMessages } from '@shared/message';
 import { StatusCodes } from 'http-status-codes';
-import { getConnection, getCustomRepository } from 'typeorm';
-import { BookMarkRepository } from '@bookMark/repository/book-mark.repository';
-import { BmGroupBookMarkRepository } from '@bmGroupBookMark/repository/bmgroup-bookmark.repository';
 import { getLogger } from '@shared/Logger';
-import { BmGroupRepository } from '@bmGroup/repository/bm-group.repository';
+import { BookMarkService, IBookMarkService } from './book-mark.service';
 
-const { OK, CREATED, NO_CONTENT, BAD_REQUEST, CONFLICT } = StatusCodes;
-const { BAD_REQUEST_MESSAGE, CONFLICT_MESSAGE } = errorMessages;
+const { OK, CREATED, CONFLICT, NO_CONTENT, BAD_REQUEST, NOT_FOUND } = StatusCodes;
+const { BAD_REQUEST_MESSAGE, NOT_FOUND_MESSAGE, CONFLICT_MESSAGE } = errorMessages;
 const logger = getLogger();
-
-const getBmGroup = async (userId: number, bmGroupId: number) => {
-  const bmGroupRepo: BmGroupRepository = getCustomRepository(BmGroupRepository);
-  return bmGroupRepo.findOneById(userId, bmGroupId);
-};
+const bookMarkService: IBookMarkService = new BookMarkService(logger);
 
 /**
  * GET /bm-groups/:bmGroupId/bookmakes?q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId
  * - 로그인한 유저의 그룹(bmGroupId)에 속한 북마크 조회
  */
 export const searchBookMark = async (req: Request, res: Response, next: NextFunction) => {
-  const bookMarkRepo: BookMarkRepository = getCustomRepository(BookMarkRepository);
   const { bmGroupId, routeId, stationSeq, stationId } = req.dto;
   // 검색용 키 생성(유니크)
   const checkColumn = `${routeId}${stationSeq}${stationId}`;
 
-  const isBmGroup = !!(await getBmGroup(req.id, bmGroupId));
-  if (!isBmGroup) {
-    return res.status(BAD_REQUEST).json({
-      errCode: BAD_REQUEST,
-      message: BAD_REQUEST_MESSAGE.createBookMark,
-    });
+  try {
+    const bookMark = await bookMarkService.findOneTreeByCheckColumn(req.id, bmGroupId, checkColumn);
+    return bookMark //
+      ? res.status(OK).json([bookMark])
+      : res.status(OK).json([]);
+  } catch (error: any) {
+    if (error.code === 400) {
+      return res.status(BAD_REQUEST).json({
+        errCode: BAD_REQUEST,
+        message: BAD_REQUEST_MESSAGE.createBookMark,
+      });
+    }
   }
-
-  const bookMark = await bookMarkRepo.findTreeByCheckColumn(req.id, bmGroupId, checkColumn);
-  return bookMark //
-    ? res.status(OK).json([bookMark])
-    : res.status(OK).json([]);
 };
 
 /**
@@ -45,60 +38,27 @@ export const searchBookMark = async (req: Request, res: Response, next: NextFunc
  * - 북마크 생성
  */
 export const createBookMark = async (req: Request, res: Response, next: NextFunction) => {
-  const bookMarkRepo: BookMarkRepository = getCustomRepository(BookMarkRepository);
-  const bmGroupBookMarkRepo: BmGroupBookMarkRepository = getCustomRepository(BmGroupBookMarkRepository);
-  const { bmGroupId, routeId, stationSeq, stationId } = req.dto;
   let bookMark: any;
-  let bmGroupBookMark: any;
-
-  const queryRunner = getConnection().createQueryRunner();
-  await queryRunner.connect();
-  await queryRunner.startTransaction();
-  await queryRunner.commitTransaction();
   try {
-    // 검색용 키 생성(유니크)
-    const checkColumn = `${routeId}${stationSeq}${stationId}`;
-
-    // 1. Insert book_mark
-    try {
-      const newBookMark = bookMarkRepo.create({ ...req.dto, checkColumn });
-      bookMark = await bookMarkRepo.save(newBookMark);
-    } catch (error) {
-      // 이미 있는 북마크면? => 조회
-      bookMark = await bookMarkRepo.findOneByCheckColumn(checkColumn);
-    }
-
-    // 2. Select bm_group
-    const bmGroup = await getBmGroup(req.id, bmGroupId);
-    if (!bmGroup) {
+    bookMark = await bookMarkService.createBookMark(req.id, req.dto);
+  } catch (error: any) {
+    const { code } = error;
+    if (code === 400) {
       return res.status(BAD_REQUEST).json({
         errCode: BAD_REQUEST,
         message: BAD_REQUEST_MESSAGE.createBookMark,
       });
     }
 
-    // 3. Insert bmgroup_bookmark
-    try {
-      bmGroupBookMark = bmGroupBookMarkRepo.create({ bmGroup, bookMark });
-      await bmGroupBookMarkRepo.save(bmGroupBookMark);
-    } catch (error) {
-      // bmGroupId, bookMarkId 중복되면? => 그룹에 이미 추가된 bookMake이다.
-      // => ALTER TABLE bmgroup_bookmark ADD UNIQUE(bmGroupId, bookMarkId)
+    if (code === 409) {
       return res.status(CONFLICT).json({
         errCode: CONFLICT,
         message: CONFLICT_MESSAGE.createBookMark,
       });
     }
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    logger.error('createBookMark Rollback 발생:');
-    logger.error(error);
-    throw error;
-  } finally {
-    await queryRunner.release();
   }
 
-  return res.status(CREATED).json(bmGroupBookMark);
+  return res.status(CREATED).json(bookMark);
 };
 
 /**
@@ -106,23 +66,23 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
  * - 북마크 삭제
  */
 export const deleteBookMark = async (req: Request, res: Response, next: NextFunction) => {
-  const bmGroupBookMarkRepo: BmGroupBookMarkRepository = getCustomRepository(BmGroupBookMarkRepository);
   const { bmGroupId, bookMarkId } = req.dto;
-
-  const isBmGroup = !!(await getBmGroup(req.id, bmGroupId));
-  if (!isBmGroup) {
-    return res.status(BAD_REQUEST).json({
-      errCode: BAD_REQUEST,
-      message: BAD_REQUEST_MESSAGE.createBookMark,
-    });
-  }
-
   try {
-    await bmGroupBookMarkRepo.deleteOne(bmGroupId, bookMarkId);
-  } catch (error) {
-    logger.error(error);
-    throw error;
+    await bookMarkService.deleteBookMark(req.id, bmGroupId, bookMarkId);
+    return res.sendStatus(NO_CONTENT);
+  } catch (error: any) {
+    const { code } = error;
+    if (code === 400) {
+      return res.status(BAD_REQUEST).json({
+        errCode: BAD_REQUEST,
+        message: BAD_REQUEST_MESSAGE.createBookMark,
+      });
+    }
+    if (error.code === 404) {
+      return res.status(NOT_FOUND).json({
+        errCode: NOT_FOUND,
+        message: NOT_FOUND_MESSAGE.deleteBookMark,
+      });
+    }
   }
-
-  res.sendStatus(NO_CONTENT);
 };
