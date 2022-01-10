@@ -10,18 +10,19 @@ import { getLogger } from '@shared/Logger';
 import customMorgan from '@middleware/custom-morgan';
 import { config } from '@config';
 import { errorMessages } from '@shared/message';
+import httpException from '@middleware/http-exception';
 // my router
 import AuthRouter from '@auth/auth.route';
 import BusRouter from '@bus/bus.route';
 import bmGroupRouter from '@bmGroup/bm-group.route';
 import bookMarkRouter from '@bookMark/book-mark.route';
+import { HttpError } from '@shared/http.error';
 
 // winston 로거 생성
 const logger = getLogger();
 
 const app = express();
-const { NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
-const { INTERNAL_SERVER_ERROR_MESSAGE } = errorMessages;
+const { NOT_FOUND } = StatusCodes;
 const { credentials, origin } = config.server.cors;
 
 /************************************************************************************
@@ -57,14 +58,16 @@ app.use('/api/bm-groups/:bmGroupId/book-marks', bookMarkRouter);
 
 // 404 처리
 app.use((req: Request, res: Response) => {
-  logger.info('[라우트 없음 : 404] ' + req.url);
-  res.sendStatus(NOT_FOUND);
+  //logger.info('[라우트 없음 : 404] ' + req.url);
+  throw new HttpError(404, 'not_found');
 });
 
 // 500 : 서버 에러 처리 미들웨어
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err);
-  return res.status(INTERNAL_SERVER_ERROR).json(INTERNAL_SERVER_ERROR_MESSAGE);
+  return err instanceof HttpError
+    ? httpException(err, req, res)
+    : httpException(new HttpError(500, 'serverError'), req, res);
 });
 
 export default app;

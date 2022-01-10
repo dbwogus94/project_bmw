@@ -2,6 +2,7 @@ import { ClassType, transformAndValidate } from 'class-transformer-validator';
 import { NextFunction, Request, Response } from 'express';
 import { errorMessages } from '@shared/message';
 import { StatusCodes } from 'http-status-codes';
+import { HttpError } from '@shared/http.error';
 const { BAD_REQUEST } = StatusCodes;
 /**
  * Dto 유효성 검사기
@@ -22,7 +23,7 @@ export default function (DtoClass: ClassType<object>) {
       req.dto = dtoObject;
       next();
     } catch (errors) {
-      res.status(BAD_REQUEST).json(makeErrorMsg(errors));
+      throw new HttpError(BAD_REQUEST, 'validator', makeErrorMsg(errors));
     }
   };
 
@@ -32,7 +33,7 @@ export default function (DtoClass: ClassType<object>) {
       accumulator.push({
         errCode: BAD_REQUEST,
         property, // 오류 필드
-        message: getKorMsg(constraints), // 오류 내용
+        messages: getKorMsg(constraints), // 오류 내용
         errValue: !(value === undefined) && Number.isNaN(value) ? 'NaN' : value, // 오류 값
       });
 
@@ -43,7 +44,7 @@ export default function (DtoClass: ClassType<object>) {
 
     function getKorMsg(object: any) {
       return Object.keys(object).reduce((accumulator: any, key: any) => {
-        const korMsg = errorMessages.BAD_REQUEST_MESSAGE[key];
+        const korMsg = errorMessages.BAD_REQUEST_MESSAGE.validate[key];
         const detailMsg = object[key];
         accumulator[key] = { korMsg, detailMsg };
         return accumulator;

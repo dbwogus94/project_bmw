@@ -44,7 +44,7 @@ export class BookMarkService implements IBookMarkService {
     const bookMarkRepo: BookMarkRepository = getCustomRepository(BookMarkRepository);
     const isBmGroup = !!(await this.getBmGroup(userId, bmGroupId));
     if (!isBmGroup) {
-      throw new HttpError(400, 'BAD_REQUEST');
+      throw new HttpError(400, 'searchBookMark');
     }
     const entity = await bookMarkRepo.findOneTreeByCheckColumn(userId, bmGroupId, checkColumn);
     return entity //
@@ -87,7 +87,7 @@ export class BookMarkService implements IBookMarkService {
       // 2. Select bm_group
       const bmGroup = await this.getBmGroup(userId, bmGroupId);
       if (!bmGroup) {
-        httpError = new HttpError(400, 'BAD_REQUEST');
+        httpError = new HttpError(400, 'createBookMark');
         throw httpError;
       }
 
@@ -96,7 +96,7 @@ export class BookMarkService implements IBookMarkService {
         const bmGroupBookMark = bmGroupBookMarkRepo.create({ bmGroup, bookMark });
         await bmGroupBookMarkRepo.save(bmGroupBookMark);
       } catch (error) {
-        httpError = new HttpError(409, 'CONFLICT');
+        httpError = new HttpError(409, 'createBookMark');
         throw httpError;
       }
     } catch (error) {
@@ -105,7 +105,8 @@ export class BookMarkService implements IBookMarkService {
       throw error;
     } finally {
       await queryRunner.release();
-      if (httpError) throw httpError; // controller에 에러 전달
+      // 롤백 이후 httpError이 있다면 에러를 던짐
+      if (httpError) throw httpError;
     }
 
     return transformAndValidate(BookMarkDto, { ...bookMark });
@@ -121,14 +122,14 @@ export class BookMarkService implements IBookMarkService {
     const bmGroupBookMarkRepo: BmGroupBookMarkRepository = getCustomRepository(BmGroupBookMarkRepository);
     const isBmGroup = !!(await this.getBmGroup(userId, bmGroupId));
     if (!isBmGroup) {
-      throw new HttpError(400, 'BAD_REQUEST');
+      throw new HttpError(400, 'deleteBookMark');
     }
 
     // BM그룹, 북마크 연결 테이블에서 매핑 관계 제거
     const result = await bmGroupBookMarkRepo.deleteOne(bmGroupId, bookMarkId); // affected
     const { affected } = result!;
     if (!affected) {
-      throw new HttpError(404, 'NOT_FOUND');
+      throw new HttpError(404, 'deleteBookMark');
     }
   }
 }

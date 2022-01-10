@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { errorMessages } from '@shared/message';
 import { StatusCodes } from 'http-status-codes';
 import { BmGroupService, IBmGroupService } from './bm-group.service';
+import { HttpError } from '@shared/http.error';
 
-const { OK, CREATED, NOT_FOUND } = StatusCodes;
-const { NOT_FOUND_MESSAGE } = errorMessages;
+const { OK, CREATED } = StatusCodes;
 const bmGroupService: IBmGroupService = new BmGroupService();
 
 /**
@@ -62,10 +61,7 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
   }
 
   if (!bmGroup) {
-    return res.status(NOT_FOUND).json({
-      errCode: NOT_FOUND_MESSAGE.code,
-      message: NOT_FOUND_MESSAGE.getBmGroup,
-    });
+    throw new HttpError(400, 'getBmGroup');
   }
 
   return res.status(OK).json(bmGroup);

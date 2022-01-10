@@ -2,13 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { XMLParser } from 'fast-xml-parser';
 import { config } from '@config';
-import { errorMessages } from '@shared/message';
 import { OpenApi } from '@shared/open-api';
 import { GyeonggiBusService } from '@bus/gyeonggi-bus.service';
 import { SeoulBusService } from './seoul-bus.service';
+import { HttpError } from '@shared/http.error';
 
-const { OK, NOT_FOUND } = StatusCodes;
-const { NOT_FOUND_MESSAGE } = errorMessages;
+const { OK } = StatusCodes;
 const { gyeonggi, seoul } = config.openApi;
 
 // 의존성 주입
@@ -42,12 +41,11 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
     info = await seoulBusService.getBusInfoByRouteId(routeId);
   }
 
-  return info //
-    ? res.status(OK).json({ routeId, type, info })
-    : res.status(NOT_FOUND).json({
-        errCode: NOT_FOUND_MESSAGE,
-        message: NOT_FOUND_MESSAGE.getBusInfo,
-      });
+  if (!info) {
+    throw new HttpError(404, 'getBusInfo');
+  }
+
+  return res.status(OK).json({ routeId, type, info });
 };
 
 // GET /api/buses/:routeId/stations?type=:type
@@ -63,10 +61,9 @@ export const getStations = async (req: Request, res: Response, next: NextFunctio
     stationList = await seoulBusService.getStationsByRouteId(routeId);
   }
 
-  return stationList && stationList.length !== 0
-    ? res.status(OK).json({ routeId, type, stationList })
-    : res.status(NOT_FOUND).json({
-        errCode: NOT_FOUND_MESSAGE,
-        message: NOT_FOUND_MESSAGE.getStations,
-      });
+  if (!stationList || stationList.length === 0) {
+    throw new HttpError(404, 'getStations');
+  }
+
+  return res.status(OK).json({ routeId, type, stationList });
 };

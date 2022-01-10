@@ -10,9 +10,9 @@ import { SigninDto } from '@user/dto/signin.dto';
 import { errorMessages } from '@shared/message';
 import { JwtService } from '@shared/jwt.service';
 import { getClient } from '@db/redis';
+import { HttpError } from '@shared/http.error';
 
-const { UNAUTHORIZED, CONFLICT, OK, CREATED, TEMPORARY_REDIRECT, NO_CONTENT, NOT_FOUND } = StatusCodes;
-const { CONFLICT_MESSAGE, UNAUTHORIZED_MESSAGE, NOT_FOUND_MESSAGE } = errorMessages;
+const { UNAUTHORIZED, OK, CREATED, TEMPORARY_REDIRECT, NO_CONTENT, NOT_FOUND } = StatusCodes;
 const { cookie, jwt } = config;
 const { access, refresh } = jwt;
 const { key, options } = cookie;
@@ -27,10 +27,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     // 아이디 중복 확인
     const isExist: boolean = !!(await userRepository.findByUsername(username));
     if (isExist) {
-      return res.status(CONFLICT).json({
-        errCode: CONFLICT,
-        message: CONFLICT_MESSAGE.signup,
-      });
+      throw new HttpError(409, 'signup');
     }
 
     // 패스워드 암호화
@@ -56,23 +53,19 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 export const signin = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password }: SigninDto = req.dto;
   const userRepository: UserRepository = getCustomRepository(UserRepository);
-  const errMessage = {
-    errCode: UNAUTHORIZED,
-    message: UNAUTHORIZED_MESSAGE.signin,
-  };
 
   try {
     // 가입된 회원인지 확인
     const user: IUser | undefined = await userRepository.findByUsername(username);
     if (!user) {
-      return res.status(UNAUTHORIZED).json(errMessage);
+      throw new HttpError(401, 'signin');
     }
     const { id, hashPassword, accessToken } = user;
 
     // 패스워드 확인
     const result: boolean = await bcrypt.compare(password, hashPassword);
     if (!result) {
-      return res.status(UNAUTHORIZED).json(errMessage);
+      throw new HttpError(401, 'signin');
     }
 
     // TODO: DB에서 토큰 확인 이미 발급된 토큰 있으면?
@@ -113,14 +106,11 @@ export const me = (req: Request, res: Response, next: NextFunction) => {
 // GET auth/refresh?username=:username
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   const { username } = req.dto;
-  const errMessage = {
-    errCode: UNAUTHORIZED,
-    message: UNAUTHORIZED_MESSAGE.isAuth,
-  };
+
   // 1. 토큰 확인
   const accessToken: string = req.signedCookies[key];
   if (!accessToken) {
-    return res.status(UNAUTHORIZED).json(errMessage);
+    throw new HttpError(401, 'isAuth');
   }
 
   // 2. 유저 조회 및 엑세스 토큰 비교
@@ -128,7 +118,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
   try {
     const user = await userRepository.findByUsername(username);
     if (!user || user.accessToken !== accessToken) {
-      return res.status(UNAUTHORIZED).json(errMessage);
+      throw new HttpError(401, 'isAuth');
     }
 
     // 3. 리프래시 토큰 유효한지 확인
@@ -136,7 +126,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     const { id, refreshToken } = user;
     const isActive = await jwtService.decodeToken(refreshToken!, refresh.secret);
     if (!isActive) {
-      return res.status(UNAUTHORIZED).json(errMessage);
+      throw new HttpError(401, 'isAuth');
     }
 
     // 4. 엑세스 토큰 재발급, db 저장
@@ -150,6 +140,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       ...options,
       sameSite: options.sameSite === 'none' ? 'none' : false,
     });
+
     return res.status(CREATED).json({
       username,
     });
@@ -172,10 +163,7 @@ export const signout = async (req: Request, res: Response, next: NextFunction) =
     // 2. db에서 토큰 모두 제거
     const result = await userRepository.update({ id: req.id }, { accessToken: '', refreshToken: '' });
     if (result.affected === 0) {
-      return res.status(NOT_FOUND).json({
-        code: NOT_FOUND,
-        message: NOT_FOUND_MESSAGE,
-      });
+      throw new HttpError(404, 'signout');
     }
     // 3. usename key로 redis 블랙리스트 등록
     await getClient().set(req.username, accessToken);

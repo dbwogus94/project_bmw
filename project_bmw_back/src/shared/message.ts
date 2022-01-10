@@ -1,13 +1,34 @@
+export const httpName: any = Object.freeze({
+  200: 'OK',
+  201: 'CREATED',
+  204: 'NO_CONTENT',
+  400: 'BAD_REQUEST',
+  401: 'UNAUTHORIZED',
+  403: 'FORBIDDEN',
+  404: 'NOT_FOUND',
+  409: 'CONFLICT',
+  500: 'INTERNAL_SERVER_ERROR',
+});
+
+/**
+ * 에러 메세지 key는 호출된 컨트롤러를 기준으로 한다.
+ */
 export const errorMessages: any = Object.freeze({
   BAD_REQUEST_MESSAGE: {
     code: 400,
-    isEmail: 'email 형식이 아닙니다.',
-    isNotEmpty: '필수 값이 입력되지 않았습니다.',
-    isString: '문자 형식이 아닙니다.',
-    isNumber: '숫자 형식이 아닙니다.',
-    matches: '정규식에 일치하지 않습니다.',
-    maxLength: '최대 길이를 초과했습니다.',
+    validate: {
+      isEmail: 'email 형식이 아닙니다.',
+      isNotEmpty: '필수 값이 입력되지 않았습니다.',
+      isString: '문자 형식이 아닙니다.',
+      isNumber: '숫자 형식이 아닙니다.',
+      matches: '정규식에 일치하지 않습니다.',
+      maxLength: '최대 길이를 초과했습니다.',
+    },
+    validator: '요청에 필요한 필수 값이 없습니다.',
+    searchBookMark: 'bmGroupId이 잘못되었습니다. ex) 로그인된 user의 bmGroup이 아닙니다.',
     createBookMark: 'bmGroupId이 잘못되었습니다. ex) 로그인된 user의 bmGroup이 아닙니다.',
+    deleteBookMark: 'bmGroupId이 잘못되었습니다. ex) 로그인된 user의 bmGroup이 아닙니다.',
+    getBmGroup: 'bmGroupId이 잘못되었습니다. ex) 로그인된 user의 bmGroup이 아닙니다.',
   },
   UNAUTHORIZED_MESSAGE: {
     code: 401,
@@ -16,10 +37,10 @@ export const errorMessages: any = Object.freeze({
   },
   NOT_FOUND_MESSAGE: {
     code: 404,
+    not_found: 'NOT_FOUND',
     signout: '탈퇴한 유저가 입니다.',
     getBusInfo: '버스 상세정보가 없습니다. routeId를 확인하세요.',
     getStations: '경유 정류장 목록이 없습니다. routeId를 확인하세요.',
-    getBmGroup: '요청한 bmGroupId에 일치하는 BM그룹이 없습니다.',
     deleteBookMark: '요청한 bmGroupId 그룹에는 bookMarkId를 가진 북마크가 없습니다.',
   },
   CONFLICT_MESSAGE: {
@@ -32,3 +53,11 @@ export const errorMessages: any = Object.freeze({
     serverError: 'INTERNAL_SERVER_ERROR',
   },
 });
+
+export function getHttpName(code: string | number): any {
+  return httpName[code];
+}
+
+export function getHttpErrorMessage(code: string | number): any {
+  return errorMessages[`${getHttpName(code)}_MESSAGE`];
+}

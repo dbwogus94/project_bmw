@@ -1,25 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import { config } from '@config';
-import { IJwtPayload, JwtService } from '@shared/jwt.service';
+import { JwtService } from '@shared/jwt.service';
 import { StatusCodes } from 'http-status-codes';
-import { errorMessages } from '@shared/message';
 import { getClient } from '@db/redis';
+import { HttpError } from '@shared/http.error';
 
 const { cookie, jwt } = config;
-const { UNAUTHORIZED, MOVED_TEMPORARILY } = StatusCodes;
-const { UNAUTHORIZED_MESSAGE } = errorMessages;
+const { MOVED_TEMPORARILY } = StatusCodes;
 
 export const isAuth = async (req: Request, res: Response, next: NextFunction) => {
   const jwtService = new JwtService();
-  const errMessage = {
-    errCode: UNAUTHORIZED,
-    message: UNAUTHORIZED_MESSAGE.isAuth,
-  };
 
   // 1. 쿠키에서 jwt 가져오기
   const accessToken: string = req.signedCookies[cookie.key];
   if (!accessToken) {
-    return res.status(UNAUTHORIZED).json(errMessage);
+    throw new HttpError(401, 'isAuth');
   }
 
   // 2. jwt 디코딩
@@ -37,7 +32,7 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
 
     // 4. 블랙 리스트이면? 401 응답
     if (blacklistToken && blacklistToken === accessToken) {
-      return res.status(UNAUTHORIZED).json(errMessage);
+      throw new HttpError(401, 'isAuth');
     }
     // 5. 블랙리스트에 없거나 아니라면? req에 디코딩 데이터 담고 통과
     req.id = id!;
