@@ -21,23 +21,30 @@ export const getBmGroups = async (req: Request, res: Response, next: NextFunctio
   const { include, routeId, stationSeq, stationId } = req.dto;
   const { id } = req;
   let bmGroups;
+  const responseData = {
+    statusCode: 200,
+    message: 'getBmGroups',
+  };
 
   // GET /api/bm-groups?include
   if (include && !(routeId && stationSeq && stationId)) {
     bmGroups = await bmGroupService.findBmGroupsWithEntityTree(req.id);
-    return res.status(OK).json(bmGroups);
+    req.responseData = { ...responseData, data: bmGroups };
+    next();
   }
 
   // GET /api/bm-groups?include=book-mark&q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId // q 검색쿼리 사용
   if (include && !!(routeId && stationSeq && stationId)) {
     const searchKey = `${routeId}${stationSeq}${stationId}`;
     bmGroups = await bmGroupService.searchBmGroupsWithEntityTree(id, searchKey);
-    return res.status(OK).json(bmGroups);
+    req.responseData = { ...responseData, data: bmGroups };
+    next();
   }
 
   // GET /bm-groups
   bmGroups = await bmGroupService.findById(id);
-  return res.status(OK).json(bmGroups);
+  req.responseData = { ...responseData, data: bmGroups };
+  next();
 };
 
 /**
@@ -64,7 +71,12 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
     throw new HttpError(400, 'getBmGroup');
   }
 
-  return res.status(OK).json(bmGroup);
+  req.responseData = {
+    statusCode: 200,
+    message: 'getBmGroup',
+    data: bmGroup,
+  };
+  next();
 };
 
 /**
@@ -73,5 +85,10 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
 export const createBmGroup = async (req: Request, res: Response, next: NextFunction) => {
   const { bmGroupName } = req.dto;
   const bmGroup = await bmGroupService.createBmGroup(req.id, bmGroupName);
-  return res.status(CREATED).json(bmGroup);
+  req.responseData = {
+    statusCode: 201,
+    message: 'createBmGroup',
+    data: bmGroup,
+  };
+  next();
 };

@@ -17,9 +17,13 @@ export const searchBookMark = async (req: Request, res: Response, next: NextFunc
   const checkColumn = `${routeId}${stationSeq}${stationId}`;
 
   const bookMark = await bookMarkService.findOneTreeByCheckColumn(req.id, bmGroupId, checkColumn);
-  return bookMark //
-    ? res.status(OK).json([bookMark])
-    : res.status(OK).json([]);
+
+  req.responseData = {
+    statusCode: 200,
+    message: 'searchBookMark',
+    data: bookMark ? bookMark : [],
+  };
+  next();
 };
 
 /**
@@ -28,7 +32,13 @@ export const searchBookMark = async (req: Request, res: Response, next: NextFunc
  */
 export const createBookMark = async (req: Request, res: Response, next: NextFunction) => {
   const bookMark = await bookMarkService.createBookMark(req.id, req.dto);
-  return res.status(CREATED).json(bookMark);
+
+  req.responseData = {
+    statusCode: 201,
+    message: 'createBmGroup',
+    data: bookMark,
+  };
+  next();
 };
 
 /**
@@ -38,5 +48,10 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
 export const deleteBookMark = async (req: Request, res: Response, next: NextFunction) => {
   const { bmGroupId, bookMarkId } = req.dto;
   await bookMarkService.deleteBookMark(req.id, bmGroupId, bookMarkId);
-  return res.sendStatus(NO_CONTENT);
+
+  req.responseData = {
+    statusCode: 204,
+    message: 'deleteBookMark',
+  };
+  next();
 };

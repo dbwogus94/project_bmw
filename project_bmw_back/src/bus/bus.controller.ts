@@ -25,7 +25,12 @@ export const getBusList = async (req: Request, res: Response, next: NextFunction
     seoulBusService.getBusListByRouteName(routeName),
   ]);
 
-  return res.status(OK).json({ gyeonggi: gyeonggiBusList, seoul: seoulBusList });
+  req.responseData = {
+    statusCode: 200,
+    message: 'getBusList',
+    data: { gyeonggi: gyeonggiBusList, seoul: seoulBusList },
+  };
+  next();
 };
 
 // GET /api/buses/:routeId?type=:type
@@ -45,7 +50,12 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
     throw new HttpError(404, 'getBusInfo');
   }
 
-  return res.status(OK).json({ routeId, type, info });
+  req.responseData = {
+    statusCode: 200,
+    message: 'getBusInfo',
+    data: { routeId, type, info },
+  };
+  next();
 };
 
 // GET /api/buses/:routeId/stations?type=:type
@@ -65,5 +75,10 @@ export const getStations = async (req: Request, res: Response, next: NextFunctio
     throw new HttpError(404, 'getStations');
   }
 
-  return res.status(OK).json({ routeId, type, stationList });
+  req.responseData = {
+    statusCode: 200,
+    message: 'getStations',
+    data: { routeId, type, stationList },
+  };
+  next();
 };

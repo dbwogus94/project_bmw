@@ -1,4 +1,5 @@
 import { IUser } from '@entities/User';
+import { ResponseData } from '@middleware/response';
 import { IClientData } from '@shared/jwt.service';
 import { Dto } from '../user/dto/dto.interface';
 
@@ -23,6 +24,7 @@ declare global {
       dto: Dto;
       id: number;
       username: string;
+      responseData: ResponseData;
     }
   }
 }

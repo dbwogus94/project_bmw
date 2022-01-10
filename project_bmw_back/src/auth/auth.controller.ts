@@ -12,7 +12,7 @@ import { JwtService } from '@shared/jwt.service';
 import { getClient } from '@db/redis';
 import { HttpError } from '@shared/http.error';
 
-const { UNAUTHORIZED, OK, CREATED, TEMPORARY_REDIRECT, NO_CONTENT, NOT_FOUND } = StatusCodes;
+const { TEMPORARY_REDIRECT } = StatusCodes;
 const { cookie, jwt } = config;
 const { access, refresh } = jwt;
 const { key, options } = cookie;
@@ -88,9 +88,12 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
       // 여기서 문제는 options.sameSite의 타입이 'string'로 판별되기 때문에 에러가 발생한다.
     });
 
-    return res.status(CREATED).json({
-      username,
-    });
+    req.responseData = {
+      statusCode: 201,
+      message: 'signin',
+      data: { username },
+    };
+    next();
   } catch (error) {
     throw error;
   }
@@ -98,9 +101,13 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
 
 // GET auth/me?username=:username
 export const me = (req: Request, res: Response, next: NextFunction) => {
-  return res.status(OK).json({
-    username: req.username,
-  });
+  const { username } = req;
+  req.responseData = {
+    statusCode: 200,
+    message: 'me',
+    data: { username },
+  };
+  next();
 };
 
 // GET auth/refresh?username=:username
@@ -141,9 +148,12 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       sameSite: options.sameSite === 'none' ? 'none' : false,
     });
 
-    return res.status(CREATED).json({
-      username,
-    });
+    req.responseData = {
+      statusCode: 201,
+      message: 'refreshToken',
+      data: { username },
+    };
+    next();
   } catch (error) {
     throw error;
   }
@@ -167,7 +177,13 @@ export const signout = async (req: Request, res: Response, next: NextFunction) =
     }
     // 3. usename key로 redis 블랙리스트 등록
     await getClient().set(req.username, accessToken);
-    return res.sendStatus(NO_CONTENT);
+    // return res.sendStatus(NO_CONTENT);
+
+    req.responseData = {
+      statusCode: 204,
+      message: 'signout',
+    };
+    next();
   } catch (error) {
     throw error;
   }

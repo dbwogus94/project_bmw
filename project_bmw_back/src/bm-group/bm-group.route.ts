@@ -5,6 +5,7 @@ import { GetBmGroupDto } from './dto/request/get-bm-group.dto';
 import { CreateBmGroupDto } from './dto/request/create-bm-group.dto';
 import { createBmGroup, getBmGroup, getBmGroups } from './bm-group.controller';
 import { SearchBmGroupDto } from './dto/request/search-bm-group.dto';
+import { response } from '@middleware/response';
 
 /* 모든 라우트 인증토큰 필수(isAuth 사용) */
 /* Bm Groups router: api/bm-groups */
@@ -19,13 +20,13 @@ const bmGroupRouter = Router();
 // GET /api/bm-groups?include=book-marks
 // GET /api/bm-groups?include=book-marks&q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId  // q 검색쿼리 사용
 // GET /api/bm-groups?include=book-marks&routeId=:routeId&stationSeq=:stationSeq&stationId=:stationId    // 사용은 가능하지만 권장 x
-bmGroupRouter.get('/', isAuth, dtoValidator(SearchBmGroupDto), getBmGroups);
+bmGroupRouter.get('/', isAuth, dtoValidator(SearchBmGroupDto), getBmGroups, response);
 
 // GET /api/bm-groups/:bmGroupId
 // GET /api/bm-groups/:bmGroupId?include=book-marks
-bmGroupRouter.get('/:bmGroupId', dtoValidator(GetBmGroupDto), isAuth, getBmGroup);
+bmGroupRouter.get('/:bmGroupId', dtoValidator(GetBmGroupDto), isAuth, getBmGroup, response);
 
 // POST /api/bm-groups
-bmGroupRouter.post('/', dtoValidator(CreateBmGroupDto), isAuth, createBmGroup);
+bmGroupRouter.post('/', dtoValidator(CreateBmGroupDto), isAuth, createBmGroup, response);
 
 export default bmGroupRouter;
