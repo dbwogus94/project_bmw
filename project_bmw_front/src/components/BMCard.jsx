@@ -1,18 +1,22 @@
 import React, { memo } from 'react';
 import Avatar from './Avatar';
 
-const BMCard = memo(({ tweet, onUsernameClick, onNameClick }) => {
+const BMCard = memo(({ bookMark, onBusNameClick, onStationNameClick }) => {
   const {
-    label, //
-    name,
-    username,
-    server_time,
-    first_time,
-    first_text,
-    second_time,
-    second_text,
+    // bookMarkId, checkColumn, routeId, stationSeq, stationId, type
+    label,
+    routeName,
+    stationName,
     direction,
-  } = tweet;
+  } = bookMark;
+
+  const time = {
+    server_time: '12시 10분',
+    first_time: '10분',
+    first_text: 'xxx 에서 출발',
+    second_time: '15분',
+    second_text: 'xxx 에서 출발',
+  };
 
   return (
     <li className="tweet">
@@ -21,28 +25,28 @@ const BMCard = memo(({ tweet, onUsernameClick, onNameClick }) => {
         <div className="tweet-body">
           <div className="tweet-top-div">
             <div className="tweet-top-main">
-              <span className="tweet-name" onClick={() => onNameClick(tweet)}>
-                {name}
+              <span className="tweet-name" onClick={() => onBusNameClick(bookMark)}>
+                {routeName}
               </span>
             </div>
             <div className="tweet-top-side">
-              <span className="tweet-username" onClick={() => onUsernameClick(tweet)}>
-                @{username}
+              <span className="tweet-username" onClick={() => onStationNameClick(bookMark)}>
+                @{stationName}
               </span>
               <p>
                 <span className="tweet-date">{direction}</span>
-                <span className="tweet-date"> · {server_time} 기준</span>
+                <span className="tweet-date"> · {time.server_time} 기준</span>
               </p>
             </div>
           </div>
           <div className="tweet-bottom-div">
             <p>
-              <span className="tweet-feed-time">{first_time}</span>
-              <span className="tweet-feed-text">{first_text}</span>
+              <span className="tweet-feed-time">{time.first_time}</span>
+              <span className="tweet-feed-text">{time.first_text}</span>
             </p>
             <p>
-              <span className="tweet-feed-time">{second_time}</span>
-              <span className="tweet-feed-text">{second_text}</span>
+              <span className="tweet-feed-time">{time.second_time}</span>
+              <span className="tweet-feed-text">{time.second_text}</span>
             </p>
           </div>
         </div>

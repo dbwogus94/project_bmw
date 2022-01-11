@@ -1,85 +1,93 @@
 import { memo, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
 import { onError } from '../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';
 import SelectBMGroup from './SelectBMGroup';
+import Spinner from './Spinner';
 
 const BMFeeds = memo(({ bmGroupService, edit }) => {
-  const { username } = useParams();
-  const [bmGroup, setTweets] = useState({});
+  const [bookMarks, setBookMarks] = useState([]);
+  const [bmGroups, setBmGroups] = useState([]);
+  const [spinnerActive, setSpinnerActive] = useState(false);
   const [error, setError] = useState('');
   // const history = useHistory();
   // const { user } = useAuth();
 
   useEffect(() => {
-    bmGroupService //
-      .getBmGroups(username)
+    setSpinnerActive(true);
+    bmGroupService
+      .getBmGroups()
+      .then(bmGroups => {
+        setBmGroups([...bmGroups]);
+        return bmGroups[0].bmGroupId;
+      })
+      .then(bmGroupId => bmGroupService.getGroupById(bmGroupId, true))
       .then(bmGroup => {
-        bmGroupService
-          .getBMGroup(bmGroup[0].bmGroupId)
-          .then(bmGroup => {
-            return setTweets({ ...bmGroup });
-          })
-          .catch(err => onError(err, setError));
-      });
-  }, [bmGroupService, username]);
+        setSpinnerActive(false);
+        setBookMarks(bmGroup.bookMarks);
+      })
+      .catch(onError);
+  }, [bmGroupService]);
 
   // SelectBMGroup에서 사용
   const onGroupChange = async event => {
     const bmGroupId = event.target.value;
     bmGroupService
-      .getBMGroup(bmGroupId)
-      .then(bmGroup => setTweets({ ...bmGroup }))
+      .getGroupById(bmGroupId, true)
+      .then(bmGroup => {
+        setBookMarks([...bmGroup.bookMarks]);
+      })
       .catch(err => onError(err, setError));
   };
 
-  // onError Wraaper
-  const onErrorWraaper = err => {
-    return () => onError(err, setError);
-  };
+  // // 즐겨찾기
+  // const onLickClick = event => {
+  //   // console.log(event);
+  // };
+  // // BM정보 페이지 이동
+  // const onInfoClick = event => {
+  //   // console.log(event);
+  // };
 
-  // 즐겨찾기
-  const onLickClick = event => {
-    // console.log(event);
-  };
-  // BM정보 페이지 이동
-  const onInfoClick = event => {
-    // console.log(event);
-  };
+  const makeFeeds = bookMarks => {
+    const result = [];
+    let flag = '';
 
-  const makeFeeds = bmGroup => {
-    let result = [];
-    Object.keys(bmGroup).forEach(key => {
-      const feed = bmGroup[key].map((bm, index) => {
-        return index !== 0 ? ( //
-          <BMFeed tweet={bm} edit={edit} onInfoClick={onInfoClick} onLickClick={onLickClick}></BMFeed>
-        ) : (
-          <>
-            <FeedHeader label={bm.label === 'B' ? '버스' : '지하철'}></FeedHeader>
-            <BMFeed key={bm.id} tweet={bm} edit={edit} onInfoClick={onInfoClick} onLickClick={onLickClick}></BMFeed>
-          </>
-        );
-      });
-      result.push(feed);
-    });
+    for (let bm of bookMarks) {
+      const { routeId, type } = bm;
+      if (flag !== type) {
+        flag = type;
+        result.push(<FeedHeader label={bm.label === 'B' ? '버스' : '지하철'}></FeedHeader>);
+      }
+
+      result.push(
+        <>
+          <BMFeed //
+            key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
+            bm={bm}
+            // onfeedClick={onfeedClick}
+            edit={false}
+          ></BMFeed>
+        </>
+      );
+    }
+
     return result;
   };
 
   return (
     <>
       <SelectBMGroup //
-        bmGroupService={bmGroupService}
-        onGroupChange={onGroupChange}
-        onError={onErrorWraaper}
-        username={username}
         button1="그룹 편집"
         button2="BM 편집"
+        onGroupChange={onGroupChange}
+        bmGroups={bmGroups}
       />
       {error && <Banner text={error} isAlert={true} transient={true} />}
-      {Object.keys(bmGroup).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
-      {/* <ul className="feeds">{makeFeeds(bmGroup)}</ul> */}
+      {Object.keys(bookMarks).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
+      {spinnerActive && Spinner()}
+      {!spinnerActive && bookMarks && bookMarks.length !== 0 && <ul className="feeds">{makeFeeds(bookMarks)}</ul>}
     </>
   );
 });

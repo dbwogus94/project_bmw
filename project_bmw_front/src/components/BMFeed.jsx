@@ -1,10 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useRouteMatch } from 'react-router-dom/cjs/react-router-dom.min';
 
 const BMFeed = ({ bm, onfeedClick }) => {
   const { routeId, routeName, routeTypeName, type } = bm;
-  const { path } = useRouteMatch();
 
   return (
     <>
@@ -17,7 +15,7 @@ const BMFeed = ({ bm, onfeedClick }) => {
             </p>
           </div>
           <div className="feed-info">
-            <Link to={`${path}/${routeId}?type=${type}`}>
+            <Link to={`/buses/${routeId}?type=${type}`}>
               <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
             </Link>
           </div>

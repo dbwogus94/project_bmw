@@ -1,33 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-const SelectBMGroup = ({ bmGroupService, onGroupChange, onError, username, button1, button2, onButtonClick1, onButtonClick2 }) => {
-  const [bmGroup, setBMGroup] = useState([]);
+const SelectBMGroup = ({ button1, button2, onButtonClick1, onButtonClick2, onGroupChange, bmGroups }) => {
+  const [selectItems, setSelectItems] = useState([]);
 
   useEffect(() => {
-    bmGroupService
-      .getBmGroups(username)
-      .then(bmGroup => setBMGroup([...bmGroup]))
-      .catch(onError);
-  }, [bmGroupService, onError, setBMGroup, username]);
-  // 그룹 변경에 사용
-  // const onSubmit = async event => {
-  //   event.preventDefault();
-  //   bmGroupService
-  //     .postTweet(tweet)
-  //     .then(created => {
-  //       setTweet('');
-  //       onCreated(created);
-  //     })
-  //     .catch(onError);
-  // };
+    setSelectItems(bmGroups);
+  }, [bmGroups]);
 
   return (
     <div className="tweet-form">
-      {/* <input type="text" placeholder="Edit your tweet" value={tweet} required autoFocus onChange={onChange} className="form-input tweet-input" /> */}
       <select className="form-input tweet-input" onChange={onGroupChange}>
-        {bmGroup.map(group => (
-          <option key={group.bmGroupId} value={group.bmGroupId}>
-            {group.bmGroupName}
+        {selectItems.map(bmGroup => (
+          <option key={bmGroup.bmGroupId} value={bmGroup.bmGroupId}>
+            {bmGroup.bmGroupName}
           </option>
         ))}
       </select>

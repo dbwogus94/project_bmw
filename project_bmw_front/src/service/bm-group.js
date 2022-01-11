@@ -17,25 +17,35 @@ export default class BmGroupService {
    * 유저의 모든 그룹 리스트 조회
    * - API: GET /api/bmgroups
    * @returns {Promise<BmGroup[]>}
-   * - bmGroups:
+   * @param {boolean} isInclude
+   * - if(isInclude) bmGroups
     ```
     [
       {
         bmGroupId: 1,
         bmGroupName: jay_group_1,
-        user: {
-            username: jay
-        },
-        bmGroupBookMarkId: 1,
-        bmGroupBookMarks: [
-          bookMark: {...}
+        bookMarks: [
+          {
+            "bookMarkId": 29,
+            "checkColumn": "2290001114229000968",
+            "routeId": 229000111,
+            "stationSeq": 4,
+            "stationId": 229000968,
+            "label": "B",
+            "routeName": "G7426",
+            "stationName": "야당역.한빛마을5.9단지",
+            "direction": "양재역.양재1동민원분소",
+            "type": "gyeonggi"
+          }
         ]
       },
     ]
     ```
    */
-  async getBmGroups() {
-    const url = `${this.getBmGroupApi()}?${this.include}`;
+  async getBmGroups(isInclude = false) {
+    const url = isInclude //
+      ? `${this.getBmGroupApi()}?${this.include}`
+      : `${this.getBmGroupApi()}`;
     return this.http.fetch(url, { method: 'GET' });
   }
 
@@ -51,25 +61,22 @@ export default class BmGroupService {
   ```
     [
       { 
-          "bmGroupId": 1,
-          "bmGroupName": "jay_group_1",
-          "bmGroupBookMarks": [
-            {
-              "bmGroupBookMarkId": 180,
-              "bookMark": {
-                "bookMarkId": 29,
-                "checkColumn": "2290001114229000968",
-                "routeId": 229000111,
-                "stationSeq": 4,
-                "stationId": 229000968,
-                "label": "B",
-                "routeName": "G7426",
-                "stationName": "야당역.한빛마을5.9단지",
-                "direction": "양재역.양재1동민원분소",
-                "type": "gyeonggi"
-              }
-            }
-          ]
+        "bmGroupId": 1,
+        "bmGroupName": "jay_group_1",
+        "bookMarks": [
+          {
+            "bookMarkId": 29,
+            "checkColumn": "2290001114229000968",
+            "routeId": 229000111,
+            "stationSeq": 4,
+            "stationId": 229000968,
+            "label": "B",
+            "routeName": "G7426",
+            "stationName": "야당역.한빛마을5.9단지",
+            "direction": "양재역.양재1동민원분소",
+            "type": "gyeonggi"
+          }
+        ]
       }
     ]
   ```
@@ -77,8 +84,41 @@ export default class BmGroupService {
   async searchBmGroups(routeId, stationSeq, stationId) {
     const searchQuery = `q=routeId=${routeId},stationSeq=${stationSeq},stationId=${stationId}`;
     const url = `${this.getBmGroupApi()}?${this.include}&${searchQuery}`;
-    const data = this.http.fetch(url, { method: 'GET' });
-    return data;
+    return this.http.fetch(url, { method: 'GET' });
+  }
+
+  /**
+   * 
+   * @param {number} bmGroupId 
+   * @param {boolean} isInclude 
+   * @returns {Promise<BmGroup>}
+    * - if(isInclude) bmGroup
+    ```
+    { 
+      "bmGroupId": 1,
+      "bmGroupName": "jay_group_1",
+      "bookMarks": [
+        {
+          "bookMarkId": 29,
+          "checkColumn": "2290001114229000968",
+          "routeId": 229000111,
+          "stationSeq": 4,
+          "stationId": 229000968,
+          "label": "B",
+          "routeName": "G7426",
+          "stationName": "야당역.한빛마을5.9단지",
+          "direction": "양재역.양재1동민원분소",
+          "type": "gyeonggi"
+        }
+      ]
+    }
+    ```
+   */
+  async getGroupById(bmGroupId, isInclude = false) {
+    const url = isInclude //
+      ? `${this.getBmGroupApi()}/${bmGroupId}?${this.include}`
+      : `${this.getBmGroupApi()}/${bmGroupId}`;
+    return this.http.fetch(url, { method: 'GET' });
   }
 
   /**
@@ -156,33 +196,5 @@ export default class BmGroupService {
   async deleteBookMark(bmGroupId, bookMarkId) {
     const url = `${this.getBookMarkApi(bmGroupId)}/${bookMarkId}`;
     return this.http.fetch(url, { method: 'DELETE' });
-  }
-
-  // ========================= 제거 예정 ===========================
-
-  //
-  /**
-   *  bmGroupId에 해당하는 BMGroup 조회
-   * 서버에서 전달받아야 하는 데이터 형태
-   * @param {*} bmGroupId
-   * @returns { bus: [], metro: [] }
-   */
-  async getBMGroup(bmGroupId) {
-    const bmList = this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
-    const bus = bmList.filter(bm => bm.label === 'B');
-    const metro = bmList.filter(bm => bm.label === 'M');
-    return !!(bus.length || metro.length) //
-      ? { bus, metro }
-      : {};
-  }
-
-  /**
-   * 전달받은 bmGroupId에 속하는 BMList 조회
-   * -> 서버에서 도착시간이 빠른순 정렬하여 전달받아야 한다.
-   * @param {*} bmGroupId
-   * @returns list
-   */
-  async getBMList(bmGroupId) {
-    return this.tweets.filter(tweet => tweet.bmGroupId === bmGroupId);
   }
 }
