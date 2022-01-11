@@ -58,16 +58,15 @@ app.use('/api/bm-groups/:bmGroupId/book-marks', bookMarkRouter);
 
 // 404 처리
 app.use((req: Request, res: Response) => {
-  //logger.info('[라우트 없음 : 404] ' + req.url);
-  throw new HttpError(404, 'not_found');
+  // logger.info('[라우트 없음 : 404] ' + req.url);
+  return httpException(new HttpError(404, 'not_found'), req, res);
 });
 
 // 500 : 서버 에러 처리 미들웨어
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof HttpError) return httpException(err, req, res);
   logger.error(err);
-  return err instanceof HttpError
-    ? httpException(err, req, res)
-    : httpException(new HttpError(500, 'serverError'), req, res);
+  return httpException(new HttpError(500, 'serverError'), req, res);
 });
 
 export default app;
