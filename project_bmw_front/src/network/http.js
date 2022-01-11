@@ -17,10 +17,10 @@ export default class HttpClient {
       },
     });
 
-    let data;
+    let body;
 
     try {
-      data = res.status !== 204 ? await res.json() : undefined;
+      body = res.status !== 204 ? await res.json() : undefined;
     } catch (error) {
       console.error(error);
     }
@@ -28,8 +28,8 @@ export default class HttpClient {
     // 200번대 제외
     if (res.status > 299 || res.status < 200) {
       const message =
-        data && data.message //
-          ? data.message
+        body && body.message //
+          ? body.message
           : 'Something went wrong!';
       const error = new Error(message);
 
@@ -42,6 +42,6 @@ export default class HttpClient {
       // 401 이외의 에러는 에러를 던진다.
       throw error;
     }
-    return data;
+    return body && body.data ? body.data : undefined;
   }
 }
