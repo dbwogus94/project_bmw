@@ -10,7 +10,7 @@ export interface ResponseData {
 export function response(req: Request, res: Response) {
   const { message, statusCode, data } = req.responseData;
   return res.status(statusCode).json({
-    status: statusCode + '',
+    status: statusCode,
     message: getHttpSuccessMessages(statusCode)[message],
     data,
   });

@@ -7,7 +7,7 @@ const { BAD_REQUEST } = StatusCodes;
 /**
  * Dto 유효성 검사기
  * 1. 요청 body(json || query)를 Dto로 매핑 후 유효성 검사 실행
- * 2. 유효성 검사 통과 next() 호출
+ * 2. 유효성 검사 통과 return next() 호출
  * 3. 에러 발생 400 코드 응답
  * @param DtoClass - interface Dto를 구현한 dto 클래스
  * @returns
@@ -21,7 +21,7 @@ export default function (DtoClass: ClassType<object>) {
       const searchQuery = getSearchQuery(req.query);
       const dtoObject = await transformAndValidate(DtoClass, { ...data, ...searchQuery });
       req.dto = dtoObject;
-      next();
+      return next();
     } catch (errors) {
       throw new HttpError(BAD_REQUEST, 'validator', makeErrorMsg(errors));
     }

@@ -7,7 +7,6 @@ import { config } from '@config';
 import { SignupDto } from '@user/dto/signup.dto';
 import { IUser } from '@user/entities/User.entity';
 import { SigninDto } from '@user/dto/signin.dto';
-import { errorMessages } from '@shared/message';
 import { JwtService } from '@shared/jwt.service';
 import { getClient } from '@db/redis';
 import { HttpError } from '@shared/http.error';
@@ -93,7 +92,7 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
       message: 'signin',
       data: { username },
     };
-    next();
+    return next();
   } catch (error) {
     throw error;
   }
@@ -107,7 +106,7 @@ export const me = (req: Request, res: Response, next: NextFunction) => {
     message: 'me',
     data: { username },
   };
-  next();
+  return next();
 };
 
 // GET auth/refresh?username=:username
@@ -153,7 +152,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       message: 'refreshToken',
       data: { username },
     };
-    next();
+    return next();
   } catch (error) {
     throw error;
   }
@@ -183,7 +182,7 @@ export const signout = async (req: Request, res: Response, next: NextFunction) =
       statusCode: 204,
       message: 'signout',
     };
-    next();
+    return next();
   } catch (error) {
     throw error;
   }

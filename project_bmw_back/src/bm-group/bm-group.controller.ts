@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { BmGroupService, IBmGroupService } from './bm-group.service';
 import { HttpError } from '@shared/http.error';
 
-const { OK, CREATED } = StatusCodes;
 const bmGroupService: IBmGroupService = new BmGroupService();
 
 /**
@@ -30,7 +28,7 @@ export const getBmGroups = async (req: Request, res: Response, next: NextFunctio
   if (include && !(routeId && stationSeq && stationId)) {
     bmGroups = await bmGroupService.findBmGroupsWithEntityTree(req.id);
     req.responseData = { ...responseData, data: bmGroups };
-    next();
+    return next();
   }
 
   // GET /api/bm-groups?include=book-mark&q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId // q 검색쿼리 사용
@@ -38,13 +36,13 @@ export const getBmGroups = async (req: Request, res: Response, next: NextFunctio
     const searchKey = `${routeId}${stationSeq}${stationId}`;
     bmGroups = await bmGroupService.searchBmGroupsWithEntityTree(id, searchKey);
     req.responseData = { ...responseData, data: bmGroups };
-    next();
+    return next();
   }
 
   // GET /bm-groups
   bmGroups = await bmGroupService.findById(id);
   req.responseData = { ...responseData, data: bmGroups };
-  next();
+  return next();
 };
 
 /**
@@ -76,7 +74,7 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
     message: 'getBmGroup',
     data: bmGroup,
   };
-  next();
+  return next();
 };
 
 /**
@@ -90,5 +88,5 @@ export const createBmGroup = async (req: Request, res: Response, next: NextFunct
     message: 'createBmGroup',
     data: bmGroup,
   };
-  next();
+  return next();
 };

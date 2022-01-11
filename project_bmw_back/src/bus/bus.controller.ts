@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { XMLParser } from 'fast-xml-parser';
 import { config } from '@config';
 import { OpenApi } from '@shared/open-api';
@@ -7,7 +6,6 @@ import { GyeonggiBusService } from '@bus/gyeonggi-bus.service';
 import { SeoulBusService } from './seoul-bus.service';
 import { HttpError } from '@shared/http.error';
 
-const { OK } = StatusCodes;
 const { gyeonggi, seoul } = config.openApi;
 
 // 의존성 주입
@@ -30,7 +28,7 @@ export const getBusList = async (req: Request, res: Response, next: NextFunction
     message: 'getBusList',
     data: { gyeonggi: gyeonggiBusList, seoul: seoulBusList },
   };
-  next();
+  return next();
 };
 
 // GET /api/buses/:routeId?type=:type
@@ -55,7 +53,7 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
     message: 'getBusInfo',
     data: { routeId, type, info },
   };
-  next();
+  return next();
 };
 
 // GET /api/buses/:routeId/stations?type=:type
@@ -80,5 +78,5 @@ export const getStations = async (req: Request, res: Response, next: NextFunctio
     message: 'getStations',
     data: { routeId, type, stationList },
   };
-  next();
+  return next();
 };

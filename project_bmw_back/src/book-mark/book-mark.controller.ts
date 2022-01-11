@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { getLogger } from '@shared/Logger';
 import { BookMarkService, IBookMarkService } from './book-mark.service';
 
-const { OK, CREATED, NO_CONTENT } = StatusCodes;
 const logger = getLogger();
 const bookMarkService: IBookMarkService = new BookMarkService(logger);
 
@@ -23,7 +21,7 @@ export const searchBookMark = async (req: Request, res: Response, next: NextFunc
     message: 'searchBookMark',
     data: bookMark ? bookMark : [],
   };
-  next();
+  return next();
 };
 
 /**
@@ -38,7 +36,7 @@ export const createBookMark = async (req: Request, res: Response, next: NextFunc
     message: 'createBmGroup',
     data: bookMark,
   };
-  next();
+  return next();
 };
 
 /**
@@ -53,5 +51,5 @@ export const deleteBookMark = async (req: Request, res: Response, next: NextFunc
     statusCode: 204,
     message: 'deleteBookMark',
   };
-  next();
+  return next();
 };
