@@ -11,7 +11,7 @@ const busRouter = Router();
 // GET /api/buses?routeName=:routeName
 busRouter.get('/', dtoValidator(SearchBusDto), getBusList, response);
 
-// GET /api/buses/arrival?type=:type&q=stationId=:stationId,routeId=:routeId,stationSeq=:stationSeq
+// GET /api/buses/arrival?type=:type&stationId=:stationId&routeId=:routeId&stationSeq=:stationSeq
 busRouter.get('/arrival', dtoValidator(GetArrialInfoDto), getArrivalInfo, response);
 
 // GET /api/buses/:routeId?type=:type

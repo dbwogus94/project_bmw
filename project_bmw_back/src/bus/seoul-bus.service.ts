@@ -3,16 +3,20 @@ import { BusService } from '@bus/bus.service.interface';
 import { SeoulBusDto } from '@bus/dto/response/bus/seoul-bus.dto';
 import { SeoulBusInfoDto } from '@bus/dto/response/info/seoul-info.dto';
 import { SeoulBusStationDto } from '@bus/dto/response/station/seoul-station.dto';
+import { Arrival } from './dto/response/arrival-info/arrival-interface';
+import { SeoulArrivalDto } from './dto/response/arrival-info/seoul-arrival.dto';
 
 export class SeoulBusService implements BusService {
   private openApi: OpenApi;
   private HOST: string;
+  private ARRIVAL: string;
   private SERVICE_KEY: string;
 
   constructor(openApi: OpenApi, config: any) {
-    const { host, key } = config.bus;
+    const { host, key, arrival } = config.bus;
     this.openApi = openApi;
     this.HOST = host;
+    this.ARRIVAL = arrival;
     this.SERVICE_KEY = key;
   }
 
@@ -96,5 +100,21 @@ export class SeoulBusService implements BusService {
       : ServiceResult.msgBody.itemList.map((bus: any) => {
           return new SeoulBusStationDto(bus);
         });
+  }
+
+  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<Arrival> {
+    const SERVICE = 'getArrInfoByRoute';
+    const query = `&stId=${stationId}&busRouteId=${routeId}&ord=${stationSeq}`;
+    const apiUrl = `${this.ARRIVAL}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
+    const { ServiceResult } = await this.openApi.callApi(apiUrl);
+
+    const { headerCd, headerMsg } = ServiceResult.msgHeader;
+
+    // headerCd: 0(정상), 4(결과 없음), 8(운행 종료)
+    if (headerCd !== 0 && headerCd !== 4 && headerCd !== 8) {
+      this.errorHandler(headerCd, headerMsg);
+    }
+
+    return new SeoulArrivalDto(ServiceResult.msgBody.itemList);
   }
 }

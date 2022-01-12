@@ -1,7 +1,7 @@
 import { Bus } from '@bus/dto/response/bus/bus.interface';
 import { Info } from '@bus/dto/response/info/info.interface';
 import { Station } from '@bus/dto/response/station/station.interface';
-import { ArrivalInfo } from './dto/response/arrival-info/arrival-info.interface';
+import { Arrival } from './dto/response/arrival-info/arrival-interface';
 
 export interface BusService {
   // 1. 버스번호와 일치하는 버스 검색
@@ -11,5 +11,5 @@ export interface BusService {
   // 3. 버스 routeId를 사용하여 버스 경유 정류소 검색
   getStationsByRouteId(routeId: number): Promise<Station[]>;
   // 4. 버스 도착정보 검색
-  getArrivalInfo(routeId: number, stationSeq: number, stationId: number): Promise<ArrivalInfo>;
+  getArrivalInfo(routeId: number, stationSeq: number, stationId: number): Promise<Arrival>;
 }

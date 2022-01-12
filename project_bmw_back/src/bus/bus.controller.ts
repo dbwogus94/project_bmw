@@ -81,7 +81,7 @@ export const getStations = async (req: Request, res: Response, next: NextFunctio
   return next();
 };
 
-// GET /api/buses/arrival?type=:type&q=stationId=:stationId&routeId=:routeId&stationSeq=:stationSeq
+// GET /api/buses/arrival?type=:type&stationId=:stationId&routeId=:routeId&stationSeq=:stationSeq
 export const getArrivalInfo = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, stationId, stationSeq, type } = req.dto;
   let arrival;
@@ -91,7 +91,7 @@ export const getArrivalInfo = async (req: Request, res: Response, next: NextFunc
   }
 
   if (type === 'seoul') {
-    //
+    arrival = await seoulBusService.getArrivalInfo(routeId, stationId, stationSeq);
   }
 
   req.responseData = {
