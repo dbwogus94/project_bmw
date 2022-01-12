@@ -80,3 +80,24 @@ export const getStations = async (req: Request, res: Response, next: NextFunctio
   };
   return next();
 };
+
+// GET /api/buses/arrival?type=:type&q=stationId=:stationId&routeId=:routeId&stationSeq=:stationSeq
+export const getArrivalInfo = async (req: Request, res: Response, next: NextFunction) => {
+  const { routeId, stationId, stationSeq, type } = req.dto;
+  let arrival;
+
+  if (type === 'gyeonggi') {
+    arrival = await gyeonggiBusService.getArrivalInfo(routeId, stationId, stationSeq);
+  }
+
+  if (type === 'seoul') {
+    //
+  }
+
+  req.responseData = {
+    statusCode: 200,
+    message: 'getArrivalInfo',
+    data: { routeId, type, arrival },
+  };
+  return next();
+};

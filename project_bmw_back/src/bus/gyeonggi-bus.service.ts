@@ -3,16 +3,20 @@ import { BusService } from '@bus/bus.service.interface';
 import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi-bus.dto';
 import { GyeonggiBusInfoDto } from '@bus/dto/response/info/gyeonggi-info.dto';
 import { GyeonggiBusStationDto } from '@bus/dto/response/station/gyeonggi-station.dto';
+import { ArrivalInfo } from './dto/response/arrival-info/arrival-info.interface';
+import { GyeonggiArrivalInfo } from './dto/response/arrival-info/gyeonggi-arrival-info.dto';
 
 export class GyeonggiBusService implements BusService {
   private openApi: OpenApi;
   private HOST: string;
+  private ARRIVAL: string;
   private SERVICE_KEY: string;
 
   constructor(openApi: OpenApi, config: any) {
-    const { host, key } = config.bus;
+    const { host, key, arrival } = config.bus;
     this.openApi = openApi;
     this.HOST = host;
+    this.ARRIVAL = arrival;
     this.SERVICE_KEY = key;
   }
 
@@ -114,5 +118,35 @@ export class GyeonggiBusService implements BusService {
       : response.msgBody.busRouteStationList.map((bus: any) => {
           return new GyeonggiBusStationDto(routeId, bus);
         });
+  }
+
+  /**
+   * 노선 도착정보 조회
+   * @param routeId 노선 id
+   * @param stationId 경유 정류소 id
+   * @param stationSeq 경유 정류소 순번
+   * @returns
+   */
+  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<ArrivalInfo> {
+    const SERVICE = 'getBusArrivalItem';
+    const query = `&stationId=${stationId}&routeId=${routeId}&staOrder=${stationSeq}`;
+    const apiUrl = `${this.ARRIVAL}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
+    const temp = await this.openApi.callApi(apiUrl);
+    const { response, OpenAPI_ServiceResponse } = temp;
+    // OpenAPI_ServiceResponse 값이 있으면 API 키가 잘못된것
+    if (OpenAPI_ServiceResponse) {
+      const { returnReasonCode, returnAuthMsg } = OpenAPI_ServiceResponse.cmmMsgHeader;
+      this.errorHandler(returnReasonCode, returnAuthMsg);
+    }
+
+    const { resultCode, resultMessage } = response.msgHeader;
+
+    if (resultCode !== 0 && resultCode !== 4) {
+      this.errorHandler(resultCode, resultMessage);
+    }
+
+    return resultCode === 4 //
+      ? new GyeonggiArrivalInfo()
+      : new GyeonggiArrivalInfo(response.msgBody.busArrivalItem);
   }
 }
