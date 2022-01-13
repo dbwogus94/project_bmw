@@ -58,6 +58,7 @@ export const errorMessages: any = Object.freeze({
   INTERNAL_SERVER_ERROR_MESSAGE: {
     code: 500,
     serverError: 'INTERNAL_SERVER_ERROR',
+    Gyeonggi_getArrivalInfo: '도착 정보 서비스 오류입니다. 잠시후 다시 시도하세요',
   },
 });
 

@@ -11,14 +11,16 @@ export class GyeonggiArrivalDto implements Arrival {
   firstTime?: number; // 첫번째 버스 도착 시간(분)
   isFirstRow?: boolean; // 첫번째 버스 저상버스 여부
   isFirstActive?: boolean; // 첫번째 버스 운행 여부
+  firstState?: '운행중' | '곧 도착' | '출발대기' | '운행종료';
   /* */
   secondLocation?: number; // 두번째 버스 위치
   secondTime?: number; // 두번째 버스 도착 시간(분)
   isSecondRow?: boolean; // 두번째 버스 저상버스 여부
   isSecondActive?: boolean; // 두번째 버스 운행 여부
+  secondState?: '운행중' | '곧 도착' | '출발대기' | '운행종료';
 
-  constructor(data?: any | undefined) {
-    data ? this.setFields(data) : this.setFieldsWhenNull();
+  constructor(data: any) {
+    data.flag === 'STOP' ? this.setFieldsByStop(data) : this.setFields(data);
   }
 
   private setFields(data: any) {
@@ -32,11 +34,19 @@ export class GyeonggiArrivalDto implements Arrival {
       locationNo2,
       predictTime2,
       lowPlate2,
+      flag,
     } = data;
 
     this.routeId = routeId;
     this.stationId = stationId;
     this.stationSeq = staOrder;
+
+    /* 노선 상태 설정 */
+    this.firstState = this.getState(locationNo1);
+    this.secondState = this.getState(locationNo2);
+
+    this.isFirstActive = true; // 운행여부
+    this.isSecondActive = true;
     /* */
     this.firstLocation = Number(locationNo1);
     this.firstTime = Number(predictTime1);
@@ -46,15 +56,20 @@ export class GyeonggiArrivalDto implements Arrival {
     this.secondTime = Number(predictTime2);
     this.isSecondRow = lowPlate2 === '1' ? true : false;
     /* */
-    this.serverTime = `${dateToString('HH:mm')} 기준`; // 'HH시 mm분'
-    this.isFirstActive = true; // 운행여부
-    this.isSecondActive = true;
+    this.serverTime = `${dateToString('HH:mm')}`; // 'HH시 mm분'
   }
 
-  private setFieldsWhenNull() {
-    this.routeId = '';
-    this.stationId = '';
-    this.stationSeq = '';
+  private setFieldsByStop(data: any) {
+    const { routeId, stationId, stationSeq } = data;
+    this.routeId = routeId;
+    this.stationId = stationId;
+    this.stationSeq = stationSeq;
+
+    this.firstState = '운행종료';
+    this.secondState = '운행종료';
+    /* */
+    this.isFirstActive = false; // 운행여부
+    this.isSecondActive = false;
     /* */
     this.firstLocation = 0;
     this.firstTime = 0;
@@ -64,8 +79,22 @@ export class GyeonggiArrivalDto implements Arrival {
     this.secondTime = 0;
     this.isSecondRow = false;
     /* */
-    this.serverTime = `${dateToString('HH:mm')} 기준`; // 'HH시 mm분'
-    this.isFirstActive = false; // 운행여부
-    this.isSecondActive = false;
+    this.serverTime = `${dateToString('HH:mm')}`; // 'HH시 mm분'
+  }
+
+  /**
+   * 버스 노선의 상태를 리턴
+   * - '운행중' | '출발대기' | '곧 도착'
+   * @param locationNo 몇 번째 전 정류장에 위치하는지 숫자 정보
+   * @returns
+   */
+  private getState(locationNo: string): '운행중' | '출발대기' | '곧 도착' {
+    if (locationNo === '') {
+      return '출발대기';
+    } else if (locationNo === '1') {
+      return '곧 도착';
+    } else {
+      return '운행중';
+    }
   }
 }

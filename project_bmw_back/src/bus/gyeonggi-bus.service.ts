@@ -3,8 +3,9 @@ import { BusService } from '@bus/bus.service.interface';
 import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi-bus.dto';
 import { GyeonggiBusInfoDto } from '@bus/dto/response/info/gyeonggi-info.dto';
 import { GyeonggiBusStationDto } from '@bus/dto/response/station/gyeonggi-station.dto';
-import { ArrivalInfo } from './dto/response/arrival-info/arrival-info.interface';
-import { GyeonggiArrivalInfo } from './dto/response/arrival-info/gyeonggi-arrival-info.dto';
+import { Arrival } from './dto/response/arrival-info/arrival-interface';
+import { GyeonggiArrivalDto } from './dto/response/arrival-info/gyeonggi-arrival.dto';
+import { HttpError } from '@shared/http.error';
 
 export class GyeonggiBusService implements BusService {
   private openApi: OpenApi;
@@ -127,7 +128,7 @@ export class GyeonggiBusService implements BusService {
    * @param stationSeq 경유 정류소 순번
    * @returns
    */
-  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<ArrivalInfo> {
+  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<Arrival> {
     const SERVICE = 'getBusArrivalItem';
     const query = `&stationId=${stationId}&routeId=${routeId}&staOrder=${stationSeq}`;
     const apiUrl = `${this.ARRIVAL}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
@@ -139,6 +140,11 @@ export class GyeonggiBusService implements BusService {
       this.errorHandler(returnReasonCode, returnAuthMsg);
     }
 
+    if (!response.msgHeader) {
+      // TODO: 경기도 버스 도착정보 서비스 간헐적으로 연결 오류 발생.
+      throw new HttpError(500, 'Gyeonggi_getArrivalInfo');
+    }
+
     const { resultCode, resultMessage } = response.msgHeader;
 
     if (resultCode !== 0 && resultCode !== 4) {
@@ -146,7 +152,7 @@ export class GyeonggiBusService implements BusService {
     }
 
     return resultCode === 4 //
-      ? new GyeonggiArrivalInfo()
-      : new GyeonggiArrivalInfo(response.msgBody.busArrivalItem);
+      ? new GyeonggiArrivalDto({ routeId, stationId, stationSeq, flag: 'STOP' })
+      : new GyeonggiArrivalDto(response.msgBody.busArrivalItem);
   }
 }
