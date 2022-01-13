@@ -17,6 +17,17 @@ const { access, refresh } = jwt;
 const { key, options } = cookie;
 const jwtService = new JwtService();
 
+/**
+ * 쿠키로 사용할 값 생성
+ * @param accessToken
+ * @param username
+ * @returns - accessToken + ' ' + username
+ */
+const createCookie = (accessToken: string, username: string) => {
+  // accessToken + ' ' + username
+  return `${accessToken} ${username}`;
+};
+
 // POST auth/signup
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password, name, email }: SignupDto = req.dto;
@@ -78,11 +89,8 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
       refreshToken: await jwtService.issueToken({}, { ...refresh }),
     });
 
-    // accessToken + ' ' + username
-    const cookieValue = `${newUser.accessToken} ${username}`;
-
     // 쿠키에 엑세스 토큰 저장
-    res.cookie(key, cookieValue, {
+    res.cookie(key, createCookie(newUser.accessToken, username), {
       ...options,
       sameSite: options.sameSite === 'none' ? 'none' : false,
       // TODO: ts 컴파일 'No overload matches this call.' 에러로 인해 3항 연산자로 처리
@@ -114,11 +122,10 @@ export const me = (req: Request, res: Response, next: NextFunction) => {
 
 // GET auth/refresh?username=:username
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  const { username } = req.dto;
-
   // 1. 토큰 확인
-  const accessToken: string = req.signedCookies[key];
-  if (!accessToken) {
+  const value: string = req.signedCookies[cookie.key];
+  const [accessToken, username] = value ? value.split(' ') : [];
+  if (!value || !accessToken || !username) {
     throw new HttpError(401, 'isAuth');
   }
 
@@ -145,7 +152,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     });
 
     // 5. 응답 쿠키에 엑세스 토큰 저장 => 응답
-    res.cookie(key, newUser.accessToken, {
+    res.cookie(key, createCookie(newUser.accessToken, username), {
       ...options,
       sameSite: options.sameSite === 'none' ? 'none' : false,
     });

@@ -16,6 +16,7 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
   useEffect(() => {
     authErrorEventBus.listen(err => {
       setUser(undefined);
+      setError(err);
       throw err;
     });
   }, [authErrorEventBus]);

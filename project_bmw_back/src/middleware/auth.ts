@@ -27,7 +27,7 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
 
   // 1. 쿠키에서 jwt 가져오기
   const value: string = req.signedCookies[cookie.key];
-  const [accessToken, username] = value.split(' ');
+  const [accessToken, username] = value ? value.split(' ') : [];
   if (!value || !accessToken || !username) {
     throw new HttpError(401, 'isAuth');
   }

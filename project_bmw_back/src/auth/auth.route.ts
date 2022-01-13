@@ -13,8 +13,8 @@ authRouter.post('/signup', dtoValidator(SignupDto), signup);
 authRouter.post('/signin', dtoValidator(SigninDto), signin, response);
 // auth/me
 authRouter.get('/me', isAuth, me, response);
-// auth/refresh?username=:username
-authRouter.get('/refresh', dtoValidator(RefreshDto), refreshToken, response);
+// auth/refresh
+authRouter.get('/refresh', refreshToken, response);
 // auth/signout
 authRouter.get('/signout', isAuth, signout, response);
 

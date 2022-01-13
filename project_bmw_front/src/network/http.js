@@ -35,7 +35,7 @@ export default class HttpClient {
 
       if (res.status === 401) {
         // 401에러 -> 로그인 페이지
-        this.storage.clearItem('USERNAME');
+        this.storage.clearItem();
         this.authErrorEventBus.notify(error);
         return;
       }
