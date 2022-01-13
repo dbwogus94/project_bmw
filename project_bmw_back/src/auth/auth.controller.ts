@@ -78,8 +78,11 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
       refreshToken: await jwtService.issueToken({}, { ...refresh }),
     });
 
+    // accessToken + ' ' + username
+    const cookieValue = `${newUser.accessToken} ${username}`;
+
     // 쿠키에 엑세스 토큰 저장
-    res.cookie(key, newUser.accessToken, {
+    res.cookie(key, cookieValue, {
       ...options,
       sameSite: options.sameSite === 'none' ? 'none' : false,
       // TODO: ts 컴파일 'No overload matches this call.' 에러로 인해 3항 연산자로 처리

@@ -11,8 +11,8 @@ import { response } from '@middleware/response';
 const authRouter = Router();
 authRouter.post('/signup', dtoValidator(SignupDto), signup);
 authRouter.post('/signin', dtoValidator(SigninDto), signin, response);
-// auth/me?username=:username
-authRouter.get('/me', dtoValidator(RefreshDto), isAuth, me, response);
+// auth/me
+authRouter.get('/me', isAuth, me, response);
 // auth/refresh?username=:username
 authRouter.get('/refresh', dtoValidator(RefreshDto), refreshToken, response);
 // auth/signout
