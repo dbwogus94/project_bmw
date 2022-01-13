@@ -1,9 +1,6 @@
 import React from 'react';
 
-const SearchForm = ({ service, onError, button, onSubmit, regExp = null, pasteRegExp = null }) => {
-  // const [tweet] = useState('');
-  // const [tweet, setTweet] = useState('');
-
+const SearchForm = ({ button, onSubmit, regExp = null }) => {
   /* 정규식과 일치하는 단어 제거 */
   const onChange = e => {
     const nowValue = e.nativeEvent.data; // 현재 입력된 단어 하나
@@ -38,7 +35,6 @@ const SearchForm = ({ service, onError, button, onSubmit, regExp = null, pasteRe
         required
         autoFocus
       />
-      {/* <input type="text" placeholder="검색 내용을 입력하세요" value={tweet} required autoFocus onChange={onChange} className="form-input tweet-input" /> */}
       <button type="submit" className="form-btn-search">
         {button}
       </button>

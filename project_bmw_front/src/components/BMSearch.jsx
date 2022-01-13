@@ -86,6 +86,7 @@ const BMSearch = memo(({ service, button }) => {
             key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
             bm={bm}
             onfeedClick={onfeedClick}
+            info={true}
             edit={false}
           ></BMFeed>
         </>

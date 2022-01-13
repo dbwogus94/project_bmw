@@ -2,92 +2,172 @@ import { memo, useEffect, useState } from 'react';
 import { onError } from '../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
+import BMGroupFeed from './BMGroupFeed';
 import FeedHeader from './FeedHeader';
 import SelectBMGroup from './SelectBMGroup';
 import Spinner from './Spinner';
 
-const BMFeeds = memo(({ bmGroupService, edit }) => {
+const BMFeeds = memo(({ bmGroupService, busService }) => {
   const [bookMarks, setBookMarks] = useState([]);
   const [bmGroups, setBmGroups] = useState([]);
+  const [bmGroupId, setBmGroupId] = useState(0);
   const [spinnerActive, setSpinnerActive] = useState(false);
+  const [bmEditName, setBmEditName] = useState('BM 편집');
+  const [bmGroupEditName, setBmGroupEditName] = useState('그룹 편집');
+  const [bmEdit, setBmEdit] = useState(false);
+  const [groupEdit, setGroupEdit] = useState(false);
   const [error, setError] = useState('');
-  // const history = useHistory();
-  // const { user } = useAuth();
 
   useEffect(() => {
-    setSpinnerActive(true);
     bmGroupService
       .getBmGroups()
       .then(bmGroups => {
         setBmGroups([...bmGroups]);
-        return bmGroups[0].bmGroupId;
+        const bmGroupId = localStorage.getItem('EditBM_bmGroupId') //
+          ? Number(localStorage.getItem('EditBM_bmGroupId'))
+          : bmGroups[0].bmGroupId;
+        setBmGroupId(bmGroupId);
       })
-      .then(bmGroupId => bmGroupService.getGroupById(bmGroupId, true))
-      .then(bmGroup => {
+      .catch(err => {
+        onError(err, setError);
         setSpinnerActive(false);
-        setBookMarks(bmGroup.bookMarks);
-      })
-      .catch(onError);
+      });
+    return () => {
+      // 컴포넌트 unmount시 호출
+      setSpinnerActive(false);
+    };
   }, [bmGroupService]);
 
-  // SelectBMGroup에서 사용
+  useEffect(() => {
+    // 그룹리스트가 조회되어 값이 있는 경우만 실행
+    return bmGroupId === 0
+      ? false
+      : // 1. 그룹ID에 속한 북마크 리스트 조회
+        bmGroupService
+          .getGroupById(bmGroupId, true)
+          .then(async bmGroup => {
+            const { bookMarks } = bmGroup;
+            return setBookMarks([...bookMarks]);
+          })
+          .catch(err => onError(err, setError))
+          .finally(() => setSpinnerActive(false));
+  }, [bmGroupService, busService, bmGroupId]);
+
+  // 그룹 select box 변경 이벤트
   const onGroupChange = async event => {
     const bmGroupId = event.target.value;
-    bmGroupService
-      .getGroupById(bmGroupId, true)
-      .then(bmGroup => {
-        setBookMarks([...bmGroup.bookMarks]);
-      })
-      .catch(err => onError(err, setError));
+    localStorage.setItem('EditBM_bmGroupId', bmGroupId);
+    setBmGroupId(bmGroupId);
+    setSpinnerActive(true);
   };
 
-  // // 즐겨찾기
-  // const onLickClick = event => {
-  //   // console.log(event);
-  // };
-  // // BM정보 페이지 이동
-  // const onInfoClick = event => {
-  //   // console.log(event);
-  // };
+  // BM 편집
+  const onBmEditClick = event => {
+    if (groupEdit) {
+      window.alert('그룹 편집 완료 후 실행하세요.');
+      return false;
+    }
 
-  const makeFeeds = bookMarks => {
+    if (bmEdit) {
+      setBmEditName('BM 편집');
+    } else {
+      window.alert("BM 편집 모드는 'x' 선택시 즉시 삭제되니 주의하세요!");
+      setBmEditName('BM 편집 완료');
+    }
+    setBmEdit(!bmEdit);
+  };
+
+  // 그룹 편집
+  const onBmGroupEditClick = event => {
+    if (bmEdit) {
+      window.alert('BM 편집 완료 후 실행하세요.');
+      return false;
+    }
+
+    if (groupEdit) {
+      setBmGroupEditName('그룹 편집');
+    } else {
+      // window.alert("'x' 선택시 즉시 삭제되니 주의하세요!");
+      setBmGroupEditName('그룹 편집 완료');
+    }
+    setGroupEdit(!groupEdit);
+  };
+
+  // 피드 삭제
+  const onDeleteClick = event => {
+    if (groupEdit && window.confirm('그룹에 있는 모든 북마크를 삭제할까요?')) {
+      // const { bmGroupId } = event.target.dataset;
+      // 그룹 삭제 => bmGroupId로 삭제가능
+    }
+
+    if (bmEdit) {
+      // const { bookMarkId } = event.target.dataset;
+      // 북마크 삭제 => bookMarkId, bmGroupId를 사용하면 삭제 가능
+    }
+  };
+
+  /* =================== Make Component =================== */
+
+  // 북마크 피드 생성
+  const makeBookMarkFeed = bookMarks => {
     const result = [];
     let flag = '';
 
     for (let bm of bookMarks) {
-      const { routeId, type } = bm;
-      if (flag !== type) {
-        flag = type;
-        result.push(<FeedHeader label={bm.label === 'B' ? '버스' : '지하철'}></FeedHeader>);
+      const { bookMarkId, label } = bm;
+      if (flag !== label) {
+        flag = label;
+        result.push(<FeedHeader label={label === 'B' ? '버스' : '지하철'}></FeedHeader>);
       }
-
       result.push(
         <>
           <BMFeed //
-            key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
+            key={bookMarkId}
             bm={bm}
+            info={false}
             // onfeedClick={onfeedClick}
-            edit={false}
+            onDeleteClick={onDeleteClick}
+            edit={bmEdit}
           ></BMFeed>
         </>
       );
     }
-
     return result;
+  };
+
+  const makeBmGroupFeed = bmGroups => {
+    return bmGroups.map((bmGroup, i) => {
+      const { bmGroupId } = bmGroup;
+      return (
+        <>
+          {i === 0 && <FeedHeader label={'그룹 목록'}></FeedHeader>}
+          <BMGroupFeed //
+            key={bmGroupId}
+            bmGroup={bmGroup}
+            onDeleteClick={onDeleteClick}
+            edit={groupEdit}
+          ></BMGroupFeed>
+        </>
+      );
+    });
   };
 
   return (
     <>
       <SelectBMGroup //
-        button1="그룹 편집"
-        button2="BM 편집"
+        button1={bmGroupEditName}
+        button2={bmEditName}
+        onButtonClick1={onBmGroupEditClick}
+        onButtonClick2={onBmEditClick}
         onGroupChange={onGroupChange}
-        bmGroups={bmGroups}
+        itemList={bmGroups}
+        selectedItem={bmGroupId}
       />
       {error && <Banner text={error} isAlert={true} transient={true} />}
-      {Object.keys(bookMarks).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
+      {!groupEdit && Object.keys(bookMarks).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
       {spinnerActive && Spinner()}
-      {!spinnerActive && bookMarks && bookMarks.length !== 0 && <ul className="feeds">{makeFeeds(bookMarks)}</ul>}
+      {!spinnerActive && !groupEdit && bookMarks && bookMarks.length !== 0 && <ul className="feeds">{makeBookMarkFeed(bookMarks)}</ul>}
+      {!spinnerActive && groupEdit && <ul className="feeds">{makeBmGroupFeed(bmGroups)}</ul>}
     </>
   );
 });

@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const BMFeed = ({ bm, onfeedClick }) => {
-  const { routeId, routeName, routeTypeName, type } = bm;
+const BMFeed = ({ bm, onfeedClick, onDeleteClick, info, edit }) => {
+  const { routeId, routeName, routeTypeName, type, bookMarkId } = bm;
+  const [edited, setEdited] = useState(false);
+
+  useEffect(() => {
+    setEdited(edit);
+  }, [edit]);
 
   return (
     <>
@@ -15,9 +20,16 @@ const BMFeed = ({ bm, onfeedClick }) => {
             </p>
           </div>
           <div className="feed-info">
-            <Link to={`/buses/${routeId}?type=${type}`}>
-              <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
-            </Link>
+            {info && (
+              <Link to={`/buses/${routeId}?type=${type}`}>
+                <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
+              </Link>
+            )}
+            {edited && (
+              <button className="tweet-action-btn" onClick={onDeleteClick} data-book-mark-id={bookMarkId}>
+                x
+              </button>
+            )}
           </div>
         </article>
       </li>

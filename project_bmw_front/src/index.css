@@ -267,9 +267,9 @@ button {
 }
 
 .tweet-action-btn {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  color: var(--color-blue);
+  color: var(--color-black);
   transition: transform 300ms;
 }
 
