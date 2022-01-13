@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
-const SelectBMGroup = ({ button1, button2, onButtonClick1, onButtonClick2, onGroupChange, bmGroups }) => {
-  const [selectItems, setSelectItems] = useState([]);
+const SelectBMGroup = ({ button1, button2, onButtonClick1, onButtonClick2, onGroupChange, itemList, selectedItem }) => {
+  const [selectItemList, setSelectItemList] = useState([]);
+  const [selectItem, setSelectItem] = useState(0);
 
   useEffect(() => {
-    setSelectItems(bmGroups);
-  }, [bmGroups]);
+    setSelectItemList(itemList);
+    setSelectItem(selectedItem);
+  }, [itemList, selectedItem]);
 
   return (
     <div className="tweet-form">
-      <select className="form-input tweet-input" onChange={onGroupChange}>
-        {selectItems.map(bmGroup => (
-          <option key={bmGroup.bmGroupId} value={bmGroup.bmGroupId}>
-            {bmGroup.bmGroupName}
-          </option>
-        ))}
+      <select className="form-input tweet-input" onChange={onGroupChange} defaultValue={selectItem}>
+        {selectItemList.map(bmGroup => {
+          const { bmGroupId, bmGroupName } = bmGroup;
+          return (
+            <>
+              <option key={bmGroupId} value={bmGroupId}>
+                {bmGroupName}
+              </option>
+            </>
+          );
+        })}
       </select>
       <button className="form-btn-search" onClick={onButtonClick1}>
         {button1}

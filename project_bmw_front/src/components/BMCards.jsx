@@ -6,11 +6,12 @@ import BMCard from './BMCard';
 import { onError } from '../util/on-error';
 import Spinner from './Spinner';
 
-const BMCards = memo(({ bmGroupService }) => {
+const BMCards = memo(({ bmGroupService, busService }) => {
   const [bookMarks, setBookMarks] = useState([]);
   const [bmGroups, setBmGroups] = useState([]);
   const [bmGroupId, setBmGroupId] = useState(0);
   const [spinnerActive, setSpinnerActive] = useState(false);
+  const [reloadCnt, setReloadCnt] = useState(0);
   const [error, setError] = useState('');
   const history = useHistory();
 
@@ -19,18 +20,42 @@ const BMCards = memo(({ bmGroupService }) => {
     bmGroupService
       .getBmGroups()
       .then(bmGroups => {
-        const { bmGroupId } = bmGroups[0];
         setBmGroups([...bmGroups]);
+        const bmGroupId = localStorage.getItem('MyBM_bmGroupId') //
+          ? Number(localStorage.getItem('MyBM_bmGroupId'))
+          : bmGroups[0].bmGroupId;
         setBmGroupId(bmGroupId);
-        return bmGroupId;
       })
-      .then(bmGroupId => bmGroupService.getGroupById(bmGroupId, true))
-      .then(bmGroup => {
+      .catch(err => {
+        onError(err, setError);
         setSpinnerActive(false);
-        setBookMarks(bmGroup.bookMarks);
-      })
-      .catch(onError);
+      });
+    return () => {
+      // 컴포넌트 unmount시 호출
+      setSpinnerActive(false);
+    };
   }, [bmGroupService]);
+
+  useEffect(() => {
+    // 그룹리스트가 조회되어 값이 있는 경우만 실행
+    return bmGroupId === 0
+      ? false
+      : // 1. 그룹ID에 속한 북마크 리스트 조회
+        bmGroupService
+          .getGroupById(bmGroupId, true)
+          .then(async bmGroup => {
+            const { bookMarks } = bmGroup;
+            // 2. 조회된 전체 북마크 도착 정보 조회
+            return Promise.all(bookMarks.map(bookMark => busService.getArrivalByBookMark(bookMark))) //
+              .then(bookMarks => {
+                // 3. 도착 시간 빠른 순으로 정렬
+                bookMarks.sort((a, b) => a.arrival.firstTime - b.arrival.firstTime);
+                return setBookMarks([...bookMarks]);
+              });
+          })
+          .catch(err => onError(err, setError))
+          .finally(() => setSpinnerActive(false));
+  }, [bmGroupService, busService, bmGroupId, reloadCnt]);
 
   // 정류장 클릭, TODO: API 정해지면 API URL 적용
   const onUsernameClick = bookMark => {
@@ -49,31 +74,20 @@ const BMCards = memo(({ bmGroupService }) => {
   // 그룹 select box 변경 이벤트
   const onGroupChange = async event => {
     const bmGroupId = event.target.value;
+    localStorage.setItem('MyBM_bmGroupId', bmGroupId);
     setBmGroupId(bmGroupId);
-    getBookMarks(bmGroupId);
+    setSpinnerActive(true);
   };
 
   // 새로고침
   const onButtonClick1 = () => {
-    getBookMarks(bmGroupId);
-  };
-
-  const getBookMarks = async bmGroupId => {
+    const reload = reloadCnt + 1;
+    setReloadCnt(reload);
     setSpinnerActive(true);
-    bmGroupService
-      .getGroupById(bmGroupId, true)
-      .then(bmGroup => {
-        const { bookMarks } = bmGroup;
-        setSpinnerActive(false);
-        setBookMarks([...bookMarks]);
-        // TODO: 도착정보 조회 API 완료되면 => 모든 북마크 도착 정보 조회
-        // Promise.all(bookMarks)
-      })
-      .catch(err => onError(err, setError));
   };
 
   // 수정하기
-  const onButtonClick2 = tweet => {
+  const onButtonClick2 = () => {
     return history.push(`/bmgroup`);
   };
 
@@ -85,10 +99,13 @@ const BMCards = memo(({ bmGroupService }) => {
         button2="수정하기"
         onButtonClick2={onButtonClick2}
         onGroupChange={onGroupChange}
-        bmGroups={bmGroups}
+        itemList={bmGroups}
+        selectedItem={bmGroupId}
       />
-      {error && <Banner text={error} isAlert={true} transient={true} />}
-      {bookMarks.length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
+
+      {!spinnerActive && error && <Banner text={error} isAlert={true} transient={true} />}
+
+      {!spinnerActive && bookMarks.length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
 
       {spinnerActive && Spinner()}
 

@@ -63,10 +63,10 @@ function App({ bmGroupService, busService, metroService, stopService }) {
         (
         <>
           <Route exact path="/">
-            <MyBM bmGroupService={bmGroupService} />
+            <MyBM bmGroupService={bmGroupService} busService={busService} />
           </Route>
           <Route exact path="/bmgroups">
-            <EditBM bmGroupService={bmGroupService} />
+            <EditBM bmGroupService={bmGroupService} busService={busService} />
           </Route>
           <Route path="/buses">
             <Bus busService={busService} bmGroupService={bmGroupService} />

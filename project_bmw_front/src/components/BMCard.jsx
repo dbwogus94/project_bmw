@@ -8,15 +8,20 @@ const BMCard = memo(({ bookMark, onBusNameClick, onStationNameClick }) => {
     routeName,
     stationName,
     direction,
+    arrival,
   } = bookMark;
 
-  const time = {
-    server_time: '12시 10분',
-    first_time: '10분',
-    first_text: 'xxx 에서 출발',
-    second_time: '15분',
-    second_text: 'xxx 에서 출발',
-  };
+  const {
+    serverTime, //
+    firstTime,
+    firstLocation,
+    // isFirstActive,
+    firstState, // '운행중' | '곧 도착' | '출발대기'  | '운행종료'
+    secondTime,
+    secondLocation,
+    isSecondActive,
+    secondState,
+  } = arrival;
 
   return (
     <li className="tweet">
@@ -34,19 +39,67 @@ const BMCard = memo(({ bookMark, onBusNameClick, onStationNameClick }) => {
                 @{stationName}
               </span>
               <p>
-                <span className="tweet-date">{direction}</span>
-                <span className="tweet-date"> · {time.server_time} 기준</span>
+                <span className="tweet-date">{`${direction} 방향`}</span>
+                <span className="tweet-date"> · {serverTime} 기준</span>
               </p>
             </div>
           </div>
           <div className="tweet-bottom-div">
             <p>
-              <span className="tweet-feed-time">{time.first_time}</span>
-              <span className="tweet-feed-text">{time.first_text}</span>
+              {firstState === '운행중' && ( //
+                <>
+                  <span className="tweet-feed-time">{`${firstTime}분 후`}</span>
+                  <span className="tweet-feed-text">{`${firstLocation}전 정류장 출발`}</span>
+                </>
+              )}
+              {firstState === '곧 도착' && ( //
+                <>
+                  <span className="tweet-feed-time">{firstState}</span>
+                  <span className="tweet-feed-text">{`${firstLocation}전 정류장 출발`}</span>
+                </>
+              )}
+              {firstState === '출발대기' && ( //
+                <>
+                  <span className="tweet-feed-time">{firstState}</span>
+                  <span className="tweet-feed-text">{'도착정보 없음'}</span>
+                </>
+              )}
+              {firstState === '운행종료' && ( //
+                <>
+                  <span className="tweet-feed-time">{firstState}</span>
+                  <span className="tweet-feed-text">{'도착정보 없음'}</span>
+                </>
+              )}
             </p>
             <p>
-              <span className="tweet-feed-time">{time.second_time}</span>
-              <span className="tweet-feed-text">{time.second_text}</span>
+              {isSecondActive &&
+                secondState === '운행중' && ( //
+                  <>
+                    <span className="tweet-feed-time">{`${secondTime}분 후`}</span>
+                    <span className="tweet-feed-text">{`${secondLocation}전 정류장 출발`}</span>
+                  </>
+                )}
+              {isSecondActive &&
+                secondState === '곧 도착' && ( //
+                  <>
+                    <span className="tweet-feed-time">{secondState}</span>
+                    <span className="tweet-feed-text">{`${secondLocation}전 정류장 출발`}</span>
+                  </>
+                )}
+              {isSecondActive &&
+                secondState === '출발대기' && ( //
+                  <>
+                    <span className="tweet-feed-time">{secondState}</span>
+                    <span className="tweet-feed-text">{'도착정보 없음'}</span>
+                  </>
+                )}
+              {isSecondActive &&
+                secondState === '운행종료' && ( //
+                  <>
+                    <span className="tweet-feed-time">{secondState}</span>
+                    <span className="tweet-feed-text">{'도착정보 없음'}</span>
+                  </>
+                )}
             </p>
           </div>
         </div>

@@ -50,4 +50,12 @@ export default class BusService {
 
     return { routeId, type, info, stationList };
   }
+
+  // GET /api/buses/arrival?type=:type&stationId=:stationId&routeId=:routeId&stationSeq=:stationSeq
+  async getArrivalByBookMark(bookMark) {
+    const { routeId, stationId, stationSeq, type } = bookMark;
+    const query = `type=${type}&routeId=${routeId}&stationId=${stationId}&stationSeq=${stationSeq}`;
+    const { arrival } = await this.http.fetch(`${this.apiName}/arrival?${query}`, { method: 'GET' });
+    return { ...bookMark, arrival };
+  }
 }
