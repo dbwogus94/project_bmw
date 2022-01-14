@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const BMFeed = ({ bm, onfeedClick, onDeleteClick, info, edit }) => {
-  const { routeId, routeName, routeTypeName, type, bookMarkId } = bm;
+  const { routeId, routeName, routeTypeName, type, bookMarkId, stationName } = bm;
   const [edited, setEdited] = useState(false);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const BMFeed = ({ bm, onfeedClick, onDeleteClick, info, edit }) => {
           <div className="feed-main" onClick={onfeedClick} data-route-id={routeId} data-type={type}>
             <p>
               <span className="feed-main-name">{routeName}</span>
-              <span className="feed-main-routeTypeName">{routeTypeName}</span>
+              <span className="feed-main-routeTypeName">{routeTypeName ? routeTypeName : stationName}</span>
             </p>
           </div>
           <div className="feed-info">
@@ -26,7 +26,7 @@ const BMFeed = ({ bm, onfeedClick, onDeleteClick, info, edit }) => {
               </Link>
             )}
             {edited && (
-              <button className="tweet-action-btn" onClick={onDeleteClick} data-book-mark-id={bookMarkId}>
+              <button className="bm-feed-delete-btn" onClick={onDeleteClick} data-book-mark-id={bookMarkId}>
                 x
               </button>
             )}

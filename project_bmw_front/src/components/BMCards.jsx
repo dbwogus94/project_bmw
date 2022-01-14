@@ -20,11 +20,13 @@ const BMCards = memo(({ bmGroupService, busService }) => {
     bmGroupService
       .getBmGroups()
       .then(bmGroups => {
-        setBmGroups([...bmGroups]);
-        const bmGroupId = localStorage.getItem('MyBM_bmGroupId') //
-          ? Number(localStorage.getItem('MyBM_bmGroupId'))
+        // localStorage에 select된 그룹 있는지 확인
+        const getBmGroupId = localStorage.getItem('MyBM_bmGroupId') ? Number(localStorage.getItem('MyBM_bmGroupId')) : null;
+        const bmGroupId = !!bmGroups.find(bmGroup => bmGroup.bmGroupId === getBmGroupId) //
+          ? getBmGroupId
           : bmGroups[0].bmGroupId;
         setBmGroupId(bmGroupId);
+        setBmGroups([...bmGroups]);
       })
       .catch(err => {
         onError(err, setError);
@@ -37,11 +39,12 @@ const BMCards = memo(({ bmGroupService, busService }) => {
   }, [bmGroupService]);
 
   useEffect(() => {
+    setSpinnerActive(true);
     // 그룹리스트가 조회되어 값이 있는 경우만 실행
     return bmGroupId === 0
-      ? false
-      : // 1. 그룹ID에 속한 북마크 리스트 조회
-        bmGroupService
+      ? setSpinnerActive(false)
+      : bmGroupService
+          // 1. 그룹ID에 속한 북마크 리스트 조회
           .getGroupById(bmGroupId, true)
           .then(async bmGroup => {
             const { bookMarks } = bmGroup;
@@ -76,14 +79,12 @@ const BMCards = memo(({ bmGroupService, busService }) => {
     const bmGroupId = event.target.value;
     localStorage.setItem('MyBM_bmGroupId', bmGroupId);
     setBmGroupId(bmGroupId);
-    setSpinnerActive(true);
   };
 
   // 새로고침
   const onButtonClick1 = () => {
     const reload = reloadCnt + 1;
     setReloadCnt(reload);
-    setSpinnerActive(true);
   };
 
   // 수정하기
@@ -93,15 +94,17 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
   return (
     <>
-      <SelectBMGroup //
-        button1="새로고침"
-        onButtonClick1={onButtonClick1}
-        button2="수정하기"
-        onButtonClick2={onButtonClick2}
-        onGroupChange={onGroupChange}
-        itemList={bmGroups}
-        selectedItem={bmGroupId}
-      />
+      {bmGroups && bmGroups.length !== 0 && (
+        <SelectBMGroup //
+          button1="새로고침"
+          onButtonClick1={onButtonClick1}
+          button2="수정하기"
+          onButtonClick2={onButtonClick2}
+          onGroupChange={onGroupChange}
+          itemList={bmGroups}
+          selectedItem={bmGroupId}
+        />
+      )}
 
       {!spinnerActive && error && <Banner text={error} isAlert={true} transient={true} />}
 

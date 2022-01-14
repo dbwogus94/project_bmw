@@ -15,7 +15,7 @@ export default class BmGroupService {
 
   /**
    * 유저의 모든 그룹 리스트 조회
-   * - API: GET /api/bmgroups
+   * - API: GET /api/bmgroups?include=book-mark
    * @returns {Promise<BmGroup[]>}
    * @param {boolean} isInclude
    * - if(isInclude) bmGroups
@@ -51,7 +51,7 @@ export default class BmGroupService {
 
   /**
    * 조건에 일치하는 bookMark를 가진 그룹리스트를 조회한다.
-   * - API: GET /api/bmgroups?routeId=:routeId&stationSeq=:stationSeq&statonId=:statonId
+   * - API: GET /api/bm-groups?include=book-mark&q=routeId=:routeId,stationSeq=:stationSeq,statonId=:statonId
    * - 조건: 노선Id(routeId), 경유지순번(stationSeq), 정류소Id(stationId)
    * @param {number} routeId
    * @param {number} stationSeq
@@ -88,7 +88,8 @@ export default class BmGroupService {
   }
 
   /**
-   * 
+   * BM그룹 조회
+   * - API: GET /api/bm-groups/:bmGroupId?include=book-mark
    * @param {number} bmGroupId 
    * @param {boolean} isInclude 
    * @returns {Promise<BmGroup>}
@@ -123,7 +124,7 @@ export default class BmGroupService {
 
   /**
    * 신규 BM그룹 생성
-   * - API: POST /api/bmgroups
+   * - API: POST /api/bm-groups
    * @param {string} bmGroupName
    * @returns {Promise<BmGroup>}
    */
@@ -132,11 +133,20 @@ export default class BmGroupService {
     return this.http.fetch(url, { method: 'POST', body: JSON.stringify({ bmGroupName }) });
   }
 
+  /**
+   * BM그룹 삭제
+   * - API: DELETE /api/bm-groups/:bmGroupId
+   * @param {number} bmGroupId
+   * @returns
+   */
+  async deleteBmGroup(bmGroupId) {
+    const url = `${this.getBmGroupApi()}/${bmGroupId}`;
+    await this.http.fetch(url, { method: 'DELETE' });
+  }
+
   /* ===================================================================================== */
   /* =================================== bookmarks api =================================== */
   /* ===================================================================================== */
-
-  // GET /bmgroups/:bmGroupId/bookmakes?routeId=:routeId&stationSeq=:stationSeq&statonId
 
   /**
    * 조건에 일치하는 bookmakes를 조회한다.

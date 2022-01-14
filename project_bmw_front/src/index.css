@@ -270,6 +270,7 @@ button {
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-black);
+  margin-top: 16%;
   transition: transform 300ms;
 }
 
@@ -294,7 +295,7 @@ button {
   background: var(--color-red);
 }
 
-/* my custom */
+/* ========================== my custom ========================= */
 
 /* header */
 .menu-div {
@@ -356,7 +357,7 @@ button {
   font-size: 0.9rem;
 }
 
-/* feeds */
+/* ========================== feeds ==========================*/
 
 .feeds {
   height: 100%;
@@ -446,6 +447,22 @@ button {
   margin: auto; */
 }
 
+.bm-feed-delete-btn {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-black);
+  margin-top: 16%;
+  transition: transform 300ms;
+}
+
+.bm-group-delete-btn {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-black);
+  margin-top: 1%;
+  transition: transform 300ms;
+}
+
 .feed-book-mark-text {
   display: inline-block;
   font-size: 2.5rem;
@@ -473,7 +490,7 @@ button {
   height: 1px;
 } */
 
-/* info */
+/* ========================== info ========================== */
 .info {
   height: 100%;
   overflow-y: auto;
@@ -518,7 +535,7 @@ button {
   font-size: 12px;
 }
 
-/* station */
+/* ========================== station ========================== */
 .bm-info {
   width: 100%;
   text-align: center;

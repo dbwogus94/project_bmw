@@ -22,11 +22,13 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     bmGroupService
       .getBmGroups()
       .then(bmGroups => {
-        setBmGroups([...bmGroups]);
-        const bmGroupId = localStorage.getItem('EditBM_bmGroupId') //
-          ? Number(localStorage.getItem('EditBM_bmGroupId'))
+        // localStorage에 select된 그룹 있는지 확인
+        const getBmGroupId = localStorage.getItem('EditBM_bmGroupId') ? Number(localStorage.getItem('EditBM_bmGroupId')) : null;
+        const bmGroupId = !!bmGroups.find(bmGroup => bmGroup.bmGroupId === getBmGroupId) //
+          ? getBmGroupId
           : bmGroups[0].bmGroupId;
         setBmGroupId(bmGroupId);
+        setBmGroups([...bmGroups]);
       })
       .catch(err => {
         onError(err, setError);
@@ -42,18 +44,15 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     // 그룹리스트가 조회되어 값이 있는 경우만 실행
     return bmGroupId === 0
       ? false
-      : // 1. 그룹ID에 속한 북마크 리스트 조회
-        bmGroupService
+      : bmGroupService
+          // 1. 그룹ID에 속한 북마크 리스트 조회
           .getGroupById(bmGroupId, true)
-          .then(async bmGroup => {
-            const { bookMarks } = bmGroup;
-            return setBookMarks([...bookMarks]);
-          })
+          .then(bmGroup => setBookMarks([...bmGroup.bookMarks]))
           .catch(err => onError(err, setError))
           .finally(() => setSpinnerActive(false));
   }, [bmGroupService, busService, bmGroupId]);
 
-  // 그룹 select box 변경 이벤트
+  // SelectBMGroup에 전달되는 select 변경 이벤트
   const onGroupChange = async event => {
     const bmGroupId = event.target.value;
     localStorage.setItem('EditBM_bmGroupId', bmGroupId);
@@ -61,7 +60,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     setSpinnerActive(true);
   };
 
-  // BM 편집
+  // SelectBMGroup에 전달되는 BM 편집 클릭 이벤트
   const onBmEditClick = event => {
     if (groupEdit) {
       window.alert('그룹 편집 완료 후 실행하세요.');
@@ -77,7 +76,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     setBmEdit(!bmEdit);
   };
 
-  // 그룹 편집
+  // SelectBMGroup에 전달되는 그룹 편집 클릭 이벤트
   const onBmGroupEditClick = event => {
     if (bmEdit) {
       window.alert('BM 편집 완료 후 실행하세요.');
@@ -87,23 +86,45 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     if (groupEdit) {
       setBmGroupEditName('그룹 편집');
     } else {
-      // window.alert("'x' 선택시 즉시 삭제되니 주의하세요!");
       setBmGroupEditName('그룹 편집 완료');
     }
     setGroupEdit(!groupEdit);
   };
 
-  // 피드 삭제
+  // feed에 전달되는 삭제 이벤트
   const onDeleteClick = event => {
-    if (groupEdit && window.confirm('그룹에 있는 모든 북마크를 삭제할까요?')) {
-      // const { bmGroupId } = event.target.dataset;
-      // 그룹 삭제 => bmGroupId로 삭제가능
+    if (bmEdit) {
+      const { bookMarkId } = event.target.dataset;
+      deleteBookMark(Number(bookMarkId));
     }
 
-    if (bmEdit) {
-      // const { bookMarkId } = event.target.dataset;
-      // 북마크 삭제 => bookMarkId, bmGroupId를 사용하면 삭제 가능
+    if (groupEdit && window.confirm('그룹에 있는 모든 북마크를 삭제할까요?')) {
+      const { bmGroupId } = event.target.dataset;
+      deleteBmGroup(Number(bmGroupId));
     }
+  };
+
+  // 북마크 삭제
+  const deleteBookMark = selectBookMarkId => {
+    return bmGroupService
+      .deleteBookMark(bmGroupId, selectBookMarkId) //
+      .then(() => setBookMarks(bookMarks.filter(bookMark => bookMark.bookMarkId !== selectBookMarkId)))
+      .catch(err => onError(err, setError));
+  };
+
+  // 그룹 삭제
+  const deleteBmGroup = selectBmGroupId => {
+    return bmGroupService
+      .deleteBmGroup(selectBmGroupId)
+      .then(() => {
+        // 그룹 리스트에서 삭제한 그룹 제거
+        setBmGroups(bmGroups.filter(bmGroup => bmGroup.bmGroupId !== selectBmGroupId));
+        // 삭제한 그룹이 현재 select된 그룹이면? selected값을 변경(setBmGroupId 사용)
+        return selectBmGroupId === bmGroupId //
+          ? setBmGroupId(bmGroups[0].bmGroupId)
+          : false;
+      })
+      .catch(err => onError(err, setError));
   };
 
   /* =================== Make Component =================== */
@@ -117,7 +138,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       const { bookMarkId, label } = bm;
       if (flag !== label) {
         flag = label;
-        result.push(<FeedHeader label={label === 'B' ? '버스' : '지하철'}></FeedHeader>);
+        result.push(<FeedHeader key={flag} label={label === 'B' ? '버스' : '지하철'}></FeedHeader>);
       }
       result.push(
         <>

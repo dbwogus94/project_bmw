@@ -20,7 +20,7 @@ const BMGroupFeed = ({ bmGroup, onDeleteClick, edit }) => {
           </div>
           <div className="feed-info">
             {edited && (
-              <button className="tweet-action-btn" onClick={onDeleteClick} data-bm-group-id={bmGroupId}>
+              <button className="bm-group-delete-btn" onClick={onDeleteClick} data-bm-group-id={bmGroupId}>
                 x
               </button>
             )}
