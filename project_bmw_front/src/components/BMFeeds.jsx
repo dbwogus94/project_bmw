@@ -98,7 +98,12 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       deleteBookMark(Number(bookMarkId));
     }
 
-    if (groupEdit && window.confirm('그룹에 있는 모든 북마크를 삭제할까요?')) {
+    if (bmGroups.length <= 1) {
+      window.alert('그룹은 하나 이상 필요하여 삭제할 수 없습니다.');
+      return false;
+    }
+
+    if (groupEdit && window.confirm('그룹을 삭제하면 북마크가 함께 삭제됩니다. 삭제할까요?')) {
       const { bmGroupId } = event.target.dataset;
       deleteBmGroup(Number(bmGroupId));
     }
