@@ -34,7 +34,7 @@ export default class AuthService {
   }
 
   async logout() {
-    this.storage.clearItem('USERNAME');
+    this.storage.clearItem();
     await this.http.fetch('/auth/signout', {
       method: 'GET',
     });

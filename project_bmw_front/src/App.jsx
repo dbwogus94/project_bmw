@@ -28,7 +28,6 @@ function App({ bmGroupService, busService, metroService, stopService }) {
   const onLogout = () => {
     if (window.confirm('로그아웃을 하시겠습니까?')) {
       logout();
-      removeBMData();
       history.push('/');
     }
   };

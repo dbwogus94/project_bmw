@@ -25,10 +25,7 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
     authService
       .me() //
       .then(setUser)
-      .catch(err => {
-        console.error(err);
-        setError(err);
-      });
+      .catch(err => setError(err));
   }, [authService]);
 
   const signUp = useCallback(
@@ -51,11 +48,11 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
     async () =>
       authService
         .logout() //
-        .then(() => setUser(undefined)),
+        .then(() => setUser(undefined))
+        .catch(err => setError(err)),
     [authService]
   );
 
-  // TODO: 개선 필요
   const setError = error => {
     setText(error.toString());
     setIsAlert(true);
