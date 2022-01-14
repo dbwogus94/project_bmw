@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Dto } from './dto.interface';
+import { Dto } from '../dto.interface';
 
 export class SigninDto implements Dto {
   @IsNotEmpty()
