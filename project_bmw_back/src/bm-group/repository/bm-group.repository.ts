@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { DeleteResult, EntityRepository, Repository } from 'typeorm';
 import { BmGroup, IBmGroup } from '@bmGroup/entities/BmGroup.entity';
 
 export interface IBmGroupRepository {
@@ -7,6 +7,7 @@ export interface IBmGroupRepository {
   findById(userId: number): Promise<IBmGroup[]>;
   findOneById(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
   findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
+  deleteOne(userId: number, bmGroupId: number): Promise<DeleteResult | undefined>;
 }
 
 @EntityRepository(BmGroup)
@@ -56,7 +57,7 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
       - 하지만 typeOrm에서는 Entity를 사용하지 않고 바로 SubQuery를 사용하는 방법을 지원하지 않는다.
       - 결과적으로 bg에 SubQuery A를 join하고 이후 SubQuery B Left join하는 방법을 사용해야했다.
       **요점: typeOrm에 특성 때문에 한번의 join이 더 발생하게 됨.
-    */
+      */
 
     return (
       this.createQueryBuilder('bg')
@@ -153,5 +154,19 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
       .where('user.id = :userId', { userId })
       .andWhere('bg.bmGroupId = :bmGroupId', { bmGroupId })
       .getOne();
+  }
+
+  /**
+   * 로그인한 유저의 그룹중 bmGroupId에 해당하는 BM그룹을 삭제
+   * @param userId
+   * @param bmGroupId
+   */
+  async deleteOne(userId: number, bmGroupId: number): Promise<DeleteResult | undefined> {
+    return this.createQueryBuilder()
+      .delete()
+      .from(BmGroup)
+      .where('userId = :userId', { userId })
+      .andWhere('bmGroupId = :bmGroupId', { bmGroupId })
+      .execute();
   }
 }

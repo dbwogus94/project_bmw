@@ -46,14 +46,16 @@ export const errorMessages: any = Object.freeze({
     /* bus */
     getBusInfo: '버스 상세정보가 없습니다. routeId를 확인하세요.',
     getStations: '경유 정류장 목록이 없습니다. routeId를 확인하세요.',
+    /* bmGroup */
+    deleteBmGroup: '요청한 bmGroupId에 해당하는 BM그룹이 없습니다.',
     /* bookMark */
-    deleteBookMark: '요청한 bmGroupId 그룹에는 bookMarkId를 가진 북마크가 없습니다.',
+    deleteBookMark: '요청한 bmGroupId에 해당하는 BM그룹에는 bookMarkId를 가진 북마크가 없습니다.',
   },
   CONFLICT_MESSAGE: {
     code: 409,
     signup: '중복된 username 입니다.',
     /* bookMark */
-    createBookMark: '이미 추가된 book mark 입니다.',
+    createBookMark: '추가를 요청한 북마크가 존재합니다.',
   },
   INTERNAL_SERVER_ERROR_MESSAGE: {
     code: 500,
@@ -92,8 +94,10 @@ const successMessages: any = Object.freeze({
     code: 204,
     /* auth */
     signout: '로그아웃 처리되어 토큰을 만료합니다.',
+    /* bmGroup */
+    deleteBmGroup: '요청한 BM그룹을 성공적으로 삭재했습니다.',
     /* bookMark */
-    deleteBookMark: '북마크를 성공적으로 삭제했습니다.',
+    deleteBookMark: '그룹에 매핑된 북마크를 성공적으로 삭제했습니다.',
   },
 });
 

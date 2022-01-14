@@ -4,6 +4,7 @@ import { TreeBmGroupDto } from './dto/response/tree-bm-group.dto';
 import { BmGroupDto } from './dto/response/bm-group.dto';
 import { IBmGroup } from './entities/BmGroup.entity';
 import { BmGroupRepository } from './repository/bm-group.repository';
+import { HttpError } from '@shared/http.error';
 
 export interface IBmGroupService {
   findById(userId: number): Promise<BmGroupDto[]>;
@@ -12,6 +13,7 @@ export interface IBmGroupService {
   findOneById(userId: number, bmGroupId: number): Promise<BmGroupDto | undefined>;
   findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<TreeBmGroupDto | undefined>;
   createBmGroup(userId: number, bmGroupName: string): Promise<BmGroupDto>;
+  deleteBmGroup(userId: number, bmGroupId: number): Promise<void>;
 }
 
 export class BmGroupService implements IBmGroupService {
@@ -136,5 +138,20 @@ export class BmGroupService implements IBmGroupService {
     });
     await bmGroupRepository.save(bmGroup);
     return BmGroupDto.entityToDto(bmGroup);
+  }
+
+  /**
+   * 로그인 유저의 bmGroup 삭제
+   * @param userId
+   * @param bmGroupId
+   */
+  public async deleteBmGroup(userId: number, bmGroupId: number): Promise<void> {
+    const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
+
+    const result = await bmGroupRepository.deleteOne(userId, bmGroupId);
+    const { affected } = result!;
+    if (!affected) {
+      throw new HttpError(404, 'deleteBmGroup');
+    }
   }
 }

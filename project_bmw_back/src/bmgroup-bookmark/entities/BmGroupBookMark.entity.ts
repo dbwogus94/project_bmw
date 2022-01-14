@@ -20,7 +20,7 @@ export class BmGroupBookMark implements IBmGroupBookMark {
   @PrimaryGeneratedColumn({ comment: 'bmGroupBookMark 테이블 PK' })
   bmGroupBookMarkId!: number;
 
-  @ManyToOne(type => BmGroup, bmGroup => bmGroup.bmGroupBookMarks, { nullable: false })
+  @ManyToOne(type => BmGroup, bmGroup => bmGroup.bmGroupBookMarks, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'bmGroupId' })
   // FK: bmGroup(N) : bmGroupBookMark(1)
   bmGroup!: BmGroup;

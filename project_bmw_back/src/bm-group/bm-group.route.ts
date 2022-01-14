@@ -3,9 +3,10 @@ import { isAuth } from '@middleware/auth';
 import dtoValidator from '@middleware/dto.validator';
 import { GetBmGroupDto } from './dto/request/get-bm-group.dto';
 import { CreateBmGroupDto } from './dto/request/create-bm-group.dto';
-import { createBmGroup, getBmGroup, getBmGroups } from './bm-group.controller';
+import { createBmGroup, deleteBmGroup, getBmGroup, getBmGroups } from './bm-group.controller';
 import { SearchBmGroupDto } from './dto/request/search-bm-group.dto';
 import { response } from '@middleware/response';
+import { deleteBmGroupDto } from './dto/request/delete-bm-group.dto';
 
 /* 모든 라우트 인증토큰 필수(isAuth 사용) */
 /* Bm Groups router: api/bm-groups */
@@ -28,5 +29,8 @@ bmGroupRouter.get('/:bmGroupId', dtoValidator(GetBmGroupDto), isAuth, getBmGroup
 
 // POST /api/bm-groups
 bmGroupRouter.post('/', dtoValidator(CreateBmGroupDto), isAuth, createBmGroup, response);
+
+// DELETE /api/bm-groups/:bmGroupId
+bmGroupRouter.delete('/:bmGroupId', dtoValidator(deleteBmGroupDto), isAuth, deleteBmGroup, response);
 
 export default bmGroupRouter;

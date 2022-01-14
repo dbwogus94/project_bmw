@@ -90,3 +90,20 @@ export const createBmGroup = async (req: Request, res: Response, next: NextFunct
   };
   return next();
 };
+
+/**
+ * DELETE /api/bm-groups/:bmGroupId
+ */
+export const deleteBmGroup = async (req: Request, res: Response, next: NextFunction) => {
+  const { bmGroupId } = req.dto;
+  const userId = req.id;
+
+  await bmGroupService.deleteBmGroup(userId, bmGroupId);
+
+  req.responseData = {
+    statusCode: 204,
+    message: 'deleteBmGroup',
+  };
+
+  return next();
+};
