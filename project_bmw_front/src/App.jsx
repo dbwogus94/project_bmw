@@ -1,4 +1,4 @@
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Route, useNavigate, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import MyBM from './pages/MyBM';
 import EditBM from './pages/EditBM';
@@ -9,7 +9,7 @@ import Stop from './pages/Stop';
 import Footer from './components/Footer';
 
 function App({ bmGroupService, busService, metroService, stopService }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   // TODO: 개선필요
   const removeBMData = () => window.localStorage.removeItem('BMSearchResult');
@@ -17,34 +17,34 @@ function App({ bmGroupService, busService, metroService, stopService }) {
   // MyBM 페이지 이동
   const onMyBM = () => {
     removeBMData();
-    history.push('/');
+    navigate('/');
   };
   // EditBM 페이지 이동
   const onEditBM = () => {
     removeBMData();
-    history.push(`/bmgroups`);
+    navigate(`/bmgroups`);
   };
   // 로그아웃
   const onLogout = () => {
     if (window.confirm('로그아웃을 하시겠습니까?')) {
       logout();
-      history.push('/');
+      navigate('/');
     }
   };
 
   // bus 검색 페이지 이동
   const onBusSearch = () => {
-    history.push('/buses');
+    navigate('/buses');
   };
   // metro 검색 페이지 이동
   const onMetroSearch = () => {
     removeBMData();
-    history.push('/metros');
+    navigate('/metros');
   };
   // stop 검색 페이지 이동
   const onStopSearch = () => {
     removeBMData();
-    history.push('/stops');
+    navigate('/stops');
   };
 
   return (
@@ -58,33 +58,24 @@ function App({ bmGroupService, busService, metroService, stopService }) {
         onMetroSearch={onMetroSearch}
         onStopSearch={onStopSearch}
       />
-      <Switch>
+      <Routes>
         (
         <>
-          <Route exact path="/">
-            <MyBM bmGroupService={bmGroupService} busService={busService} />
-          </Route>
-          <Route exact path="/bmgroups">
-            <EditBM bmGroupService={bmGroupService} busService={busService} />
-          </Route>
-          <Route path="/buses">
-            <Bus busService={busService} bmGroupService={bmGroupService} />
-          </Route>
-          <Route exact path="/metros">
-            <Metro metroService={metroService} />
-          </Route>
-          <Route exact path="/stops">
-            <Stop stopService={stopService} />
-          </Route>
+          {/* 6버전 exact 제거, 복수 라우팅시 /*를 마지막에 붙여야한다. */}
+          <Route path="/" element={<MyBM bmGroupService={bmGroupService} busService={busService} />} />
+          <Route path="/bmgroups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
+          <Route path="/buses/*" element={<Bus busService={busService} bmGroupService={bmGroupService} />} />
+          <Route path="/metros" element={<Metro metroService={metroService} />} />
+          <Route path="/stops" element={<Stop stopService={stopService} />} />
         </>
         )
-      </Switch>
+      </Routes>
       <Footer //
         isTransparent={true}
         backBtn={true}
         homeBtn={true}
         topBtn={true}
-        history={history}
+        navigate={navigate}
       ></Footer>
     </div>
   );

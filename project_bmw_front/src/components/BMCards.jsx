@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Banner from './Banner';
 import SelectBMGroup from './SelectBMGroup';
 import BMCard from './BMCard';
@@ -13,7 +13,7 @@ const BMCards = memo(({ bmGroupService, busService }) => {
   const [spinnerActive, setSpinnerActive] = useState(false);
   const [reloadCnt, setReloadCnt] = useState(0);
   const [error, setError] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSpinnerActive(true);
@@ -63,15 +63,15 @@ const BMCards = memo(({ bmGroupService, busService }) => {
   // 정류장 클릭, TODO: API 정해지면 API URL 적용
   const onUsernameClick = bookMark => {
     // return bookMark.label === 'B' //
-    //   ? history.push(`/stop/${bookMark.stationId}`) // 버스 정류소
-    //   : history.push(`/stop/${bookMark.stationId}`); // 지하철 노선
+    //   ? navigate(`/stop/${bookMark.stationId}`) // 버스 정류소
+    //   : navigate(`/stop/${bookMark.stationId}`); // 지하철 노선
   };
 
   const onNameClick = bookMark => {
     const { label, routeId, type } = bookMark;
     return label === 'B'
-      ? history.push(`/buses/${routeId}/stations?type=${type}`) // 버스 id로 버스 정보
-      : history.push(`/metro/${routeId}`); // 지하철 id로 역정보
+      ? navigate(`/buses/${routeId}/stations?type=${type}`) // 버스 id로 버스 정보
+      : navigate(`/metro/${routeId}`); // 지하철 id로 역정보
   };
 
   // 그룹 select box 변경 이벤트
@@ -89,7 +89,7 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
   // 수정하기
   const onButtonClick2 = () => {
-    return history.push(`/bmgroup`);
+    return navigate(`/bmgroup`);
   };
 
   return (

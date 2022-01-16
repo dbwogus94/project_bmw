@@ -1,10 +1,10 @@
-const Footer = ({ isTransparent, backBtn, homeBtn, topBtn, history }) => {
+const Footer = ({ isTransparent, backBtn, homeBtn, topBtn, navigate }) => {
   const onBackClick = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const onHomeClick = () => {
-    history.push('/');
+    navigate('/');
   };
 
   const handleTop = () => {
