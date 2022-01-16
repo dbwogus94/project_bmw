@@ -19,11 +19,14 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    setSpinnerActive(true);
     bmGroupService
       .getBmGroups()
       .then(bmGroups => {
         // localStorage에 select된 그룹 있는지 확인
-        const getBmGroupId = localStorage.getItem('EditBM_bmGroupId') ? Number(localStorage.getItem('EditBM_bmGroupId')) : null;
+        const getBmGroupId = localStorage.getItem('EditBM_bmGroupId') //
+          ? Number(localStorage.getItem('EditBM_bmGroupId'))
+          : null;
         const bmGroupId = !!bmGroups.find(bmGroup => bmGroup.bmGroupId === getBmGroupId) //
           ? getBmGroupId
           : bmGroups[0].bmGroupId;
@@ -41,9 +44,10 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
   }, [bmGroupService]);
 
   useEffect(() => {
+    setSpinnerActive(true);
     // 그룹리스트가 조회되어 값이 있는 경우만 실행
     return bmGroupId === 0
-      ? false
+      ? setSpinnerActive(false)
       : bmGroupService
           // 1. 그룹ID에 속한 북마크 리스트 조회
           .getGroupById(bmGroupId, true)
@@ -52,12 +56,12 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
           .finally(() => setSpinnerActive(false));
   }, [bmGroupService, busService, bmGroupId]);
 
-  // SelectBMGroup에 전달되는 select 변경 이벤트
-  const onGroupChange = async event => {
-    const bmGroupId = event.target.value;
-    localStorage.setItem('EditBM_bmGroupId', bmGroupId);
-    setBmGroupId(bmGroupId);
-    setSpinnerActive(true);
+  // SelectBMGroup에 전달되는 onChange 이벤트
+  const onGroupChange = async value => {
+    const selectedId = value.bmGroupId;
+    if (selectedId === bmGroupId) return false;
+    localStorage.setItem('EditBM_bmGroupId', selectedId);
+    setBmGroupId(selectedId);
   };
 
   // SelectBMGroup에 전달되는 BM 편집 클릭 이벤트
@@ -151,7 +155,6 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
             key={bookMarkId}
             bm={bm}
             info={false}
-            // onfeedClick={onfeedClick}
             onDeleteClick={onDeleteClick}
             edit={bmEdit}
           ></BMFeed>
@@ -180,15 +183,18 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
 
   return (
     <>
-      <SelectBMGroup //
-        button1={bmGroupEditName}
-        button2={bmEditName}
-        onButtonClick1={onBmGroupEditClick}
-        onButtonClick2={onBmEditClick}
-        onGroupChange={onGroupChange}
-        itemList={bmGroups}
-        selectedItem={bmGroupId}
-      />
+      {bmGroups && bmGroups.length !== 0 && (
+        <SelectBMGroup //
+          firstButton={bmGroupEditName}
+          onFirstButtonClick={onBmGroupEditClick}
+          secondButton={bmEditName}
+          onSecondButtonClick={onBmEditClick}
+          onGroupChange={onGroupChange}
+          bmGroups={bmGroups}
+          selected={bmGroupId}
+          edit={groupEdit}
+        />
+      )}
       {error && <Banner text={error} isAlert={true} transient={true} />}
       {!groupEdit && Object.keys(bookMarks).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
       {spinnerActive && Spinner()}

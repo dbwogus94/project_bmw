@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react';
-
-const SelectBMGroup = ({ button1, button2, onButtonClick1, onButtonClick2, onGroupChange, itemList, selectedItem }) => {
+import { useEffect, useState } from 'react';
+import Select from 'react-select';
+const SelectBMGroup = ({ firstButton, secondButton, onFirstButtonClick, onSecondButtonClick, onGroupChange, bmGroups, selected, edit }) => {
   const [selectItemList, setSelectItemList] = useState([]);
-  const [selectItem, setSelectItem] = useState(0);
+  const [selectItem, setSelectItem] = useState({});
 
   useEffect(() => {
-    setSelectItemList(itemList);
-    setSelectItem(selectedItem);
-  }, [itemList, selectedItem]);
+    const options = bmGroups.map(bmGroup => {
+      const { bmGroupId, bmGroupName } = bmGroup;
+      return { ...bmGroup, value: bmGroupId, label: bmGroupName };
+    });
+    setSelectItemList(options);
+    setSelectItem(options.find(bmGroup => bmGroup.bmGroupId === selected));
+  }, [bmGroups, selected]);
 
   return (
     <div className="tweet-form">
-      <select className="form-input tweet-input" onChange={onGroupChange} defaultValue={selectItem}>
-        {selectItemList.map(bmGroup => {
-          const { bmGroupId, bmGroupName } = bmGroup;
-          return (
-            <>
-              <option key={bmGroupId} value={bmGroupId}>
-                {bmGroupName}
-              </option>
-            </>
-          );
-        })}
-      </select>
-      <button className="form-btn-search" onClick={onButtonClick1}>
-        {button1}
+      <Select //
+        className="group-select"
+        options={selectItemList}
+        value={selectItem}
+        onChange={onGroupChange}
+        isDisabled={edit}
+        isSearchable={true}
+      />
+      <button className="form-btn-search" onClick={onFirstButtonClick}>
+        {firstButton}
       </button>
-      <button className="form-btn-search" onClick={onButtonClick2}>
-        {button2}
+      <button className="form-btn-search" onClick={onSecondButtonClick}>
+        {secondButton}
       </button>
     </div>
   );

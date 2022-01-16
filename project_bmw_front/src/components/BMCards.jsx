@@ -21,7 +21,9 @@ const BMCards = memo(({ bmGroupService, busService }) => {
       .getBmGroups()
       .then(bmGroups => {
         // localStorage에 select된 그룹 있는지 확인
-        const getBmGroupId = localStorage.getItem('MyBM_bmGroupId') ? Number(localStorage.getItem('MyBM_bmGroupId')) : null;
+        const getBmGroupId = localStorage.getItem('MyBM_bmGroupId') //
+          ? Number(localStorage.getItem('MyBM_bmGroupId'))
+          : null;
         const bmGroupId = !!bmGroups.find(bmGroup => bmGroup.bmGroupId === getBmGroupId) //
           ? getBmGroupId
           : bmGroups[0].bmGroupId;
@@ -75,10 +77,11 @@ const BMCards = memo(({ bmGroupService, busService }) => {
   };
 
   // 그룹 select box 변경 이벤트
-  const onGroupChange = async event => {
-    const bmGroupId = event.target.value;
-    localStorage.setItem('MyBM_bmGroupId', bmGroupId);
-    setBmGroupId(bmGroupId);
+  const onGroupChange = async value => {
+    const selectedId = value.bmGroupId;
+    if (selectedId === bmGroupId) return false;
+    localStorage.setItem('MyBM_bmGroupId', selectedId);
+    setBmGroupId(selectedId);
   };
 
   // 새로고침
@@ -96,13 +99,14 @@ const BMCards = memo(({ bmGroupService, busService }) => {
     <>
       {bmGroups && bmGroups.length !== 0 && (
         <SelectBMGroup //
-          button1="새로고침"
-          onButtonClick1={onButtonClick1}
-          button2="수정하기"
-          onButtonClick2={onButtonClick2}
+          firstButton="새로고침"
+          onFirstButtonClick={onButtonClick1}
+          secondButton="수정하기"
+          onSecondButtonClick={onButtonClick2}
           onGroupChange={onGroupChange}
-          itemList={bmGroups}
-          selectedItem={bmGroupId}
+          bmGroups={bmGroups}
+          selected={bmGroupId}
+          edit={false}
         />
       )}
 
