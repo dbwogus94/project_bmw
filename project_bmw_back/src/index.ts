@@ -7,9 +7,10 @@ import * as redis from '@db/redis';
 // Create server
 const port = Number(config.server.port || 3000);
 const logger = getLogger();
+const { environment, mysql } = config;
 
 typeorm // mysql(typeOrm)
-  .getConnection()
+  .getConnection(environment, mysql, false, false)
   .then(redis.createConnection)
   .then(() => {
     // Start server

@@ -8,8 +8,11 @@
     "lint": "eslint . --ext .ts",
     "start": "ts-node -r tsconfig-paths/register dist/src --env=production",
     "start:dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json",
-    "test:no-reloading": "./node_modules/.bin/ts-node --files -r tsconfig-paths/register ./spec"
+    "typeorm": "ts-node --files -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config ./src/db/typeorm/migration-config.ts",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "migration:create": "npm run typeorm -- migration:create -n",
+    "migration:generate": "npm run typeorm -- migration:generate -n"
   },
   "nodemonConfig": {
     "watch": [

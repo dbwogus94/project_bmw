@@ -71,6 +71,7 @@
     "forceConsistentCasingInFileNames": false /* Disallow inconsistently-cased references to the same file. */,
     /* ts 모듈 경로 설정 + tsconfig-paths/register를 사용하여 실행 */
     "paths": {
+      "@src/*": ["src/*"],
       "@shared/*": ["src/shared/*"],
       "@config": ["src/config"],
       "@server": ["src/Server"],

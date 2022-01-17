@@ -67,7 +67,7 @@ export const config = Object.freeze({
     host: required('DB_HOST', 'localhost'),
     port: required('DB_PORT', '13306'),
     database: required('DB_DATABASE'),
-    user: required('DB_USERNAME', 'root'),
+    username: required('DB_USERNAME', 'root'),
     password: required('DB_PASSWORD'),
   },
   redis: {
