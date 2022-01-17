@@ -22,20 +22,33 @@ export interface IBmGroup {
 
 @Entity({ name: 'bm_group' })
 export class BmGroup implements IBmGroup {
-  @PrimaryGeneratedColumn({ comment: 'bmGroup PK' })
+  @PrimaryGeneratedColumn({
+    name: 'id',
+    comment: 'bmGroup PK',
+  })
   bmGroupId!: number;
 
   @ManyToOne(type => User, user => user.bmGroups, { nullable: false }) // FK: user 테이블과 bmGroup 테이블 N:1 관계설정
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_Id' })
   user!: User;
 
-  @Column('varchar', { length: 90, comment: 'BM그룹명' })
+  @Column('varchar', {
+    name: 'bm_group_name',
+    length: 90,
+    comment: 'BM그룹명',
+  })
   bmGroupName!: string;
 
-  @CreateDateColumn({ comment: '생성일' })
+  @CreateDateColumn({
+    name: 'created_at',
+    comment: '생성일',
+  })
   createdAt!: Date;
 
-  @UpdateDateColumn({ comment: '수정일' })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    comment: '수정일',
+  })
   updatedAt!: Date;
 
   @OneToMany(type => BmGroupBookMark, bmGroupBookMark => bmGroupBookMark.bmGroup)

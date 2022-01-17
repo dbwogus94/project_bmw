@@ -23,36 +23,77 @@ export interface IUser {
 
 @Entity({ name: 'user' })
 export class User implements IUser {
-  @PrimaryGeneratedColumn({ comment: 'user PK' })
+  @PrimaryGeneratedColumn({
+    name: 'id',
+    comment: 'user PK',
+  })
   id!: number;
 
-  @Column('varchar', { length: 100, unique: true, comment: '로그인 id' })
+  @Column('varchar', {
+    name: 'username',
+    length: 100,
+    unique: true,
+    comment: '로그인 id',
+  })
   username!: string;
 
-  @Column('varchar', { length: 100, comment: '이름' })
+  @Column('varchar', {
+    name: 'name',
+    length: 100,
+    comment: '이름',
+  })
   name!: string;
 
-  @Column('varchar', { length: 200, comment: 'hash 비밀번호' })
+  @Column('varchar', {
+    name: 'password',
+    length: 200,
+    comment: 'hash 비밀번호',
+  })
   hashPassword!: string;
 
-  @Column('varchar', { length: 100, comment: '이메일' })
+  @Column('varchar', {
+    name: 'email',
+    length: 100,
+    comment: '이메일',
+  })
   email!: string;
 
   @Exclude()
-  @Column('varchar', { length: 300, nullable: true, comment: '엑세스 토큰' })
+  @Column('varchar', {
+    name: 'access_token',
+    length: 300,
+    nullable: true,
+    comment: '엑세스 토큰',
+  })
   public accessToken?: string;
 
   @Exclude()
-  @Column('varchar', { length: 300, nullable: true, comment: '재발급 토큰' })
+  @Column('varchar', {
+    name: 'refresh_token',
+    length: 300,
+    nullable: true,
+    comment: '재발급 토큰',
+  })
   public refreshToken?: string;
 
-  @CreateDateColumn({ comment: '생성일' })
+  @CreateDateColumn({
+    name: 'created_at',
+    comment: '생성일',
+  })
   createdAt!: Date;
 
-  @UpdateDateColumn({ comment: '수정일' })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    comment: '수정일',
+  })
   updatedAt!: Date;
 
-  @Column('varchar', { length: 2, default: 'Y', comment: '계정 활성화 여부' })
+  @Column('varchar', {
+    name: 'active',
+    length: 2,
+    default: 'Y',
+    comment: '계정 활성화 여부',
+  })
   active!: active;
 
   @OneToMany(type => BmGroup, bmGroup => bmGroup.user)

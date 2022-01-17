@@ -165,7 +165,7 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
     return this.createQueryBuilder()
       .delete()
       .from(BmGroup)
-      .where('userId = :userId', { userId })
+      .where('user = :userId', { userId })
       .andWhere('bmGroupId = :bmGroupId', { bmGroupId })
       .execute();
   }

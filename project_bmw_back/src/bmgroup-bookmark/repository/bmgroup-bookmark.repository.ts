@@ -11,8 +11,8 @@ export class BmGroupBookMarkRepository extends Repository<BmGroupBookMark> imple
     return this.createQueryBuilder()
       .delete()
       .from(BmGroupBookMark)
-      .where('bmGroupId = :bmGroupId', { bmGroupId })
-      .andWhere('bookMarkId = :bookMarkId', { bookMarkId })
+      .where('bmGroup = :bmGroupId', { bmGroupId })
+      .andWhere('bookMark = :bookMarkId', { bookMarkId })
       .execute();
   }
 }
