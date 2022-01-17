@@ -92,7 +92,7 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
   // 수정하기
   const onButtonClick2 = () => {
-    return navigate(`/bmgroup`);
+    return navigate(`/bmgroups`);
   };
 
   return (
