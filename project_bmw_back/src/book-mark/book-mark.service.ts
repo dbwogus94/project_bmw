@@ -54,9 +54,13 @@ export class BookMarkService implements IBookMarkService {
 
   /**
    * 신규 북마크와 관계 생성
-   * 1. Insert book_mark
+   * 1. select book_mark
+   *  - 없으면 insert book_mark
    * 2. Select bm_group
-   * 3. Insert bmgroup_bookmark
+   *  - 없으면 400 응답
+   * 3. select bmgroup_bookmark_map
+   *  - 있으면 409 응답
+   * 4. insert bmgroup_bookmark_map
    * @param userId
    * @param dto
    * @returns
@@ -75,30 +79,28 @@ export class BookMarkService implements IBookMarkService {
       // 검색용 키 생성(유니크)
       const checkColumn = `${routeId}${stationSeq}${stationId}`;
 
-      // 1. Insert book_mark
-      try {
+      // select book_mark
+      bookMark = await bookMarkRepo.findOneByCheckColumn(checkColumn);
+      if (!bookMark) {
+        // insert book_mark
         const newBookMark = bookMarkRepo.create({ ...dto, checkColumn });
         bookMark = await bookMarkRepo.save(newBookMark);
-      } catch (error) {
-        // 이미 있는 북마크면? => 조회
-        bookMark = await bookMarkRepo.findOneByCheckColumn(checkColumn);
       }
-
-      // 2. Select bm_group
+      // Select bm_group
       const bmGroup = await this.getBmGroup(userId, bmGroupId);
       if (!bmGroup) {
         httpError = new HttpError(400, 'createBookMark');
         throw httpError;
       }
-
-      // 3. Insert bmgroup_bookmark
-      try {
-        const bmGroupBookMark = bmGroupBookMarkRepo.create({ bmGroup, bookMark });
-        await bmGroupBookMarkRepo.save(bmGroupBookMark);
-      } catch (error) {
+      // select bmgroup_bookmark_map
+      let bmGroupBookMark = await bmGroupBookMarkRepo.findOneByKeys(bmGroup.bmGroupId, bookMark.bookMarkId);
+      if (bmGroupBookMark) {
         httpError = new HttpError(409, 'createBookMark');
         throw httpError;
       }
+      // insert bmgroup_bookmark_map
+      bmGroupBookMark = bmGroupBookMarkRepo.create({ bmGroup, bookMark });
+      await bmGroupBookMarkRepo.save(bmGroupBookMark);
     } catch (error) {
       this.logger.error('createBookMark Rollback 발생:');
       await queryRunner.rollbackTransaction();
