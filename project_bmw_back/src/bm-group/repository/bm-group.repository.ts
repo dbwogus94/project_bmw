@@ -81,27 +81,29 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
         .leftJoinAndSelect(
           subQuery => {
             // 2. checkColumn로 북마크를 조회하고 그 북마크를 가진 그룹을 조회한다.
-            return subQuery
-              .select('bg.bmGroupId', 'bmGroupId')
-              .addSelect('bgbm.bmGroupBookMarkId', 'bmGroupBookMarkId')
-              .addSelect('bm.bookMarkId', 'bookMarkId')
-              .addSelect('bm.checkColumn', 'checkColumn')
-              .addSelect('bm.routeId', 'routeId')
-              .addSelect('bm.stationSeq', 'stationSeq')
-              .addSelect('bm.stationId', 'stationId')
-              .addSelect('bm.label', 'label')
-              .addSelect('bm.routeName', 'routeName')
-              .addSelect('bm.stationName', 'stationName')
-              .addSelect('bm.direction', 'direction')
-              .addSelect('bm.type', 'type')
-              .addSelect('bm.createdAt', 'createdAt')
-              .addSelect('bm.updatedAt', 'updatedAt')
-              .from(BmGroup, 'bg')
-              .innerJoin('bg.user', 'user')
-              .innerJoin('bg.bmGroupBookMarks', 'bgbm')
-              .innerJoin('bgbm.bookMark', 'bm')
-              .where('user.id = :userId', { userId })
-              .andWhere('bm.checkColumn = :checkColumn', { checkColumn });
+            return (
+              subQuery
+                .select('bg.bmGroupId', 'bmGroupId')
+                .addSelect('bgbm.bmGroupBookMarkId', 'bmGroupBookMarkId')
+                .addSelect('bm.bookMarkId', 'bookMarkId')
+                .addSelect('bm.checkColumn', 'checkColumn')
+                .addSelect('bm.routeId', 'routeId')
+                .addSelect('bm.stationSeq', 'stationSeq')
+                .addSelect('bm.stationId', 'stationId')
+                .addSelect('bm.label', 'label')
+                .addSelect('bm.routeName', 'routeName')
+                .addSelect('bm.stationName', 'stationName')
+                .addSelect('bm.direction', 'direction')
+                .addSelect('bm.type', 'type')
+                // .addSelect('bm.createdAt', 'createdAt')
+                // .addSelect('bm.updatedAt', 'updatedAt')
+                .from(BmGroup, 'bg')
+                .innerJoin('bg.user', 'user')
+                .innerJoin('bg.bmGroupBookMarks', 'bgbm')
+                .innerJoin('bgbm.bookMark', 'bm')
+                .where('user.id = :userId', { userId })
+                .andWhere('bm.checkColumn = :checkColumn', { checkColumn })
+            );
           },
           'B',
           'A.bmGroupId = B.bmGroupId',

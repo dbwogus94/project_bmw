@@ -32,13 +32,13 @@ export class BookMarkDto implements Dto {
   @Transform(params => (params.value == null ? undefined : params.value))
   public type!: 'seoul' | 'gyeonggi'; // api type
 
-  @Transform(params => (params.value == null ? undefined : params.value))
+  /* 제외 속성 */
+  @Transform(params => (params.value = undefined))
   createdAt!: Date;
 
-  @Transform(params => (params.value == null ? undefined : params.value))
+  @Transform(params => (params.value = undefined))
   updatedAt!: Date;
 
-  /* 제외 속성 */
   @Transform(params => (params.value = undefined))
   startStationName!: string;
 

@@ -201,12 +201,14 @@ export class BookMark implements IBookMark {
   /* 시스템 사용 */
   @CreateDateColumn({
     name: 'created_at',
+    select: false,
     comment: '생성일',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',
+    select: false,
     comment: '수정일',
   })
   updatedAt!: Date;

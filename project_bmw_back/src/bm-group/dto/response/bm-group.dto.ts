@@ -1,6 +1,4 @@
 import { IBmGroup } from '@bmGroup/entities/BmGroup.entity';
-import { BookMarkDto } from '@bookMark/dto/response/book-mark.dto';
-import { Transform, Type } from 'class-transformer';
 
 /**
  * 응답에 사용되는 dto
