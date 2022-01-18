@@ -31,7 +31,7 @@ export class GyeonggiBusService implements BusService {
    */
   async getBusListByRouteName(routeName: string): Promise<GyeonggiBusDto[]> {
     const SERVICE = 'getBusRouteList';
-    const query = `&keyword=${routeName}`;
+    const query = `&keyword=${encodeURI(routeName)}`;
     const apiUrl = `${this.HOST}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
     const { response, OpenAPI_ServiceResponse } = await this.openApi.callApi(apiUrl);
 

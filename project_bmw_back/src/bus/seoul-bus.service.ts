@@ -30,7 +30,7 @@ export class SeoulBusService implements BusService {
    */
   async getBusListByRouteName(routeName: string): Promise<SeoulBusDto[]> {
     const SERVICE = 'getBusRouteList';
-    const query = `&strSrch=${routeName}`;
+    const query = `&strSrch=${encodeURI(routeName)}`;
     const apiUrl = `${this.HOST}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
     const { ServiceResult } = await this.openApi.callApi(apiUrl);
 
