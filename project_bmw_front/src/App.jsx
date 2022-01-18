@@ -1,12 +1,12 @@
 import { Route, useNavigate, Routes } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import Header from './components/shared/Header';
 import MyBM from './pages/MyBM';
 import EditBM from './pages/EditBM';
-import { useAuth } from './context/AuthContext';
 import Bus from './pages/Bus';
 import Metro from './pages/Metro';
-import Stations from './pages/Station';
 import Footer from './components/shared/Footer';
+import StationPage from './pages/StationPage';
 
 function App({ bmGroupService, busService, metroService, stationService }) {
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ function App({ bmGroupService, busService, metroService, stationService }) {
 
   // bus 검색 페이지 이동
   const onBusSearch = () => {
+    removeBMData();
     navigate('/buses');
   };
   // metro 검색 페이지 이동
@@ -66,7 +67,7 @@ function App({ bmGroupService, busService, metroService, stationService }) {
           <Route path="/bm-groups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
           <Route path="/buses/*" element={<Bus busService={busService} bmGroupService={bmGroupService} />} />
           <Route path="/metros" element={<Metro metroService={metroService} />} />
-          <Route path="/stations" element={<Stations stationService={stationService} />} />
+          <Route path="/stations/*" element={<StationPage stationService={stationService} />} />
         </>
         )
       </Routes>

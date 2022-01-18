@@ -22,7 +22,7 @@ const authService = new AuthService(httpClient, userStorage);
 const bmGroupService = new BmGroupService(httpClient);
 const busService = new BusService(httpClient);
 const metroService = new MetroService();
-const stationService = new StationService();
+const stationService = new StationService(httpClient);
 
 ReactDOM.render(
   <React.StrictMode>

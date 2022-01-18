@@ -6,7 +6,7 @@ import FeedHeader from './FeedHeader';
 import SelectBMGroup from './SelectBMGroup';
 import Spinner from './Spinner';
 import BusFeed from '../bus/BusFeed';
-import StationFeed from '../stations/StationFeed';
+import MetroFeed from '../metro/MetroFeed';
 
 const BMFeeds = memo(({ bmGroupService, busService }) => {
   const [feeds, setFeeds] = useState([]);
@@ -164,7 +164,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       return (
         <BusFeed //
           key={routeId}
-          bm={bus}
+          bus={bus}
           info={false}
           onDeleteClick={onDeleteClick}
           edit={bmEdit}
@@ -176,13 +176,13 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     function makeMetroFeed(metro) {
       const { routeId } = metro;
       return (
-        <StationFeed //
+        <MetroFeed //
           key={routeId}
-          bm={metro}
+          metro={metro}
           info={false}
           onDeleteClick={onDeleteClick}
           edit={bmEdit}
-        ></StationFeed>
+        ></MetroFeed>
       );
     }
   };

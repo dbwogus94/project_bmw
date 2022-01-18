@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { onError } from '../../util/on-error';
 import BusFeed from '../bus/BusFeed';
 import MetroFeed from '../metro/MetroFeed';
-import StationFeed from '../stations/StationFeed';
+import StationFeed from '../station/StationFeed';
 import Banner from './Banner';
 import FeedHeader from './FeedHeader';
 import SearchForm from './SearchForm';
@@ -72,9 +72,16 @@ const BMSearch = memo(({ service, button }) => {
 
   // 정류소 클릭
   const onSatationClick = event => {
-    const routeId = event.currentTarget.dataset.routeId;
+    const stationId = event.currentTarget.dataset.routeId;
     const type = event.currentTarget.dataset.type;
-    navigate(`${pathname}/${routeId}/buses?type=${type}`);
+    const mobileNo = event.currentTarget.dataset.mobileNo;
+
+    const url =
+      type === 'gyeonggi' //
+        ? `${pathname}/${stationId}/buses?type=${type}`
+        : `${pathname}/${mobileNo}/buses?type=${type}`;
+
+    navigate(url);
   };
 
   const makeFeeds = bmList => {
@@ -142,8 +149,10 @@ const BMSearch = memo(({ service, button }) => {
         button={button}
         onSubmit={onSubmit}
         onError={onError}
+        // 한글 +숫자 + 영어 + '-' 가능
+        regExp={/[~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]/}
         // 숫자 + 영어 + '-' 가능
-        regExp={/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]/}
+        // regExp={/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]/}
       />
       {error && <Banner text={error} isAlert={true} transient={true} />}
       {spinnerActive ? (
