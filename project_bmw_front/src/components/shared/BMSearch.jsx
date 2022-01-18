@@ -1,8 +1,10 @@
 import { memo, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { onError } from '../../util/on-error';
+import BusFeed from '../bus/BusFeed';
+import MetroFeed from '../metro/MetroFeed';
+import StationFeed from '../stations/StationFeed';
 import Banner from './Banner';
-import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';
 import SearchForm from './SearchForm';
 import Spinner from './Spinner';
@@ -61,11 +63,18 @@ const BMSearch = memo(({ service, button }) => {
       .finally(() => setSpinnerActive(false));
   };
 
-  // 정류장 리스트 페이지 이동
-  const onfeedClick = event => {
+  // 버스 또는 지하철 클릭 => 정류장 리스트 페이지 이동
+  const onBmFeedClick = event => {
     const routeId = event.currentTarget.dataset.routeId;
     const type = event.currentTarget.dataset.type;
     navigate(`${pathname}/${routeId}/stations?type=${type}`);
+  };
+
+  // 정류소 클릭
+  const onSatationClick = event => {
+    const routeId = event.currentTarget.dataset.routeId;
+    const type = event.currentTarget.dataset.type;
+    navigate(`${pathname}/${routeId}/buses?type=${type}`);
   };
 
   const makeFeeds = bmList => {
@@ -73,26 +82,57 @@ const BMSearch = memo(({ service, button }) => {
     let flag = '';
 
     for (let bm of bmList) {
-      const { routeId, type } = bm;
+      const { label, type } = bm;
       if (flag !== type) {
         flag = type;
         result.push(<FeedHeader label={bm.districtName}></FeedHeader>);
       }
+      if (label === 'B') result.push(makeBusFeed(bm));
+      if (label === 'M') result.push(makeMetroFeed(bm));
+      if (label === 'S') result.push(makeStationFeed(bm));
+    }
+    return result;
 
-      result.push(
-        <>
-          <BMFeed //
-            key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
-            bm={bm}
-            onfeedClick={onfeedClick}
-            info={true}
-            edit={false}
-          ></BMFeed>
-        </>
+    // 버스 feed 생성
+    function makeBusFeed(bus) {
+      const { routeId, type } = bus;
+      return (
+        <BusFeed //
+          key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
+          bus={bus}
+          onfeedClick={onBmFeedClick}
+          info={true}
+          edit={false}
+        ></BusFeed>
       );
     }
 
-    return result;
+    // 자하철 feed 생성
+    function makeMetroFeed(metro) {
+      const { routeId, type } = metro;
+      return (
+        <MetroFeed //
+          key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
+          metro={metro}
+          onfeedClick={onBmFeedClick}
+          info={true}
+          edit={false}
+        ></MetroFeed>
+      );
+    }
+
+    // 정류소 feed 생성
+    function makeStationFeed(sation) {
+      const { routeId, type } = sation;
+      return (
+        <StationFeed //
+          key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
+          sation={sation}
+          onfeedClick={onSatationClick}
+          info={false}
+        ></StationFeed>
+      );
+    }
   };
 
   return (

@@ -1,11 +1,12 @@
 import { memo, useEffect, useState } from 'react';
 import { onError } from '../../util/on-error';
 import Banner from './Banner';
-import BMFeed from './BMFeed';
 import BMGroupFeed from '../bm-group/BMGroupFeed';
 import FeedHeader from './FeedHeader';
 import SelectBMGroup from './SelectBMGroup';
 import Spinner from './Spinner';
+import BusFeed from '../bus/BusFeed';
+import StationFeed from '../stations/StationFeed';
 
 const BMFeeds = memo(({ bmGroupService, busService }) => {
   const [feeds, setFeeds] = useState([]);
@@ -161,13 +162,13 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     function makeBusFeed(bus) {
       const { routeId } = bus;
       return (
-        <BMFeed //
+        <BusFeed //
           key={routeId}
           bm={bus}
           info={false}
           onDeleteClick={onDeleteClick}
           edit={bmEdit}
-        ></BMFeed>
+        ></BusFeed>
       );
     }
 
@@ -175,13 +176,13 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
     function makeMetroFeed(metro) {
       const { routeId } = metro;
       return (
-        <BMFeed //
+        <StationFeed //
           key={routeId}
           bm={metro}
           info={false}
           onDeleteClick={onDeleteClick}
           edit={bmEdit}
-        ></BMFeed>
+        ></StationFeed>
       );
     }
   };
