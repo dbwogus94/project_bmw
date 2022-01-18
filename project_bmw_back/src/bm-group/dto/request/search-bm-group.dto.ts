@@ -4,7 +4,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches, ValidateIf } from 
 export class SearchBmGroupDto {
   @IsOptional()
   @IsString()
-  @Matches(/book-marks/i)
+  @Matches(/^book-marks$/i)
   public include!: string;
 
   @ValidateIf((dto, v) => !!(dto.stationSeq || dto.stationId))

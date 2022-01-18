@@ -5,7 +5,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-valid
 export class GetBmGroupDto implements Dto {
   @IsOptional()
   @IsString()
-  @Matches(/book-marks/i)
+  @Matches(/^book-marks$/i)
   public include!: string;
 
   @IsNotEmpty()
