@@ -1,3 +1,5 @@
+import { getDistrictName } from '@src/shared/util';
+
 /**
  * Info interface는
  * Open API 버스노선 상세정보 조회 결과에서
@@ -11,7 +13,7 @@
  *    - 오퍼레이션명(국문): 노선정보항목조회
  *    - 오퍼레이션명(영문): getBusRouteInfoItem
  */
-export interface Info {
+export class BusInfoDto {
   // 노선 ID
   routeId: number;
   // 노선 번호
@@ -43,5 +45,39 @@ export interface Info {
   // 사용된 API 구분 라벨
   type: 'seoul' | 'gyeonggi';
   // 버스(B), 지하철(M) 구분
-  label: 'B';
+  label: 'B' = 'B';
+
+  constructor(
+    routeId: number,
+    routeName: string,
+    startStationName: string,
+    endStationName: string,
+    routeTypeCd: number,
+    routeTypeName: string,
+    regionName: string,
+    districtCd: number,
+    minTerm: number,
+    maxTerm: number,
+    companyId: number | null,
+    companyName: Number,
+    companyTel: string,
+    type: 'seoul' | 'gyeonggi',
+  ) {
+    this.routeId = routeId;
+    this.routeName = routeName;
+    this.startStationName = startStationName;
+    this.endStationName = endStationName;
+    this.routeTypeCd = routeTypeCd;
+    this.routeTypeName = routeTypeName;
+    this.regionName = regionName;
+    this.districtCd = districtCd;
+    this.districtName = getDistrictName(districtCd, type);
+    this.minTerm = minTerm;
+    this.maxTerm = maxTerm;
+    // 운수 회사
+    this.companyId = companyId;
+    this.companyName = companyName;
+    this.companyTel = companyTel;
+    this.type = type;
+  }
 }

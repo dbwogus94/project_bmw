@@ -3,8 +3,7 @@ import { BusService } from '@bus/bus.service.interface';
 import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi-bus.dto';
 import { GyeonggiBusInfoDto } from '@bus/dto/response/info/gyeonggi-info.dto';
 import { GyeonggiBusStationDto } from '@bus/dto/response/station/gyeonggi-station.dto';
-import { Arrival } from './dto/response/arrival-info/arrival-interface';
-import { GyeonggiArrivalDto } from './dto/response/arrival-info/gyeonggi-arrival.dto';
+import { GyeonggiArrivalDto } from './dto/response/arrival/gyeonggi-arrival.dto';
 import { HttpError } from '@shared/http.error';
 
 export class GyeonggiBusService implements BusService {
@@ -128,7 +127,7 @@ export class GyeonggiBusService implements BusService {
    * @param stationSeq 경유 정류소 순번
    * @returns
    */
-  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<Arrival> {
+  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<GyeonggiArrivalDto> {
     const SERVICE = 'getBusArrivalItem';
     const query = `&stationId=${stationId}&routeId=${routeId}&staOrder=${stationSeq}`;
     const apiUrl = `${this.ARRIVAL}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;

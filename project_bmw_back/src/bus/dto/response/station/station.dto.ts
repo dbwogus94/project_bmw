@@ -11,8 +11,7 @@
  *    - 오퍼레이션명(국문): 경유정류소목록조회
  *    - 오퍼레이션명(영문): getBusRouteStationList
  */
-export interface Station {
-  // 정류소고유번호: 서울시는 이 값으로 정류소 상세 데이터를 받아온다.
+export class BusStationDto {
   arsId: string | number;
   // 정류소ID: 경기도 이 값으로 정류소 상세 데이터 받아온다.
   stationId: string | number;
@@ -26,4 +25,22 @@ export interface Station {
   routeId: number;
   // 사용된 API 구분 라벨
   type: 'seoul' | 'gyeonggi';
+
+  constructor(
+    arsId: string | number,
+    stationId: string | number,
+    stationName: string,
+    stationSeq: string | number,
+    turnYn: 'Y' | 'N',
+    routeId: number,
+    type: 'seoul' | 'gyeonggi',
+  ) {
+    this.arsId = arsId;
+    this.stationId = stationId;
+    this.stationName = stationName;
+    this.stationSeq = stationSeq;
+    this.turnYn = turnYn;
+    this.routeId = routeId;
+    this.type = type;
+  }
 }

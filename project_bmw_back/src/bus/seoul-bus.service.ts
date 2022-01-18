@@ -3,8 +3,7 @@ import { BusService } from '@bus/bus.service.interface';
 import { SeoulBusDto } from '@bus/dto/response/bus/seoul-bus.dto';
 import { SeoulBusInfoDto } from '@bus/dto/response/info/seoul-info.dto';
 import { SeoulBusStationDto } from '@bus/dto/response/station/seoul-station.dto';
-import { Arrival } from './dto/response/arrival-info/arrival-interface';
-import { SeoulArrivalDto } from './dto/response/arrival-info/seoul-arrival.dto';
+import { SeoulArrivalDto } from './dto/response/arrival/seoul-arrival.dto';
 
 export class SeoulBusService implements BusService {
   private openApi: OpenApi;
@@ -102,7 +101,7 @@ export class SeoulBusService implements BusService {
         });
   }
 
-  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<Arrival> {
+  async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<SeoulArrivalDto> {
     const SERVICE = 'getArrInfoByRoute';
     const query = `&stId=${stationId}&busRouteId=${routeId}&ord=${stationSeq}`;
     const apiUrl = `${this.ARRIVAL}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;

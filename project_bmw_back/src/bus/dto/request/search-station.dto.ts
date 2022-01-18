@@ -1,6 +1,6 @@
 import { Dto } from '@user/dto/dto.interface';
 import { Transform, Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator';
 
 export class SearchStationDto implements Dto {
   @IsNotEmpty()
@@ -11,6 +11,6 @@ export class SearchStationDto implements Dto {
   @IsNotEmpty()
   @IsString()
   @Transform(params => params.value.trim()) // 위생화
-  // TODO: 특정값만 체크하는 기능 있는지 확인, 있으면 적용 ('seoul' | 'gyeonggi';)
+  @Matches(/^seoul$|^gyeonggi$/i)
   public type!: string;
 }
