@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-const Header = memo(({ onLogout, onMyBM, onEditBM, onBusSearch, onMetroSearch, onStopSearch }) => {
+const Header = memo(({ onLogout, onMyBM, onEditBM, onBusSearch, onMetroSearch, onStationSearch }) => {
   return (
     <header className="header">
       <div className="logo">
@@ -18,7 +18,7 @@ const Header = memo(({ onLogout, onMyBM, onEditBM, onBusSearch, onMetroSearch, o
         <div className="menu-div">
           <button onClick={onBusSearch}>BUS</button>
           <button onClick={onMetroSearch}>METRO</button>
-          <button onClick={onStopSearch}>STOP</button>
+          <button onClick={onStationSearch}>STATION</button>
         </div>
       </nav>
       {/* )} */}

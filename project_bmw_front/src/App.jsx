@@ -1,12 +1,12 @@
 import { Route, useNavigate, Routes } from 'react-router-dom';
-import Header from './components/Header';
+import Header from './components/shared/Header';
 import MyBM from './pages/MyBM';
 import EditBM from './pages/EditBM';
 import { useAuth } from './context/AuthContext';
 import Bus from './pages/Bus';
 import Metro from './pages/Metro';
 import Stop from './pages/Stop';
-import Footer from './components/Footer';
+import Footer from './components/shared/Footer';
 
 function App({ bmGroupService, busService, metroService, stopService }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function App({ bmGroupService, busService, metroService, stopService }) {
   // EditBM 페이지 이동
   const onEditBM = () => {
     removeBMData();
-    navigate(`/bmgroups`);
+    navigate(`/bm-groups`);
   };
   // 로그아웃
   const onLogout = () => {
@@ -63,7 +63,7 @@ function App({ bmGroupService, busService, metroService, stopService }) {
         <>
           {/* 6버전 exact 제거, 복수 라우팅시 /*를 마지막에 붙여야한다. */}
           <Route path="/" element={<MyBM bmGroupService={bmGroupService} busService={busService} />} />
-          <Route path="/bmgroups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
+          <Route path="/bm-groups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
           <Route path="/buses/*" element={<Bus busService={busService} bmGroupService={bmGroupService} />} />
           <Route path="/metros" element={<Metro metroService={metroService} />} />
           <Route path="/stops" element={<Stop stopService={stopService} />} />

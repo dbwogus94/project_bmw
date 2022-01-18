@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { onError } from '../util/on-error';
-import useQuery from '../util/url-query-parser';
+import { onError } from '../../util/on-error';
+import useQuery from '../../util/url-query-parser';
 import Banner from './Banner';
 import BookMarkModal from './model/BookMarkModal';
 import Spinner from './Spinner';

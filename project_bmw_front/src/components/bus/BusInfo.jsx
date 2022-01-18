@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { onError } from '../../util/on-error';
 import useQuery from '../../util/url-query-parser';
-import Banner from '../Banner';
-import Spinner from '../Spinner';
+import Banner from '../shared/Banner';
+import Spinner from '../shared/Spinner';
 
 const BusInfo = memo(({ service }) => {
   const [info, setInfo] = useState({});

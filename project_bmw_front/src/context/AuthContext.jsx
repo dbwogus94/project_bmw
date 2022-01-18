@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import Header from '../components/Header';
+import Header from '../components/shared/Header';
 import Login from '../pages/Login';
 
 const AuthContext = createContext({});

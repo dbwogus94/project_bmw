@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { onError } from '../util/on-error';
+import { onError } from '../../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
 import FeedHeader from './FeedHeader';

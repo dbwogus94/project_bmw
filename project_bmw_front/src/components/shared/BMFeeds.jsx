@@ -1,14 +1,14 @@
 import { memo, useEffect, useState } from 'react';
-import { onError } from '../util/on-error';
+import { onError } from '../../util/on-error';
 import Banner from './Banner';
 import BMFeed from './BMFeed';
-import BMGroupFeed from './BMGroupFeed';
+import BMGroupFeed from '../bm-group/BMGroupFeed';
 import FeedHeader from './FeedHeader';
 import SelectBMGroup from './SelectBMGroup';
 import Spinner from './Spinner';
 
 const BMFeeds = memo(({ bmGroupService, busService }) => {
-  const [bookMarks, setBookMarks] = useState([]);
+  const [feeds, setFeeds] = useState([]);
   const [bmGroups, setBmGroups] = useState([]);
   const [bmGroupId, setBmGroupId] = useState(0);
   const [spinnerActive, setSpinnerActive] = useState(false);
@@ -51,7 +51,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       : bmGroupService
           // 1. 그룹ID에 속한 북마크 리스트 조회
           .getGroupById(bmGroupId, true)
-          .then(bmGroup => setBookMarks([...bmGroup.bookMarks]))
+          .then(bmGroup => setFeeds([...bmGroup.bookMarks]))
           .catch(err => onError(err, setError))
           .finally(() => setSpinnerActive(false));
   }, [bmGroupService, busService, bmGroupId]);
@@ -117,7 +117,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
   const deleteBookMark = selectBookMarkId => {
     return bmGroupService
       .deleteBookMark(bmGroupId, selectBookMarkId) //
-      .then(() => setBookMarks(bookMarks.filter(bookMark => bookMark.bookMarkId !== selectBookMarkId)))
+      .then(() => setFeeds(feeds.filter(bookMark => bookMark.bookMarkId !== selectBookMarkId)))
       .catch(err => onError(err, setError));
   };
 
@@ -139,29 +139,51 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
   /* =================== Make Component =================== */
 
   // 북마크 피드 생성
-  const makeBookMarkFeed = bookMarks => {
+  const makeBmFeeds = feeds => {
+    // 1. label별로 정렬
+    feeds.sort((a, b) => (a.label > b.label ? 1 : -1));
+
+    // 2. 버스(B), 정류소(S) 별로 feed 생성
     const result = [];
     let flag = '';
 
-    for (let bm of bookMarks) {
-      const { bookMarkId, label } = bm;
+    for (let bm of feeds) {
+      const { label } = bm;
       if (flag !== label) {
         flag = label;
         result.push(<FeedHeader key={flag} label={label === 'B' ? '버스' : '지하철'}></FeedHeader>);
       }
-      result.push(
-        <>
-          <BMFeed //
-            key={bookMarkId}
-            bm={bm}
-            info={false}
-            onDeleteClick={onDeleteClick}
-            edit={bmEdit}
-          ></BMFeed>
-        </>
-      );
+      result.push(label === 'B' ? makeBusFeed(bm) : makeMetroFeed(bm));
     }
     return result;
+
+    // 버스 feed 생성
+    function makeBusFeed(bus) {
+      const { routeId } = bus;
+      return (
+        <BMFeed //
+          key={routeId}
+          bm={bus}
+          info={false}
+          onDeleteClick={onDeleteClick}
+          edit={bmEdit}
+        ></BMFeed>
+      );
+    }
+
+    // 자하철 feed 생성
+    function makeMetroFeed(metro) {
+      const { routeId } = metro;
+      return (
+        <BMFeed //
+          key={routeId}
+          bm={metro}
+          info={false}
+          onDeleteClick={onDeleteClick}
+          edit={bmEdit}
+        ></BMFeed>
+      );
+    }
   };
 
   const makeBmGroupFeed = bmGroups => {
@@ -196,9 +218,9 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
         />
       )}
       {error && <Banner text={error} isAlert={true} transient={true} />}
-      {!groupEdit && Object.keys(bookMarks).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
+      {!spinnerActive && !groupEdit && Object.keys(feeds).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
       {spinnerActive && Spinner()}
-      {!spinnerActive && !groupEdit && bookMarks && bookMarks.length !== 0 && <ul className="feeds">{makeBookMarkFeed(bookMarks)}</ul>}
+      {!spinnerActive && !groupEdit && feeds && feeds.length !== 0 && <ul className="feeds">{makeBmFeeds(feeds)}</ul>}
       {!spinnerActive && groupEdit && <ul className="feeds">{makeBmGroupFeed(bmGroups)}</ul>}
     </>
   );

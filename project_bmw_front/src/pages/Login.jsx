@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Banner from '../components/Banner';
+import Banner from '../components/shared/Banner';
 
 const Login = ({ onSignUp, onLogin, setError, text, isAlert }) => {
   const [signup, setSignup] = useState(false);

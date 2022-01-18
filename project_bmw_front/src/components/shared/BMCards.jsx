@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Banner from './Banner';
 import SelectBMGroup from './SelectBMGroup';
 import BMCard from './BMCard';
-import { onError } from '../util/on-error';
+import { onError } from '../../util/on-error';
 import Spinner from './Spinner';
 
 const BMCards = memo(({ bmGroupService, busService }) => {
@@ -65,8 +65,8 @@ const BMCards = memo(({ bmGroupService, busService }) => {
   // 정류장 클릭, TODO: API 정해지면 API URL 적용
   const onUsernameClick = bookMark => {
     // return bookMark.label === 'B' //
-    //   ? navigate(`/stop/${bookMark.stationId}`) // 버스 정류소
-    //   : navigate(`/stop/${bookMark.stationId}`); // 지하철 노선
+    //   ? navigate(`/stations/${bookMark.stationId}`) // 버스 정류소
+    //   : navigate(`/stations/${bookMark.stationId}`); // 지하철 노선
   };
 
   const onNameClick = bookMark => {
@@ -92,7 +92,7 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
   // 수정하기
   const onButtonClick2 = () => {
-    return navigate(`/bmgroups`);
+    return navigate(`/bm-groups`);
   };
 
   return (

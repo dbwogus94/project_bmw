@@ -1,8 +1,8 @@
 import { Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import BusInfo from '../components/bus/BusInfo';
-import BMSearch from '../components/BMSearch';
-import Stations from '../components/Stations';
+import BMSearch from '../components/shared/BMSearch';
+import Stations from '../components/shared/Stations';
 
 const Bus = ({ busService, bmGroupService }) => {
   return (
