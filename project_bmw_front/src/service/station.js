@@ -1,4 +1,4 @@
-export default class StopService {
+export default class stationService {
   stopList = {
     경기: [
       {

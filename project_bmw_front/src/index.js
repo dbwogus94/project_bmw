@@ -6,7 +6,7 @@ import AuthService from './service/auth';
 import BmGroupService from './service/bm-group';
 import BusService from './service/bus';
 import MetroService from './service/metro';
-import StopService from './service/stop';
+import StationService from './service/station';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AuthErrorEventBus } from './context/AuthContext';
@@ -22,7 +22,7 @@ const authService = new AuthService(httpClient, userStorage);
 const bmGroupService = new BmGroupService(httpClient);
 const busService = new BusService(httpClient);
 const metroService = new MetroService();
-const stopService = new StopService();
+const stationService = new StationService();
 
 ReactDOM.render(
   <React.StrictMode>
@@ -32,7 +32,7 @@ ReactDOM.render(
           bmGroupService={bmGroupService}
           busService={busService}
           metroService={metroService}
-          stopService={stopService}
+          stationService={stationService}
         />
       </AuthProvider>
     </BrowserRouter>

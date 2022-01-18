@@ -5,10 +5,10 @@ import EditBM from './pages/EditBM';
 import { useAuth } from './context/AuthContext';
 import Bus from './pages/Bus';
 import Metro from './pages/Metro';
-import Stop from './pages/Stop';
+import Stations from './pages/Station';
 import Footer from './components/shared/Footer';
 
-function App({ bmGroupService, busService, metroService, stopService }) {
+function App({ bmGroupService, busService, metroService, stationService }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   // TODO: 개선필요
@@ -41,10 +41,10 @@ function App({ bmGroupService, busService, metroService, stopService }) {
     removeBMData();
     navigate('/metros');
   };
-  // stop 검색 페이지 이동
-  const onStopSearch = () => {
+  // stations 검색 페이지 이동
+  const onStationSearch = () => {
     removeBMData();
-    navigate('/stops');
+    navigate('/stations');
   };
 
   return (
@@ -56,7 +56,7 @@ function App({ bmGroupService, busService, metroService, stopService }) {
         onLogout={onLogout}
         onBusSearch={onBusSearch}
         onMetroSearch={onMetroSearch}
-        onStopSearch={onStopSearch}
+        onStationSearch={onStationSearch}
       />
       <Routes>
         (
@@ -66,7 +66,7 @@ function App({ bmGroupService, busService, metroService, stopService }) {
           <Route path="/bm-groups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
           <Route path="/buses/*" element={<Bus busService={busService} bmGroupService={bmGroupService} />} />
           <Route path="/metros" element={<Metro metroService={metroService} />} />
-          <Route path="/stops" element={<Stop stopService={stopService} />} />
+          <Route path="/stations" element={<Stations stationService={stationService} />} />
         </>
         )
       </Routes>
