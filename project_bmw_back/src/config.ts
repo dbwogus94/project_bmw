@@ -82,12 +82,20 @@ export const config = Object.freeze({
         arrival: required('GYEONGGI_BUS_ARRIVAL_HOST'),
         key: required('GYEONGGI_BUS_KEY'),
       },
+      station: {
+        host: required('GYEONGGI_STATION_HOST'),
+        key: required('GYEONGGI_STATION_KEY'),
+      },
     },
     seoul: {
       bus: {
         host: required('SEOUL_BUS_HOST'),
         arrival: required('SEOUL_BUS_ARRIVAL_HOST'),
         key: required('SEOUL_BUS_KEY'),
+      },
+      station: {
+        host: required('SEOUL_STATION_HOST'),
+        key: required('SEOUL_STATION_KEY'),
       },
     },
   },

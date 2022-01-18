@@ -9,20 +9,19 @@ import cors from 'cors';
 import { getLogger } from '@shared/Logger';
 import customMorgan from '@middleware/custom-morgan';
 import { config } from '@config';
-import { errorMessages } from '@shared/message';
+import { HttpError } from '@shared/http.error';
 import httpException from '@middleware/http-exception';
 // my router
 import AuthRouter from '@auth/auth.route';
 import BusRouter from '@bus/bus.route';
 import bmGroupRouter from '@bmGroup/bm-group.route';
 import bookMarkRouter from '@bookMark/book-mark.route';
-import { HttpError } from '@shared/http.error';
+import stationRouter from '@station/station.route';
 
 // winston 로거 생성
 const logger = getLogger();
 
 const app = express();
-const { NOT_FOUND } = StatusCodes;
 const { credentials, origin } = config.server.cors;
 
 /************************************************************************************
@@ -53,6 +52,7 @@ app.set('trust proxy', true);
 // Add APIs
 app.use('/api/auth', AuthRouter);
 app.use('/api/buses', BusRouter);
+app.use('/api/stations', stationRouter);
 app.use('/api/bm-groups', bmGroupRouter);
 app.use('/api/bm-groups/:bmGroupId/book-marks', bookMarkRouter);
 

@@ -74,6 +74,9 @@ const successMessages: any = Object.freeze({
     getBusInfo: '노선 상세정보 조회에 성공했습니다.',
     getStations: '노선의 경유 정류소 조회에 성공했습니다.',
     getArrivalInfo: '노선의 도착정보 조회에 성공했습니다.',
+    /* station */
+    getStationList: '정류소 검색에 성공했습니다.',
+    getStopBusList: '정류소에 정차하는 노선목록 조회에 성공했습니다.',
     /* bmGroup */
     getBmGroups: 'BM그룹 리스트 조회에 성공했습니다.',
     getBmGroup: 'BM그룹에 조회에 성공했습니다.',

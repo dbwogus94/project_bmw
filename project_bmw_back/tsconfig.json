@@ -81,6 +81,7 @@
       "@auth/*": ["src/auth/*"],
       "@user/*": ["src/user/*"],
       "@bus/*": ["src/bus/*"],
+      "@station/*": ["src/station/*"],
       "@bmGroup/*": ["src/bm-group/*"],
       "@bookMark/*": ["src/book-mark/*"],
       "@bmGroupBookMark/*": ["src/bmgroup-bookmark/*"]
