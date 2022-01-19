@@ -8,6 +8,7 @@ import Banner from './Banner';
 import FeedHeader from './FeedHeader';
 import SearchForm from './SearchForm';
 import Spinner from './Spinner';
+import uuid from 'react-uuid';
 
 const BMSearch = memo(({ service, button }) => {
   const [bmList, setbmList] = useState([]);
@@ -72,17 +73,24 @@ const BMSearch = memo(({ service, button }) => {
 
   // 정류소 클릭
   const onSatationClick = event => {
-    const stationId = event.currentTarget.dataset.routeId;
+    const stationId = event.currentTarget.dataset.stationId;
     const type = event.currentTarget.dataset.type;
-    const mobileNo = event.currentTarget.dataset.mobileNo;
+    const arsId = event.currentTarget.dataset.arsId;
+
+    const selected = bmList.find(bm => bm.stationId === Number(stationId));
+    const { stationName, districtCd, districtName, regionName, label } = selected;
 
     const url =
       type === 'gyeonggi' //
         ? `${pathname}/${stationId}/buses?type=${type}`
-        : `${pathname}/${mobileNo}/buses?type=${type}`;
+        : `${pathname}/${arsId}/buses?type=${type}`; // 서울시 API의 경우 정류소 고유번호(arsId)를 사용
 
-    navigate(url);
+    navigate(url, {
+      state: { stationId, stationName, arsId, districtCd, districtName, regionName, label, type },
+    });
   };
+
+  /* =================== Make Component =================== */
 
   const makeFeeds = bmList => {
     const result = [];
@@ -92,7 +100,7 @@ const BMSearch = memo(({ service, button }) => {
       const { label, type } = bm;
       if (flag !== type) {
         flag = type;
-        result.push(<FeedHeader label={bm.districtName}></FeedHeader>);
+        result.push(<FeedHeader key={uuid()} label={bm.districtName}></FeedHeader>);
       }
       if (label === 'B') result.push(makeBusFeed(bm));
       if (label === 'M') result.push(makeMetroFeed(bm));
@@ -130,10 +138,10 @@ const BMSearch = memo(({ service, button }) => {
 
     // 정류소 feed 생성
     function makeStationFeed(sation) {
-      const { routeId, type } = sation;
+      const { stationId, type } = sation;
       return (
         <StationFeed //
-          key={type === 'gyeonggi' ? 'G' + routeId : 'S' + routeId}
+          key={type === 'gyeonggi' ? 'G' + stationId : 'S' + stationId}
           sation={sation}
           onfeedClick={onSatationClick}
           info={false}

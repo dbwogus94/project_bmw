@@ -64,9 +64,21 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
   // 정류장 클릭, TODO: API 정해지면 API URL 적용
   const onUsernameClick = bookMark => {
-    // return bookMark.label === 'B' //
-    //   ? navigate(`/stations/${bookMark.stationId}`) // 버스 정류소
-    //   : navigate(`/stations/${bookMark.stationId}`); // 지하철 노선
+    const { arsId, stationId, districtName, regionName, stationName, label, type } = bookMark;
+    // 버스 정류장
+    if (label === 'B') {
+      const url =
+        type === 'gyeonggi' //
+          ? `/stations/${stationId}/buses?type=${type}`
+          : `/stations/${arsId}/buses?type=${type}`;
+      navigate(url, {
+        state: { stationName, arsId, districtName, regionName, type },
+      });
+    }
+
+    // 지하철 역
+    if (label === 'M') {
+    }
   };
 
   const onNameClick = bookMark => {

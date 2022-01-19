@@ -6,7 +6,7 @@ const StationFeed = ({ sation, onfeedClick, info }) => {
     // districtCd, districtName, regionName, label,
     stationId, //
     stationName,
-    mobileNo,
+    arsId,
     type,
   } = sation;
 
@@ -14,7 +14,7 @@ const StationFeed = ({ sation, onfeedClick, info }) => {
     <>
       <li className="feed">
         <article className="feed-container">
-          <div className="feed-main" onClick={onfeedClick} data-station-id={stationId} data-type={type} data-mobile-no={mobileNo}>
+          <div className="feed-main" onClick={onfeedClick} data-station-id={stationId} data-type={type} data-ars-id={arsId}>
             <p>
               <span className="feed-main-name">{stationName}</span>
               <span className="feed-main-routeTypeName">{stationId}</span>
@@ -23,7 +23,7 @@ const StationFeed = ({ sation, onfeedClick, info }) => {
           <div className="feed-info">
             {info && (
               <Link to={`/station/${stationId}?type=${type}`}>
-                <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
+                <img src={`${process.env.PUBLIC_URL}/img/info.png`} alt="info Logo" className="feed-info-img" />
               </Link>
             )}
           </div>

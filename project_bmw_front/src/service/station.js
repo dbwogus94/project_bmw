@@ -17,4 +17,18 @@ export default class stationService {
       method: 'GET',
     });
   }
+
+  /**
+   * 정류소에 정차하는 노선 검색
+   * @param {number} stationId || arsId - 정류소id 또는 정류소 고유번호
+   * @param {'gyeonggi' | 'seoul'} type
+   * @returns
+   *  - {busList: []}
+   */
+  async getBusList(stationId, type) {
+    const { busList } = await this.http.fetch(`${this.apiName}/${stationId}/buses?type=${type}`, {
+      method: 'GET',
+    });
+    return busList;
+  }
 }
