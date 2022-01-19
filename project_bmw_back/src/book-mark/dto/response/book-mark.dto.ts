@@ -9,6 +9,9 @@ export class BookMarkDto implements Dto {
   public checkColumn!: string;
 
   @Transform(params => (params.value == null ? undefined : params.value))
+  public arsId!: number; // 경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId)
+
+  @Transform(params => (params.value == null ? undefined : params.value))
   public routeId!: number; // 노선 Id
 
   @Transform(params => (params.value == null ? undefined : params.value))
@@ -28,6 +31,15 @@ export class BookMarkDto implements Dto {
 
   @Transform(params => (params.value == null ? undefined : params.value))
   public direction!: string; // 노선 진행방향
+
+  @Transform(params => (params.value == null ? undefined : params.value))
+  public regionName!: string; // 운행지역
+
+  @Transform(params => (params.value == null ? undefined : params.value))
+  public districtCd!: number; // 관할지역코드
+
+  @Transform(params => (params.value == null ? undefined : params.value))
+  public districtName!: string; // 관할지역명
 
   @Transform(params => (params.value == null ? undefined : params.value))
   public type!: 'seoul' | 'gyeonggi'; // api type
@@ -50,15 +62,6 @@ export class BookMarkDto implements Dto {
 
   @Transform(params => (params.value = undefined))
   routeTypeName!: string;
-
-  @Transform(params => (params.value = undefined))
-  regionName!: string;
-
-  @Transform(params => (params.value = undefined))
-  districtCd!: number;
-
-  @Transform(params => (params.value = undefined))
-  districtName!: string;
 
   @Transform(params => (params.value = undefined))
   minTerm!: number;

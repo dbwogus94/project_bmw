@@ -8,7 +8,7 @@ import { BusStationDto } from './station.dto';
  */
 export class GyeonggiBusStationDto extends BusStationDto {
   constructor(routeId: number | number, gyeonggiStationData: any) {
-    const { stationId, stationName, stationSeq, turnYn } = gyeonggiStationData;
-    super(stationId, stationId, stationName, stationSeq, turnYn, routeId, 'gyeonggi');
+    const { mobileNo, stationId, stationName, stationSeq, turnYn } = gyeonggiStationData;
+    super(mobileNo, stationId, stationName, stationSeq, turnYn, routeId, 'gyeonggi');
   }
 }

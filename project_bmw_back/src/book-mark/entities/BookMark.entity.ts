@@ -6,6 +6,7 @@ export interface IBookMark {
   checkColumn: string;
 
   /* client 사용 */
+  arsId: number;
   routeId: number;
   stationSeq: number;
   stationId: number;
@@ -13,6 +14,9 @@ export interface IBookMark {
   routeName: string;
   stationName: string;
   direction: string;
+  regionName: string;
+  districtCd: number;
+  districtName: string;
   type: 'seoul' | 'gyeonggi';
 
   /* 선택 */
@@ -20,9 +24,6 @@ export interface IBookMark {
   endStationName: string;
   routeTypeCd: number;
   routeTypeName: string;
-  regionName: string;
-  districtCd: number;
-  districtName: string;
   minTerm: number;
   maxTerm: number;
   companyId: number;
@@ -48,6 +49,12 @@ export class BookMark implements IBookMark {
     comment: '조회, 중복체크용 컬럼:  String(routeId) + String(stationSeq) + String(stationId)',
   })
   checkColumn!: string;
+
+  @Column('int', {
+    name: 'ars_id',
+    comment: '경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId)',
+  })
+  arsId!: number;
 
   @Column('int', {
     name: 'route_id',
@@ -96,6 +103,26 @@ export class BookMark implements IBookMark {
   direction!: string;
 
   @Column('varchar', {
+    name: 'region_name',
+    length: 60,
+    comment: '노선운행지역명',
+  })
+  regionName!: string;
+
+  @Column('int', {
+    name: 'district_cd',
+    comment: '관할지역코드(1: 서울, 2: 경기, 3: 인천)',
+  })
+  districtCd!: number;
+
+  @Column('varchar', {
+    name: 'district_name',
+    length: 6,
+    comment: '관할지역명',
+  })
+  districtName!: string;
+
+  @Column('varchar', {
     name: 'type',
     length: 20,
     comment: 'Open API 종류',
@@ -136,29 +163,6 @@ export class BookMark implements IBookMark {
     comment: '노선종류이름',
   })
   routeTypeName!: string;
-
-  @Column('varchar', {
-    name: 'region_name',
-    length: 60,
-    select: false,
-    comment: '노선운행지역명',
-  })
-  regionName!: string;
-
-  @Column('int', {
-    name: 'district_cd',
-    select: false,
-    comment: '관할지역코드(1: 서울, 2: 경기, 3: 인천)',
-  })
-  districtCd!: number;
-
-  @Column('varchar', {
-    name: 'district_name',
-    length: 6,
-    select: false,
-    comment: '관할지역명',
-  })
-  districtName!: string;
 
   @Column('int', {
     name: 'min_term',

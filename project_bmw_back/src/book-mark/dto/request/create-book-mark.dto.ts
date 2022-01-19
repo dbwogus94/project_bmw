@@ -6,6 +6,11 @@ export class CreateBookMarkDto implements Dto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
+  public arsId!: number; // 경기도: 고유모바일번호(mobileNo) / 서울시:정류소 고유번호(arsId)에 해당하는 값
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
   public bmGroupId!: number; // 그룹 id
 
   /* BookMark entity*/
