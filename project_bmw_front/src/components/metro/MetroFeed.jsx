@@ -22,7 +22,7 @@ const MetroFeed = ({ metro, onfeedClick, onDeleteClick, info, edit }) => {
           <div className="feed-info">
             {info && (
               <Link to={`/buses/${routeId}?type=${type}`}>
-                <img src="./img/info.png" alt="info Logo" className="feed-info-img" />
+                <img src={`${process.env.PUBLIC_URL}/img/info.png`} alt="info Logo" className="feed-info-img" />
               </Link>
             )}
             {edited && (

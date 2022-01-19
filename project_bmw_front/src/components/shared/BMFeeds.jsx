@@ -7,6 +7,7 @@ import SelectBMGroup from './SelectBMGroup';
 import Spinner from './Spinner';
 import BusFeed from '../bus/BusFeed';
 import MetroFeed from '../metro/MetroFeed';
+import uuid from 'react-uuid';
 
 const BMFeeds = memo(({ bmGroupService, busService }) => {
   const [feeds, setFeeds] = useState([]);
@@ -152,7 +153,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       const { label } = bm;
       if (flag !== label) {
         flag = label;
-        result.push(<FeedHeader key={flag} label={label === 'B' ? '버스' : '지하철'}></FeedHeader>);
+        result.push(<FeedHeader key={uuid()} label={label === 'B' ? '버스' : '지하철'}></FeedHeader>);
       }
       result.push(label === 'B' ? makeBusFeed(bm) : makeMetroFeed(bm));
     }
@@ -192,7 +193,7 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       const { bmGroupId } = bmGroup;
       return (
         <>
-          {i === 0 && <FeedHeader label={'그룹 목록'}></FeedHeader>}
+          {i === 0 && <FeedHeader key={uuid()} label={'그룹 목록'}></FeedHeader>}
           <BMGroupFeed //
             key={bmGroupId}
             bmGroup={bmGroup}
@@ -221,8 +222,10 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
       {error && <Banner text={error} isAlert={true} transient={true} />}
       {!spinnerActive && !groupEdit && Object.keys(feeds).length === 0 && <p className="tweets-empty">아직 추가된 BM이 없습니다.</p>}
       {spinnerActive && Spinner()}
-      {!spinnerActive && !groupEdit && feeds && feeds.length !== 0 && <ul className="feeds">{makeBmFeeds(feeds)}</ul>}
-      {!spinnerActive && groupEdit && <ul className="feeds">{makeBmGroupFeed(bmGroups)}</ul>}
+      <ul className="feeds">
+        {!spinnerActive && !groupEdit && feeds && feeds.length !== 0 && makeBmFeeds(feeds)}
+        {!spinnerActive && groupEdit && makeBmGroupFeed(bmGroups)}
+      </ul>
     </>
   );
 });

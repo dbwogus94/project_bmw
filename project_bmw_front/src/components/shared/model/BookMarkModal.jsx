@@ -12,6 +12,7 @@ import NewBmGroupForm from './NewBmGroupForm';
           "bookMarkId": 29,
           "checkColumn": "2290001114229000968",
           "routeId": 229000111,
+          "arsId": '11112',
           "stationSeq": 4,
           "stationId": 229000968,
           "label": "B",
@@ -20,6 +21,9 @@ import NewBmGroupForm from './NewBmGroupForm';
           "direction": "양재역.양재1동민원분소",
           "createdAt": "2022-01-06T13:05:07.487Z",
           "updatedAt": "2022-01-06T13:05:07.487Z"
+          "regionName": '',
+          "districtCd": '1',
+          "districtName": '서울'
         }
       ]
     },
