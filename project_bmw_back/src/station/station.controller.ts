@@ -34,7 +34,7 @@ export const searchStationList = async (req: Request, res: Response, next: NextF
 /**
  * GET /api/stations/:stationId/buses?type=:type
  */
-export const getSationBusList = async (req: Request, res: Response, next: NextFunction) => {
+export const getStationBusList = async (req: Request, res: Response, next: NextFunction) => {
   const { type, stationId } = req.dto;
   let busList;
 

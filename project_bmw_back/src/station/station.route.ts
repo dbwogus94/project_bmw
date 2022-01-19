@@ -3,7 +3,7 @@ import { response } from '@src/middleware/response';
 import { Router } from 'express';
 import { SearchBusDto } from '@station/dto/request/search-bus.dto';
 import { SearchStationDto } from '@station/dto/request/search-station.dto';
-import { searchStationList, getSationBusList } from '@station/station.controller';
+import { searchStationList, getStationBusList } from '@station/station.controller';
 
 /* Station Router: /api/stops */
 const stationRouter = Router();
@@ -12,6 +12,6 @@ const stationRouter = Router();
 stationRouter.get('/', dtoValidator(SearchStationDto), searchStationList, response);
 
 // GET /api/stations/:stationId/buses?type=:type
-stationRouter.get('/:stationId/buses', dtoValidator(SearchBusDto), getSationBusList, response);
+stationRouter.get('/:stationId/buses', dtoValidator(SearchBusDto), getStationBusList, response);
 
 export default stationRouter;

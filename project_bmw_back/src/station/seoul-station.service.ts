@@ -51,7 +51,7 @@ export class SeoulStationService implements StationService {
 
   /**
    * 정류장을 정차하는 노선 검색
-   * @param arsId 버스 고유번호(mobileNo)
+   * @param arsId 버스 고유번호(arsId)
    * @returns
    */
   async getStopBusListByStationId(arsId: number): Promise<SeoulBusDto[]> {
