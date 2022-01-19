@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
+import Spinner from '../Spinner';
 import BmGroup from './BmGroup';
 import NewBmGroupForm from './NewBmGroupForm';
 
@@ -34,16 +35,18 @@ import NewBmGroupForm from './NewBmGroupForm';
 const BookMarkModal = memo(({ bmGroupService, onBookMarkChange, isOpen, onClose, station }) => {
   const [bmGroups, setBmGroups] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
+  const [spinnerActive, setSpinnerActive] = useState(false);
 
   // 두번째 인자에 []을 전달해 로드시만 실행
   useEffect(() => {
+    setSpinnerActive(true);
     const { routeId, stationSeq, stationId } = station;
     bmGroupService
       .searchBmGroups(routeId, stationSeq, stationId)
       .then(bmGroups => setBmGroups([...bmGroups]))
-      .catch(console.error);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      .catch(console.error)
+      .finally(() => setSpinnerActive(false));
+  }, [bmGroupService, station]);
 
   // 그룹 추가 NewBmGroupForm 활성화
   const onActiveCreateForm = event => {
@@ -74,13 +77,17 @@ const BookMarkModal = memo(({ bmGroupService, onBookMarkChange, isOpen, onClose,
           </header>
           <main>
             <ul className="bmgroups">
-              {bmGroups.map(bmGroup => (
-                <BmGroup //
-                  key={bmGroup.bmGroupId}
-                  bmGroup={bmGroup}
-                  onBookMarkChange={onBookMarkChange}
-                ></BmGroup>
-              ))}
+              {spinnerActive && Spinner()}
+              {!spinnerActive &&
+                bmGroups &&
+                bmGroups.length &&
+                bmGroups.map(bmGroup => (
+                  <BmGroup //
+                    key={bmGroup.bmGroupId}
+                    bmGroup={bmGroup}
+                    onBookMarkChange={onBookMarkChange}
+                  ></BmGroup>
+                ))}
             </ul>
           </main>
           <footer>
