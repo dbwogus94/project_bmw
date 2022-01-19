@@ -1,5 +1,6 @@
-import { BusDto } from '@src/bus/dto/response/bus/bus.dto';
 import { getRouteTypeName } from '@src/shared/util';
+import { BusDto } from './bus.dto';
+
 /**
  * 서울시 Open API 노선번호목록조회 결과 DTO
  *  - 서비스명: 노선정보조회 서비스
@@ -9,6 +10,7 @@ import { getRouteTypeName } from '@src/shared/util';
 export class SeoulBusDto extends BusDto {
   constructor(seoulBusData: any) {
     const { busRouteId, busRouteNm, routeType } = seoulBusData;
-    super(busRouteId, busRouteNm, routeType, getRouteTypeName(routeType), 1, 'seoul');
+    const busRouteType = routeType ? routeType : seoulBusData.busRouteType;
+    super(busRouteId, busRouteNm, busRouteType, getRouteTypeName(busRouteType), 1, 'seoul');
   }
 }

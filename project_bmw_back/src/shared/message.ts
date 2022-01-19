@@ -46,6 +46,8 @@ export const errorMessages: any = Object.freeze({
     /* bus */
     getBusInfo: '버스 상세정보가 없습니다. routeId를 확인하세요.',
     getStations: '경유 정류장 목록이 없습니다. routeId를 확인하세요.',
+    /* station */
+    getSationBusList: '정류장을 정차하는 노선이 없습니다. stationId를 확인하세요.',
     /* bmGroup */
     deleteBmGroup: '요청한 bmGroupId에 해당하는 BM그룹이 없습니다.',
     /* bookMark */

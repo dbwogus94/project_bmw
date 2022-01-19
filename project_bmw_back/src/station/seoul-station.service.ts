@@ -1,6 +1,7 @@
+import { StationService } from './station.service.interface';
 import { OpenApi } from '@src/shared/open-api';
 import { SeoulStationDto } from './dto/response/station/seoul-station.dto';
-import { StationService } from './station.service.interface';
+import { SeoulBusDto } from '@bus/dto/response/bus/seoul-bus.dto';
 
 export class SeoulStationService implements StationService {
   private openApi: OpenApi;
@@ -46,5 +47,35 @@ export class SeoulStationService implements StationService {
           return new SeoulStationDto(station);
         })
       : [new SeoulStationDto({ ...result })];
+  }
+
+  /**
+   * 정류장을 정차하는 노선 검색
+   * @param arsId 버스 고유번호(mobileNo)
+   * @returns
+   */
+  async getStopBusListByStationId(arsId: number): Promise<SeoulBusDto[]> {
+    const SERVICE = 'getRouteByStation';
+    const query = `&arsId=${arsId}`;
+    const apiUrl = `${this.HOST}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
+    const { ServiceResult } = await this.openApi.callApi(apiUrl);
+
+    const { headerCd, headerMsg } = ServiceResult.msgHeader;
+
+    // headerCd: 0(정상), 4(결과 없음), 8(운행 종료)
+    if (headerCd !== 0 && headerCd !== 4 && headerCd !== 8) {
+      this.errorHandler(headerCd, headerMsg);
+    }
+
+    if (headerCd === 4 || headerCd === 8) {
+      return [];
+    }
+
+    const result = ServiceResult.msgBody.itemList;
+    return Array.isArray(result) //
+      ? result.map((station: any) => {
+          return new SeoulBusDto(station);
+        })
+      : [new SeoulBusDto({ ...result })];
   }
 }

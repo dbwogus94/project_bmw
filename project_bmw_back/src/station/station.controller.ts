@@ -1,3 +1,4 @@
+import { HttpError } from '@shared/http.error';
 import { config } from '@src/config';
 import { OpenApi } from '@src/shared/open-api';
 import { NextFunction, Request, Response } from 'express';
@@ -14,7 +15,7 @@ const seoulStationService = new SeoulStationService(openApi, seoul.station);
 /**
  * GET /api/stations?stationName=:stationName
  */
-export const getStationList = async (req: Request, res: Response, next: NextFunction) => {
+export const searchStationList = async (req: Request, res: Response, next: NextFunction) => {
   const { stationName } = req.dto;
 
   const [gyeonggiStationList, seoulStationList] = await Promise.all([
@@ -33,14 +34,20 @@ export const getStationList = async (req: Request, res: Response, next: NextFunc
 /**
  * GET /api/stations/:stationId/buses?type=:type
  */
-export const getStopBusList = async (req: Request, res: Response, next: NextFunction) => {
+export const getSationBusList = async (req: Request, res: Response, next: NextFunction) => {
   const { type, stationId } = req.dto;
   let busList;
 
   if (type === 'gyeonggi') {
+    busList = await gyeonggiStationService.getStopBusListByStationId(stationId);
   }
 
   if (type === 'seoul') {
+    busList = await seoulStationService.getStopBusListByStationId(stationId);
+  }
+
+  if (!busList || busList.length === 0) {
+    throw new HttpError(404, 'getSationBusList');
   }
 
   req.responseData = {
