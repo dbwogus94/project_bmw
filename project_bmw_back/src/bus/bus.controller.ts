@@ -15,7 +15,7 @@ const gyeonggiBusService = new GyeonggiBusService(openApi, gyeonggi);
 const seoulBusService = new SeoulBusService(openApi, seoul);
 
 // GET /api/buses?routeName=:routeName
-export const getBusList = async (req: Request, res: Response, next: NextFunction) => {
+export const searchBusList = async (req: Request, res: Response, next: NextFunction) => {
   const { routeName } = req.dto;
   // 경기도, 서울시 동시 조회
   const [gyeonggiBusList, seoulBusList] = await Promise.all([

@@ -1,7 +1,7 @@
-import { BusDto } from '@src/bus/dto/response/bus/bus.dto';
-import { BusInfoDto } from '@src/bus/dto/response/info/info.dto';
-import { BusStationDto } from '@src/bus/dto/response/station/station.dto';
 import { ArrivalDto } from './dto/response/arrival/arrival.dto';
+import { BusDto } from './dto/response/bus/bus.dto';
+import { BusInfoDto } from './dto/response/info/info.dto';
+import { BusStationDto } from './dto/response/station/station.dto';
 
 export interface BusService {
   // 1. 버스번호와 일치하는 버스 검색
