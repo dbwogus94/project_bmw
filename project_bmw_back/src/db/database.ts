@@ -6,6 +6,9 @@ import { BmGroupBookMark } from '@bmGroupBookMark/entities/BmGroupBookMark.entit
 import { BookMark } from '@bookMark/entities/BookMark.entity';
 import { CustomNamingStrategy } from './typeorm/custom-naming-strategy';
 import { join } from 'path';
+import { Metro } from '@src/metro/entities/Metro.entity';
+import { MetroStation } from '@src/metro/entities/MetroStation.entity';
+import { MetroTimetable } from '@src/metro/entities/MetroTimetable.entity';
 
 interface IMysqlConfig {
   database: string;
@@ -49,7 +52,7 @@ export function getTypeOrmConfig(
     synchronize: isSynchronize ? isSynchronize : false, // 시작시 create
     // 한국 시간
     timezone: '+09:00',
-    entities: [User, BmGroup, BmGroupBookMark, BookMark],
+    entities: [User, BmGroup, BmGroupBookMark, BookMark, Metro, MetroStation, MetroTimetable],
     namingStrategy: new CustomNamingStrategy(),
     migrations: [
       environment === 'development'

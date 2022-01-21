@@ -3,12 +3,16 @@ Show index from bmgroup_bookmark_map;
 Show tables;
 Show full columns from bmgroup_bookmark_map;
 
-
 drop table bmgroup_bookmark_map;
 drop table book_mark;
 drop table bm_group;
 drop table user;
+
+drop table metro_timetable;
+drop table metro_station;
+drop table metro;
 drop table migrations;
+
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'user PK',
@@ -23,7 +27,8 @@ CREATE TABLE `user` (
   `active` varchar(2) NOT NULL DEFAULT 'Y' COMMENT '계정 활성화 여부',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UIX-user-username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `bm_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'bmGroup PK',
@@ -34,7 +39,8 @@ CREATE TABLE `bm_group` (
   PRIMARY KEY (`id`),
   KEY `FK-user-bm_group` (`user_Id`),
   CONSTRAINT `FK-user-bm_group` FOREIGN KEY (`user_Id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `book_mark` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'bookMark PK',
@@ -63,8 +69,11 @@ CREATE TABLE `book_mark` (
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '수정일',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UIX-book_mark-check_column` (`check_column`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `UIX-book_mark-check_column` (`check_column`),
+  UNIQUE KEY `UIX-book_mark-route_id-station_seq-station_id` (`route_id`,`station_seq`,`station_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 
 CREATE TABLE `bmgroup_bookmark_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'bmGroupBookMark 테이블 PK',
@@ -77,8 +86,64 @@ CREATE TABLE `bmgroup_bookmark_map` (
   KEY `FK-book_mark-bmgroup_bookmark_map` (`book_mark_id`),
   CONSTRAINT `FK-bm_group-bmgroup_bookmark_map` FOREIGN KEY (`bm_group_id`) REFERENCES `bm_group` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK-book_mark-bmgroup_bookmark_map` FOREIGN KEY (`book_mark_id`) REFERENCES `book_mark` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-/* 마이그레이션으로 추가 */
--- ALTER TABLE bmgroup_bookmark_map ADD UNIQUE `UIX-bmgroup_bookmark_map-bm_group_id-book_mark_id` (bm_group_id, book_mark_id);
+CREATE TABLE `metro` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'metro pk',
+  `metro_name` varchar(30) NOT NULL COMMENT '지하철 이름',
+  `district_cd` int(11) NOT NULL COMMENT '지하철 운행 지역',
+  `company` varchar(30) NOT NULL COMMENT '지하철 운행사',
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '수정일',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `metro_station` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'metro_station pk',
+  `station_name` varchar(120) NOT NULL COMMENT '지하철역 명',
+  `station_cd` varchar(10) NOT NULL COMMENT '지하철역 코드',
+  `station_fr_Code` varchar(20) NOT NULL COMMENT '지하철역 외부 코드',
+  `station_seq` int(11) NOT NULL COMMENT '노선별 정류장 순서',
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '수정일',
+  `metro_id` int(11) DEFAULT NULL COMMENT 'metro pk',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UIX-metro_station-station_cd` (`station_cd`),
+  UNIQUE KEY `UIX-metro_station-station_fr_Code` (`station_fr_Code`),
+  KEY `FK-metro-metro_station` (`metro_id`),
+  CONSTRAINT `FK-metro-metro_station` FOREIGN KEY (`metro_id`) REFERENCES `metro` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `metro_timetable` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'metro_timetable pk',
+  `train_no` varchar(10) NOT NULL COMMENT '열차번호',
+  `arrive_time` varchar(12) NOT NULL COMMENT '역 도착시간',
+  `left_time` varchar(12) NOT NULL COMMENT '역 출발시간',
+  `origin_station_cd` varchar(10) NOT NULL COMMENT '기점 지하철역 코드',
+  `origin_station_name` varchar(120) NOT NULL COMMENT '기점 지하철역 명',
+  `dest_station_cd` varchar(10) NOT NULL COMMENT '종점 지하철역 코드',
+  `dest_station_name` varchar(120) NOT NULL COMMENT '종점 지하철역 명',
+  `week_tag` varchar(2) NOT NULL COMMENT '요일 구분 태그(평일:1, 토요일:2, 휴일/일요일:3)',
+  `in_out_tag` varchar(2) NOT NULL COMMENT '운행방향 구분 태그(상행,내선:1, 하행,외선:2)',
+  `express_tag` varchar(2) NOT NULL COMMENT '급행선 구분 태그(G:일반(general) D: 급행(direct))',
+  `fl_flag` varchar(30) DEFAULT NULL COMMENT '플러그',
+  `dest_station_cd2` varchar(30) DEFAULT NULL COMMENT '도착역 코드2',
+  `branch_line` varchar(30) DEFAULT NULL COMMENT '지선',
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '수정일',
+  `metro_station_id` int(11) DEFAULT NULL COMMENT 'metro_station pk',
+  PRIMARY KEY (`id`),
+  KEY `FK-metro_station-metro_timetable` (`metro_station_id`),
+  CONSTRAINT `FK-metro_station-metro_timetable` FOREIGN KEY (`metro_station_id`) REFERENCES `metro_station` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+
+
+
+
+
