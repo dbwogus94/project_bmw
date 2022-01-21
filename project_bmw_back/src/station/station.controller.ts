@@ -47,7 +47,7 @@ export const getStationBusList = async (req: Request, res: Response, next: NextF
   }
 
   if (!busList || busList.length === 0) {
-    throw new HttpError(404, 'getSationBusList');
+    throw new HttpError(404, 'getStationBusList');
   }
 
   req.responseData = {
