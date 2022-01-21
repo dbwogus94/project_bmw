@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { BmGroupBookMark } from '@bmGroupBookMark/entities/BmGroupBookMark.entity';
 
 export interface IBookMark {
@@ -37,6 +37,7 @@ export interface IBookMark {
 }
 
 @Entity({ name: 'book_mark' })
+@Unique('UIX-book_mark-route_id-station_seq-station_id', ['routeId', 'stationSeq', 'stationId'])
 export class BookMark implements IBookMark {
   @PrimaryGeneratedColumn({ comment: 'bookMark PK', name: 'id' })
   bookMarkId!: number;
