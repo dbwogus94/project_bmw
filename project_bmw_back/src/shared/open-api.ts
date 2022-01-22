@@ -25,7 +25,7 @@ export class OpenApi {
    * @param url
    * @returns
    */
-  async callApi(url: string) {
+  async callApi(url: string, isXmlToJson: boolean = true) {
     try {
       const res = await axios({
         method: 'get',
@@ -38,7 +38,7 @@ export class OpenApi {
       }
 
       // xml to json
-      return this.parseJson(res.data);
+      return isXmlToJson ? this.parseJson(res.data) : res.data;
     } catch (error) {
       throw error;
     }

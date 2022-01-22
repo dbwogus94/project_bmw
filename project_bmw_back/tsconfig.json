@@ -80,6 +80,7 @@
       "@auth/*": ["src/auth/*"],
       "@user/*": ["src/user/*"],
       "@bus/*": ["src/bus/*"],
+      "@metro/*": ["src/metro/*"],
       "@station/*": ["src/station/*"],
       "@bmGroup/*": ["src/bm-group/*"],
       "@bookMark/*": ["src/book-mark/*"],
@@ -87,7 +88,7 @@
       "@src/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts"], // spec/**/*.ts
+  "include": ["src/**/*.ts", "src/metro/repository/metro-timetable.repositoryts"], // spec/**/*.ts
   // 컴파일 제외
   "exclude": ["src/public/", "/spec/"]
 }

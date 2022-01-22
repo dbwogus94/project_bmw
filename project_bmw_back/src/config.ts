@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-function required(key: string | number, defaultValue: any = undefined) {
+export function required(key: string | number, defaultValue: any = undefined) {
   const value = process.env[key] || defaultValue;
   if (value == null) {
     throw new Error(`key ${key} is undefined`);
@@ -96,6 +96,10 @@ export const config = Object.freeze({
       station: {
         host: required('SEOUL_STATION_HOST'),
         key: required('SEOUL_STATION_KEY'),
+      },
+      metro: {
+        host: required('SEOUL_METRO_OPEN_API_HOST'),
+        key: required('SEOUL_METRO_OPEN_API_KEY'),
       },
     },
   },
