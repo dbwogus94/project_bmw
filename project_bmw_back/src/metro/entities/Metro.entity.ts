@@ -4,8 +4,8 @@ import { MetroStation } from './MetroStation.entity';
 export interface IMetro {
   metroId: number;
   metroName: string;
+  metroCd: string;
   districtCd: number;
-  company: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,18 +25,18 @@ export class Metro implements IMetro {
   })
   metroName!: string;
 
+  @Column('varchar', {
+    name: 'metro_cd',
+    length: 30,
+    comment: '노선 구분 코드',
+  })
+  metroCd!: string;
+
   @Column('int', {
     name: 'district_cd',
     comment: '지하철 운행 지역',
   })
   districtCd!: number;
-
-  @Column('varchar', {
-    name: 'company',
-    length: 30,
-    comment: '지하철 운행사',
-  })
-  company!: string;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -53,6 +53,10 @@ export class Metro implements IMetro {
   updatedAt!: Date;
 
   // 연관관계 설정: Metro(1): MetroStation(N)
-  @OneToMany(type => MetroStation, metroStation => metroStation.metro)
+  @OneToMany(type => MetroStation, metroStation => metroStation.metro, {
+    cascade: true, // 부모를 통해 자식 entity 추가 가능하도록 설정
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   metroStations!: MetroStation[];
 }

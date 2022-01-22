@@ -54,7 +54,7 @@ export class MetroStation implements IMetroStation {
   @Column('varchar', {
     name: 'station_fr_Code',
     length: 20,
-    unique: true,
+    // unique: true, // 중복되는 데이터가 있음.
     nullable: false,
     comment: '지하철역 외부 코드',
   })
@@ -78,6 +78,10 @@ export class MetroStation implements IMetroStation {
   })
   updatedAt!: Date;
 
-  @OneToMany(type => MetroTimetable, metroTimetable => metroTimetable.metroStation)
+  @OneToMany(type => MetroTimetable, metroTimetable => metroTimetable.metroStation, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   metroTimetables!: MetroTimetable[];
 }

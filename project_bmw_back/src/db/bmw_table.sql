@@ -74,7 +74,6 @@ CREATE TABLE `book_mark` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-
 CREATE TABLE `bmgroup_bookmark_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'bmGroupBookMark 테이블 PK',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
@@ -92,12 +91,12 @@ CREATE TABLE `bmgroup_bookmark_map` (
 CREATE TABLE `metro` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'metro pk',
   `metro_name` varchar(30) NOT NULL COMMENT '지하철 이름',
+  `metro_cd` varchar(30) NOT NULL COMMENT '노선 구분 코드',
   `district_cd` int(11) NOT NULL COMMENT '지하철 운행 지역',
-  `company` varchar(30) NOT NULL COMMENT '지하철 운행사',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '수정일',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `metro_station` (
@@ -111,10 +110,9 @@ CREATE TABLE `metro_station` (
   `metro_id` int(11) DEFAULT NULL COMMENT 'metro pk',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UIX-metro_station-station_cd` (`station_cd`),
-  UNIQUE KEY `UIX-metro_station-station_fr_Code` (`station_fr_Code`),
   KEY `FK-metro-metro_station` (`metro_id`),
   CONSTRAINT `FK-metro-metro_station` FOREIGN KEY (`metro_id`) REFERENCES `metro` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=760 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `metro_timetable` (
@@ -139,10 +137,6 @@ CREATE TABLE `metro_timetable` (
   KEY `FK-metro_station-metro_timetable` (`metro_station_id`),
   CONSTRAINT `FK-metro_station-metro_timetable` FOREIGN KEY (`metro_station_id`) REFERENCES `metro_station` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
 
 
 
