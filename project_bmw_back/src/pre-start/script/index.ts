@@ -3,7 +3,7 @@ import '../index';
 import { config } from '@config';
 import * as typeorm from '@db/database';
 import step1InsertMetro from './step1-insert-metro';
-import './step2-insert-timetable';
+import step2InsertTimetable from './step2-insert-timetable';
 import { XMLParser } from 'fast-xml-parser';
 import { OpenApi } from '@shared/open-api';
 
@@ -14,10 +14,11 @@ import { OpenApi } from '@shared/open-api';
 
   let conn;
   try {
-    conn = await typeorm.getConnection(environment, mysql, true, true);
+    conn = await typeorm.getConnection(environment, mysql, false, false);
     // step1 - 노선과, 노선별 역 데이터 insert
     await step1InsertMetro(conn, api, openApi);
     // stop2 - 역별 시간표 insert
+    await step2InsertTimetable(conn, api, openApi);
   } catch (error) {
     console.error(error);
   } finally {
