@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { Metro } from './Metro.entity';
@@ -23,6 +24,8 @@ export interface IMetroStation {
 }
 
 @Entity({ name: 'metro_station' })
+// 노선, 정류장, 순서 - 복합 유니크 키
+@Unique('UIX-metro_station-metro_id-station_cd-station_seq', ['metro', 'stationCd', 'stationSeq'])
 export class MetroStation implements IMetroStation {
   @PrimaryGeneratedColumn({
     name: 'id',

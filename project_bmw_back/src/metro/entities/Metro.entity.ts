@@ -28,6 +28,7 @@ export class Metro implements IMetro {
   @Column('varchar', {
     name: 'metro_cd',
     length: 30,
+    unique: true,
     comment: '노선 구분 코드',
   })
   metroCd!: string;
