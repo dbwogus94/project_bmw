@@ -8,10 +8,10 @@ import { HttpError } from '@shared/http.error';
 
 export interface IBmGroupService {
   findById(userId: number): Promise<BmGroupDto[]>;
-  findBmGroupsWithEntityTree(userId: number): Promise<TreeBmGroupDto[]>;
-  searchBmGroupsWithEntityTree(userId: number, checkColumn: string): Promise<TreeBmGroupDto[]>;
+  findBmGroupsToEntityTree(userId: number): Promise<TreeBmGroupDto[]>;
+  searchBmGroupsToEntityTree(userId: number, checkColumn: string): Promise<TreeBmGroupDto[]>;
   findOneById(userId: number, bmGroupId: number): Promise<BmGroupDto | undefined>;
-  findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<TreeBmGroupDto | undefined>;
+  findOneByIdToEntityTree(userId: number, bmGroupId: number): Promise<TreeBmGroupDto | undefined>;
   createBmGroup(userId: number, bmGroupName: string): Promise<BmGroupDto>;
   deleteBmGroup(userId: number, bmGroupId: number): Promise<void>;
 }
@@ -52,9 +52,9 @@ export class BmGroupService implements IBmGroupService {
     ]
    ```
    */
-  public async findBmGroupsWithEntityTree(userId: number): Promise<TreeBmGroupDto[]> {
+  public async findBmGroupsToEntityTree(userId: number): Promise<TreeBmGroupDto[]> {
     const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
-    const entities = await bmGroupRepository.gatBmGroupsWithEntityTree(userId);
+    const entities = await bmGroupRepository.gatBmGroupsToEntityTree(userId);
     return entities.map((entity): any => TreeBmGroupDto.entityTreeToDto(entity));
   }
 
@@ -72,9 +72,9 @@ export class BmGroupService implements IBmGroupService {
     ]
    ```
    */
-  public async searchBmGroupsWithEntityTree(userId: number, checkColumn: string): Promise<TreeBmGroupDto[]> {
+  public async searchBmGroupsToEntityTree(userId: number, checkColumn: string): Promise<TreeBmGroupDto[]> {
     const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
-    const rawDatas = await bmGroupRepository.searchBmGroupsWithEntityRowData(userId, checkColumn);
+    const rawDatas = await bmGroupRepository.searchBmGroupsToEntityRowData(userId, checkColumn);
     return Promise.all(rawDatas.map((rowData: IBmGroup) => TreeBmGroupDto.rawDataToDto(rowData)));
   }
 
@@ -108,9 +108,9 @@ export class BmGroupService implements IBmGroupService {
    { bmGroupId, bmGroupName, bookMarks: BookMarkDto[] }
    ```
    */
-  public async findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<TreeBmGroupDto | undefined> {
+  public async findOneByIdToEntityTree(userId: number, bmGroupId: number): Promise<TreeBmGroupDto | undefined> {
     const bmGroupRepository: BmGroupRepository = getCustomRepository(BmGroupRepository);
-    const entity = await bmGroupRepository.findOneByIdWithEntityTree(userId, bmGroupId);
+    const entity = await bmGroupRepository.findOneByIdToEntityTree(userId, bmGroupId);
     return entity //
       ? TreeBmGroupDto.entityTreeToDto(entity)
       : undefined;

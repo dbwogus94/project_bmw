@@ -26,7 +26,7 @@ export const getBmGroups = async (req: Request, res: Response, next: NextFunctio
 
   // GET /api/bm-groups?include
   if (include && !(routeId && stationSeq && stationId)) {
-    bmGroups = await bmGroupService.findBmGroupsWithEntityTree(req.id);
+    bmGroups = await bmGroupService.findBmGroupsToEntityTree(req.id);
     req.responseData = { ...responseData, data: bmGroups };
     return next();
   }
@@ -34,7 +34,7 @@ export const getBmGroups = async (req: Request, res: Response, next: NextFunctio
   // GET /api/bm-groups?include=book-mark&q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId // q 검색쿼리 사용
   if (include && !!(routeId && stationSeq && stationId)) {
     const searchKey = `${routeId}${stationSeq}${stationId}`;
-    bmGroups = await bmGroupService.searchBmGroupsWithEntityTree(id, searchKey);
+    bmGroups = await bmGroupService.searchBmGroupsToEntityTree(id, searchKey);
     req.responseData = { ...responseData, data: bmGroups };
     return next();
   }
@@ -59,7 +59,7 @@ export const getBmGroup = async (req: Request, res: Response, next: NextFunction
 
   if (include) {
     // GET /api/bm-groups/:bmGroupId?include=book-marks
-    bmGroup = await bmGroupService.findOneByIdWithEntityTree(id, bmGroupId);
+    bmGroup = await bmGroupService.findOneByIdToEntityTree(id, bmGroupId);
   } else {
     // GET /bm-groups/:bmGroupId
     bmGroup = await bmGroupService.findOneById(id, bmGroupId);

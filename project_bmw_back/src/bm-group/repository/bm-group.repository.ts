@@ -2,11 +2,11 @@ import { DeleteResult, EntityRepository, Repository } from 'typeorm';
 import { BmGroup, IBmGroup } from '@bmGroup/entities/BmGroup.entity';
 
 export interface IBmGroupRepository {
-  gatBmGroupsWithEntityTree(userId: number): Promise<IBmGroup[]>;
-  searchBmGroupsWithEntityRowData(userId: number, checkColumn: string): Promise<any[]>;
+  gatBmGroupsToEntityTree(userId: number): Promise<IBmGroup[]>;
+  searchBmGroupsToEntityRowData(userId: number, checkColumn: string): Promise<any[]>;
   findById(userId: number): Promise<IBmGroup[]>;
   findOneById(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
-  findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
+  findOneByIdToEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined>;
   deleteOne(userId: number, bmGroupId: number): Promise<DeleteResult | undefined>;
 }
 
@@ -30,7 +30,7 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
     ]
   ```
    */
-  async gatBmGroupsWithEntityTree(userId: number | string): Promise<IBmGroup[]> {
+  async gatBmGroupsToEntityTree(userId: number | string): Promise<IBmGroup[]> {
     return (
       this.createQueryBuilder('bg')
         .select(['bg.bmGroupId', 'bg.bmGroupName']) // 'user.username'
@@ -51,7 +51,7 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
    * @returns
    * - RowData
    */
-  async searchBmGroupsWithEntityRowData(userId: string | number, checkColumn: string): Promise<any[]> {
+  async searchBmGroupsToEntityRowData(userId: string | number, checkColumn: string): Promise<any[]> {
     /* TODO: 원래는 bg테이블에 A를 inner join하면 안된다.
       - 적용하려 했던 쿼리는 SubQuery A에 SubQuery B Left join하는 것이다.
       - 하지만 typeOrm에서는 Entity를 사용하지 않고 바로 SubQuery를 사용하는 방법을 지원하지 않는다.
@@ -135,7 +135,7 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
    * @param userId
    * @param bmGroupId
    */
-  findOneByIdWithEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined> {
+  findOneByIdToEntityTree(userId: number, bmGroupId: number): Promise<IBmGroup | undefined> {
     return this.createQueryBuilder('bg')
       .select(['bg.bmGroupId', 'bg.bmGroupName'])
       .innerJoin('bg.user', 'user')
