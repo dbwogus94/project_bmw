@@ -59,24 +59,24 @@ export const getBusInfo = async (req: Request, res: Response, next: NextFunction
 // GET /api/buses/:routeId/stations?type=:type
 export const getStations = async (req: Request, res: Response, next: NextFunction) => {
   const { routeId, type } = req.dto;
-  let stationList;
+  let stations;
 
   if (type === 'gyeonggi') {
-    stationList = await gyeonggiBusService.getStationsByRouteId(routeId);
+    stations = await gyeonggiBusService.getStationsByRouteId(routeId);
   }
 
   if (type === 'seoul') {
-    stationList = await seoulBusService.getStationsByRouteId(routeId);
+    stations = await seoulBusService.getStationsByRouteId(routeId);
   }
 
-  if (!stationList || stationList.length === 0) {
+  if (!stations || stations.length === 0) {
     throw new HttpError(404, 'getStations');
   }
 
   req.responseData = {
     statusCode: 200,
     message: 'getStations',
-    data: { routeId, type, stationList },
+    data: { routeId, type, stations },
   };
   return next();
 };
