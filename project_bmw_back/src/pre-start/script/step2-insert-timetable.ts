@@ -1,7 +1,7 @@
 import { MetroStation } from '@metro/entities/MetroStation.entity';
 import { MetroStationRepository } from '@metro/repository/metro-station.repository';
 import { OpenApi } from '@shared/open-api';
-import { Connection, getCustomRepository, LessThan } from 'typeorm';
+import { Between, Connection, getCustomRepository, LessThan } from 'typeorm';
 
 interface TimetableData {
   trainNo: string; // 열차 번호
@@ -61,8 +61,9 @@ export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
       relations: ['metro'],
       where: {
         metro: {
-          metroId: LessThan(9),
+          metroId: Between(1, 8),
         },
+        // stationCd: '2614',
       },
       order: {
         metro: 'ASC',
@@ -101,7 +102,7 @@ export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
           .map((weekTag: number) => [1, 2].map((inOutTag: number) => callTimetableData(stationCd, weekTag, inOutTag)))
           .flat(),
       );
-      return result.flat();
+      return result.flat().filter(rowTimetableData => rowTimetableData !== null);
     }
   }
 
@@ -119,27 +120,31 @@ export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
   async function callTimetableData(stationCd: string, weekTag: number, inOutTag: number): Promise<any> {
     const serviceName = 'SearchSTNTimeTableByIDService';
     const url = `${host}/${key}/json/${serviceName}/1/500/${stationCd}/${weekTag}/${inOutTag}`;
-    const { SearchSTNTimeTableByIDService } = await api.callApi(url, false);
+    const result = await api.callApi(url, false);
+    const { SearchSTNTimeTableByIDService } = result;
 
     if (!SearchSTNTimeTableByIDService) {
-      throw Error('["getStationsByMetroName"] ::: API 요청이 잘못되었습니다.');
+      const { RESULT } = result;
+      const { CODE, MESSAGE } = RESULT;
+
+      if (CODE === 'INFO-200') {
+        // 6호선의 독바위 역 같은 경우 상행(1)이 없고 하행(2)만 존재함.
+        return null;
+      }
+      throw Error(`[callTimetableData] ::: CODE: ${CODE}, MESSAGE: ${MESSAGE ?? '정의되지 않음.'}, 요청_URL: ${url}`);
     }
 
     const { RESULT, row } = SearchSTNTimeTableByIDService;
-    if (!RESULT || RESULT.CODE !== 'INFO-000') {
-      const { CODE, MESSAGE } = RESULT;
-      const message = `['getStationsByMetroName'] ::: code: ${CODE}, message: ${MESSAGE ?? '정의되지 않음.'}`;
-      throw Error(message);
+    if (RESULT || RESULT.CODE === 'INFO-000') {
+      return row;
     }
 
-    return row;
+    throw Error(`[callTimetableData] 정의되지 않은 API ERROR, 요청_URL: ${url}`);
   }
 
   function rawDataToTimetableData(rawData: RawTimetableData): TimetableData {
     const {
-      FR_CODE,
-      STATION_CD,
-      STATION_NM,
+      // FR_CODE, STATION_CD, STATION_NM,
       TRAIN_NO,
       ARRIVETIME,
       LEFTTIME,
