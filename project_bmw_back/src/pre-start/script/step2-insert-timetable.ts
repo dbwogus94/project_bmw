@@ -61,7 +61,7 @@ export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
       relations: ['metro'],
       where: {
         metro: {
-          metroId: Between(1, 8),
+          metroCd: Between('1', '8'),
         },
         // stationCd: '2614',
       },

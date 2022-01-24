@@ -2,8 +2,11 @@
   "name": "project_bmw_back",
   "version": "0.0.0",
   "scripts": {
-    "pre-start:insert": "ts-node -r tsconfig-paths/register src/pre-start/script/index.ts --env=production",
-    "pre-start:insert:dev": "ts-node -r tsconfig-paths/register src/pre-start/script/index.ts --env=development",
+    "pre-start": "ts-node -r tsconfig-paths/register src/pre-start/script/index.ts",
+    "pre-start:create": "npm run pre-start -- --env=production --mode=create",
+    "pre-start:create:dev": "npm run pre-start -- --env=development --mode=create",
+    "pre-start:update": "npm run pre-start -- --env=production --mode=update",
+    "pre-start:update:dev": "npm run pre-start -- --env=development --mode=update",
     "build": "tsc --build",
     "build:config": "tsc -p tsconfig.json",
     "build:clean": "tsc --build --clean",
