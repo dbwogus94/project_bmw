@@ -46,6 +46,8 @@ export const errorMessages: any = Object.freeze({
     /* bus */
     getBusInfo: '버스 상세정보가 없습니다. routeId를 확인하세요.',
     getStations: '경유 정류장 목록이 없습니다. routeId를 확인하세요.',
+    /* metro */
+    getMetroStations: '일치하는 노선이 없습니다. metroId를 확인하세요.',
     /* station */
     getStationBusList: '정류장을 정차하는 노선이 없습니다. stationId를 확인하세요.',
     /* bmGroup */
@@ -79,6 +81,9 @@ const successMessages: any = Object.freeze({
     /* station */
     getStationList: '정류소 검색에 성공했습니다.',
     getStopBusList: '정류소에 정차하는 노선목록 조회에 성공했습니다.',
+    /* metro */
+    getMetros: '지하철 노선 목록 조회에 성공했습니다.',
+    getMetroStations: '지하철 역 검색에 성공했습니다. ',
     /* bmGroup */
     getBmGroups: 'BM그룹 리스트 조회에 성공했습니다.',
     getBmGroup: 'BM그룹에 조회에 성공했습니다.',
