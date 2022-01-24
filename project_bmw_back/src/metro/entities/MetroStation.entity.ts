@@ -13,7 +13,7 @@ import { Metro } from './Metro.entity';
 import { MetroTimetable } from './MetroTimetable.entity';
 
 export interface IMetroStation {
-  id: number;
+  metroStationId: number;
   metro: Metro;
   stationName: string;
   stationCd: string; // 지하철 역 코드
@@ -21,6 +21,7 @@ export interface IMetroStation {
   stationSeq: number;
   createdAt: Date;
   updatedAt: Date;
+  metroTimetables: MetroTimetable[];
 }
 
 @Entity({ name: 'metro_station' })
@@ -31,7 +32,7 @@ export class MetroStation implements IMetroStation {
     name: 'id',
     comment: 'metro_station pk',
   })
-  id!: number;
+  metroStationId!: number;
 
   // FK: metro 테이블과 metro_station 테이블 N:1 관계설정
   @ManyToOne(type => Metro, metro => metro.metroStations)

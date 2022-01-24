@@ -8,6 +8,7 @@ export interface IMetro {
   districtCd: number;
   createdAt: Date;
   updatedAt: Date;
+  metroStations: MetroStation[];
 }
 
 @Entity({ name: 'metro' })

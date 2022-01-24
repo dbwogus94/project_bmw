@@ -57,7 +57,7 @@ export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
   try {
     // 1~8호선 검색
     const metroStations: MetroStation[] = await metroStationRepo.find({
-      select: ['id', 'stationCd', 'metro'],
+      select: ['metroStationId', 'stationCd', 'metro'],
       relations: ['metro'],
       where: {
         metro: {
