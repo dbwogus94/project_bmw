@@ -66,7 +66,7 @@ function App({ bmGroupService, busService, metroService, stationService }) {
           <Route path="/" element={<MyBM bmGroupService={bmGroupService} busService={busService} />} />
           <Route path="/bm-groups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
           <Route path="/buses/*" element={<Bus busService={busService} bmGroupService={bmGroupService} />} />
-          <Route path="/metros" element={<Metro metroService={metroService} />} />
+          <Route path="/metros/*" element={<Metro metroService={metroService} bmGroupService={bmGroupService} />} />
           <Route path="/stations/*" element={<StationPage stationService={stationService} />} />
         </>
         )

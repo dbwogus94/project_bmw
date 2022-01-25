@@ -36,7 +36,7 @@ export default class BusService {
    * @param {number} routeId
    * @param {'gyeonggi' | 'seoul'} type
    * @returns object
-   * - { routeId, type, info, stationList }
+   * - { routeId, type, info, stations }
    */
   async searchStationsByRouteId(routeId, type) {
     // 상세정보, 정류장 리스트 동시 조회
@@ -46,9 +46,9 @@ export default class BusService {
     ]);
 
     const { info } = infoRes;
-    const { stationList } = stationsRes;
+    const { stations } = stationsRes;
 
-    return { routeId, type, info, stationList };
+    return { routeId, type, info, stations };
   }
 
   // GET /api/buses/arrival?type=:type&stationId=:stationId&routeId=:routeId&stationSeq=:stationSeq
