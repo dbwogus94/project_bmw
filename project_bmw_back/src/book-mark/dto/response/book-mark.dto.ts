@@ -1,3 +1,4 @@
+import { getDistrictName } from '@shared/util';
 import { Dto } from '@user/dto/dto.interface';
 import { Transform } from 'class-transformer';
 
@@ -9,9 +10,6 @@ export class BookMarkDto implements Dto {
   public checkColumn!: string;
 
   @Transform(params => (params.value == null ? undefined : params.value))
-  public arsId!: number; // 경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId)
-
-  @Transform(params => (params.value == null ? undefined : params.value))
   public routeId!: number; // 노선 Id
 
   @Transform(params => (params.value == null ? undefined : params.value))
@@ -19,6 +17,9 @@ export class BookMarkDto implements Dto {
 
   @Transform(params => (params.value == null ? undefined : params.value))
   public stationId!: number; // 정류소 Id
+
+  @Transform(params => (params.value == null ? undefined : params.value))
+  public arsId!: string; // 경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId), 서울시 지하철: 외부 코드(stationFrCode)
 
   @Transform(params => (params.value == null ? undefined : params.value))
   public label!: 'B' | 'M'; // 버스, 지하철 구분
@@ -38,11 +39,14 @@ export class BookMarkDto implements Dto {
   @Transform(params => (params.value == null ? undefined : params.value))
   public districtCd!: number; // 관할지역코드
 
-  @Transform(params => (params.value == null ? undefined : params.value))
+  @Transform(params => {
+    const { districtCd, type } = params.obj;
+    return params.value == null ? undefined : getDistrictName(districtCd, type);
+  })
   public districtName!: string; // 관할지역명
 
   @Transform(params => (params.value == null ? undefined : params.value))
-  public type!: 'seoul' | 'gyeonggi'; // api type
+  public type!: 'seoul' | 'gyeonggi' | 'data.seoul'; // api type
 
   /* 제외 속성 */
   @Transform(params => (params.value = undefined))
@@ -50,33 +54,6 @@ export class BookMarkDto implements Dto {
 
   @Transform(params => (params.value = undefined))
   updatedAt!: Date;
-
-  @Transform(params => (params.value = undefined))
-  startStationName!: string;
-
-  @Transform(params => (params.value = undefined))
-  endStationName!: string;
-
-  @Transform(params => (params.value = undefined))
-  routeTypeCd!: number;
-
-  @Transform(params => (params.value = undefined))
-  routeTypeName!: string;
-
-  @Transform(params => (params.value = undefined))
-  minTerm!: number;
-
-  @Transform(params => (params.value = undefined))
-  maxTerm!: number;
-
-  @Transform(params => (params.value = undefined))
-  companyId!: number;
-
-  @Transform(params => (params.value = undefined))
-  companyName!: string;
-
-  @Transform(params => (params.value = undefined))
-  companyTel!: string;
 
   @Transform(params => (params.value = undefined))
   bmGroupId!: string;

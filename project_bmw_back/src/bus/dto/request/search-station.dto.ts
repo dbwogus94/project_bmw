@@ -11,6 +11,6 @@ export class SearchStationDto implements Dto {
   @IsNotEmpty()
   @IsString()
   @Transform(params => params.value.trim()) // 위생화
-  @Matches(/^seoul$|^gyeonggi$/i)
+  @Matches(/^seoul$|^gyeonggi|^data.seoul$/i)
   public type!: string;
 }

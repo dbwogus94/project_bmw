@@ -43,7 +43,7 @@ export class BusInfoDto {
   // 운수업체전화번호
   companyTel: string;
   // 사용된 API 구분 라벨
-  type: 'seoul' | 'gyeonggi';
+  type: 'seoul' | 'gyeonggi' | 'data.seoul';
   // 버스(B), 지하철(M) 구분
   label: 'B' = 'B';
 
@@ -61,7 +61,7 @@ export class BusInfoDto {
     companyId: number | null,
     companyName: Number,
     companyTel: string,
-    type: 'seoul' | 'gyeonggi',
+    type: 'seoul' | 'gyeonggi' | 'data.seoul',
   ) {
     this.routeId = routeId;
     this.routeName = routeName;

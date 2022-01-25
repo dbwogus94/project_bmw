@@ -55,7 +55,7 @@ export class GyeonggiStationService implements StationService {
       : [new GyeonggiStationDto({ ...result })];
   }
 
-  async getStopBusListByStationId(stationId: number): Promise<GyeonggiBusDto[]> {
+  async getStopBusListByStationId(stationId: number | string): Promise<GyeonggiBusDto[]> {
     const SERVICE = 'getBusStationViaRouteList';
     const query = `&stationId=${stationId}`;
     const apiUrl = `${this.HOST}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;
