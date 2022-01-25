@@ -20,13 +20,13 @@ export default class MetroService {
       method: 'GET',
     });
 
-    const { metroId, metroName, metroCd, districtCd, metroStations } = metro;
+    const { metroName, metroCd, districtCd, metroStations } = metro;
     const startStationName = metroStations[0].stationName;
     const endStationName = metroStations[metroStations.length - 1].stationName;
     const info = { routeId, metroName, metroCd, districtCd, startStationName, endStationName };
-    const stations = metroStations.map(metroStation => ({ ...metroStation, routeId: metroId }));
+    const stations = metroStations.map(metroStation => ({ ...metroStation, routeId: routeId }));
     return {
-      routeId: metroId,
+      routeId,
       info,
       stations: stations,
     };

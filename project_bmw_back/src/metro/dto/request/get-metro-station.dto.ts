@@ -6,5 +6,5 @@ export class GetMetroStation implements Dto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  public metroId!: number;
+  public routeId!: number;
 }

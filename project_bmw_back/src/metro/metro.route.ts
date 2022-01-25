@@ -12,7 +12,7 @@ const metroRouter = Router();
 // GET /api/metros?include=stations&q=stationName=:stationName
 metroRouter.get('/', dtoValidator(SearchMetroDto), getMetros, response);
 
-// GET /api/metros/:metroId/stations
-metroRouter.get('/:metroId/stations', dtoValidator(GetMetroStation), getMetroStations, response);
+// GET /api/metros/:routeId/stations
+metroRouter.get('/:routeId/stations', dtoValidator(GetMetroStation), getMetroStations, response);
 
 export default metroRouter;

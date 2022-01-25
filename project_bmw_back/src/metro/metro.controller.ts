@@ -24,11 +24,11 @@ export const getMetros = async (req: Request, res: Response, next: NextFunction)
   return next();
 };
 
-// GET /api/metros/:metroId/stations
+// GET /api/metros/:routeId/stations
 export const getMetroStations = async (req: Request, res: Response, next: NextFunction) => {
-  const { metroId } = req.dto;
+  const { routeId } = req.dto;
 
-  const metro = await metroServcie.findOneByIdToEntityTree(metroId);
+  const metro = await metroServcie.findOneByIdToEntityTree(routeId);
 
   if (!metro) {
     throw new HttpError(404, 'getMetroStations');

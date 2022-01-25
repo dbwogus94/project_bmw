@@ -60,8 +60,8 @@ const MetroSearch = memo(({ metroService, button }) => {
 
   // 버스 또는 지하철 클릭 => 정류장 리스트 페이지 이동
   const onBmFeedClick = event => {
-    const metroId = event.currentTarget.dataset.metroId;
-    navigate(`${pathname}/${metroId}/stations`);
+    const routeId = event.currentTarget.dataset.routeId;
+    navigate(`${pathname}/${routeId}/stations`);
   };
 
   /* =================== Make Component =================== */
@@ -69,11 +69,11 @@ const MetroSearch = memo(({ metroService, button }) => {
   const makeFeeds = metros => {
     const result = [];
     for (let metro of metros) {
-      const { metroId, metroName, metroStations } = metro;
-      result.push(<FeedHeader key={metroId} label={metroName}></FeedHeader>);
+      const { routeId, metroName, metroStations } = metro;
+      result.push(<FeedHeader key={routeId} label={metroName}></FeedHeader>);
 
       for (let station of metroStations) {
-        result.push(makeMetroFeed({ ...station, metroId, metroName }));
+        result.push(makeMetroFeed({ ...station, routeId, metroName }));
       }
     }
     return result;

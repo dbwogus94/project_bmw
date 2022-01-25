@@ -6,7 +6,7 @@ import { MetroRepository } from './repository/metro.repository';
 export interface IMetroService {
   findMetros(): Promise<MetroDto[]>;
   searchMetrosByStationName(stationName: string): Promise<MetroDto[]>;
-  findOneByIdToEntityTree(metroId: number): Promise<MetroDto | undefined>;
+  findOneByIdToEntityTree(routeId: number): Promise<MetroDto | undefined>;
 }
 
 export class MetroService implements IMetroService {
@@ -34,12 +34,12 @@ export class MetroService implements IMetroService {
 
   /**
    * metroId와 일치하는 노선을 조회한다. 이때 노선에 포함되는 역을 함께 조회한다.
-   * @param metroId
+   * @param routeId
    * @returns
    */
-  async findOneByIdToEntityTree(metroId: number): Promise<MetroDto> {
+  async findOneByIdToEntityTree(routeId: number): Promise<MetroDto> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
-    const metro = await metroRepository.findOneByIdToEntityTree(metroId);
+    const metro = await metroRepository.findOneByIdToEntityTree(routeId);
     return plainToClass(MetroDto, metro);
   }
 }
