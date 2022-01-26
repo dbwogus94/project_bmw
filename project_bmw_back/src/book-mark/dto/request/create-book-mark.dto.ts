@@ -1,6 +1,6 @@
 import { Dto } from '@user/dto/dto.interface';
 import { Transform, Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches, ValidateIf } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Matches, ValidateIf } from 'class-validator';
 
 export class CreateBookMarkDto implements Dto {
   @IsNotEmpty()
@@ -34,7 +34,7 @@ export class CreateBookMarkDto implements Dto {
   public arsId!: string; // 경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId), 서울시 지하철: 외부 코드(stationFrCode)
 
   @IsNotEmpty()
-  @Matches(/B|M/i)
+  @Matches(/^B$|^M$/i)
   public label!: 'B' | 'M'; // 버스, 지하철 구분
 
   @IsNotEmpty()
@@ -55,7 +55,7 @@ export class CreateBookMarkDto implements Dto {
 
   @IsNotEmpty()
   @IsString()
-  @Transform(params => params.value.trim())
+  @Transform(params => (params.value !== '' ? params.value.trim() : '서울'))
   public regionName!: string; // 노선 운행지역명
 
   @IsNotEmpty()
@@ -64,6 +64,11 @@ export class CreateBookMarkDto implements Dto {
   public districtCd!: number; // 관할지역코드
 
   @IsNotEmpty()
-  @Matches(/seoul|gyeonggi/i)
+  @IsString()
+  @Matches(/^1$|^2$/i)
+  public inOutTag!: '1' | '2';
+
+  @IsNotEmpty()
+  @Matches(/^seoul$|^gyeonggi$|^data.seoul$/i)
   public type!: 'seoul' | 'gyeonggi' | 'data.seoul'; // api type
 }

@@ -63,33 +63,25 @@ CREATE TABLE `bm_group` (
 CREATE TABLE `book_mark` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'bookMark PK',
   `check_column` varchar(100) NOT NULL COMMENT '조회, 중복체크용 컬럼:  String(routeId) + String(stationSeq) + String(stationId)',
-  `ars_id` int NOT NULL COMMENT '경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId)',
   `route_id` int NOT NULL COMMENT '노선ID',
   `station_seq` int NOT NULL COMMENT '경유정류소(역) 순서',
   `station_id` int NOT NULL COMMENT '정유소(역) ID',
   `label` varchar(2) NOT NULL COMMENT '버스(B), 지하철(M) 구분용 라벨',
   `route_name` varchar(60) NOT NULL COMMENT '노선이름',
   `station_name` varchar(300) NOT NULL COMMENT '정류소(역) 이름',
-  `direction` varchar(200) NOT NULL COMMENT '노선진행방향',
+  `direction` varchar(200) NOT NULL COMMENT '진행방향 기준 종점 정류장 이름',
   `region_name` varchar(60) NOT NULL COMMENT '노선운행지역명',
   `district_cd` int NOT NULL COMMENT '관할지역코드(1: 서울, 2: 경기, 3: 인천)',
-  `district_name` varchar(6) NOT NULL COMMENT '관할지역명',
   `type` varchar(20) NOT NULL COMMENT 'Open API 종류',
-  `start_station_name` varchar(300) NOT NULL COMMENT '기점정류소명',
-  `end_station_name` varchar(300) NOT NULL COMMENT '종점정류소명',
-  `route_type_cd` int NOT NULL COMMENT '노선종류코드',
-  `route_type_name` varchar(60) NOT NULL COMMENT '노선종류이름',
-  `min_term` int NOT NULL COMMENT '최소배차시간',
-  `max_term` int NOT NULL COMMENT '최대배차시간',
-  `company_id` int DEFAULT NULL COMMENT '운수업체ID',
-  `company_name` varchar(200) NOT NULL COMMENT '운수업체명',
-  `company_tel` varchar(50) NOT NULL COMMENT '운수업체 전화번호',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '생성일',
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '수정일',
+  `ars_id` varchar(10) NOT NULL COMMENT '경기도 버스: 고유모바일번호(mobileNo) / 서울시 버스: 정류소 고유번호(arsId), 서울시 지하철: 외부 코드(stationFrCode)를 통합으로 관리하는 컬럼',
+  `in_out_tag` varchar(2) NOT NULL COMMENT '노선 상행(1) 하행(2) 구분 태그',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UIX-book_mark-check_column` (`check_column`),
   UNIQUE KEY `UIX-book_mark-route_id-station_seq-station_id` (`route_id`,`station_seq`,`station_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+
 
 
 CREATE TABLE `bmgroup_bookmark_map` (

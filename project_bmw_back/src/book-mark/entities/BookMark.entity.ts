@@ -16,6 +16,7 @@ export interface IBookMark {
   direction: string;
   regionName: string;
   districtCd: number;
+  inOutTag: '1' | '2'; // 상행(1)/ 하행(2)
   type: 'seoul' | 'gyeonggi' | 'data.seoul';
 
   /* */
@@ -89,7 +90,7 @@ export class BookMark implements IBookMark {
   @Column('varchar', {
     name: 'direction',
     length: 200,
-    comment: '노선진행방향',
+    comment: '진행방향 기준 종점 정류장 이름',
   })
   direction!: string;
 
@@ -105,6 +106,13 @@ export class BookMark implements IBookMark {
     comment: '관할지역코드(1: 서울, 2: 경기, 3: 인천)',
   })
   districtCd!: number;
+
+  @Column('varchar', {
+    name: 'in_out_tag',
+    length: 2,
+    comment: '노선 상행(1) 하행(2) 구분 태그',
+  })
+  inOutTag!: '1' | '2';
 
   @Column('varchar', {
     name: 'type',

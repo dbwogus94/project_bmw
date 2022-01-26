@@ -46,6 +46,9 @@ export class BookMarkDto implements Dto {
   public districtName!: string; // 관할지역명
 
   @Transform(params => (params.value == null ? undefined : params.value))
+  public inOutTag!: '1' | '2';
+
+  @Transform(params => (params.value == null ? undefined : params.value))
   public type!: 'seoul' | 'gyeonggi' | 'data.seoul'; // api type
 
   /* 제외 속성 */
