@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { MetroStation } from './MetroStation.entity';
 
 export interface IMetro {
-  metroId: number;
+  routeId: number;
   metroName: string;
   metroCd: string;
   districtCd: number;
@@ -17,7 +17,8 @@ export class Metro implements IMetro {
     name: 'id',
     comment: 'metro pk',
   })
-  metroId!: number;
+  routeId!: number;
+  // TODO: metroId로 명명해야 하지만 프로젝트 특성상 bus, metro의 통합 관리를 위해 routeId로 명명한다.
 
   @Column('varchar', {
     name: 'metro_name',

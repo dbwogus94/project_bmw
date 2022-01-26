@@ -97,7 +97,6 @@ export class BmGroupRepository extends Repository<BmGroup> implements IBmGroupRe
                 .addSelect('bm.direction', 'direction')
                 .addSelect('bm.regionName', 'regionName')
                 .addSelect('bm.districtCd', 'districtCd')
-                .addSelect('bm.districtName', 'districtName')
                 .addSelect('bm.type', 'type')
                 // .addSelect('bm.createdAt', 'createdAt')
                 // .addSelect('bm.updatedAt', 'updatedAt')

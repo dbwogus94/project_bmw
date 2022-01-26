@@ -1,13 +1,8 @@
 import { Dto } from '@user/dto/dto.interface';
 import { Transform, Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches, ValidateIf } from 'class-validator';
 
 export class CreateBookMarkDto implements Dto {
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  public arsId!: number; // 경기도: 고유모바일번호(mobileNo) / 서울시:정류소 고유번호(arsId)에 해당하는 값
-
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
@@ -28,6 +23,15 @@ export class CreateBookMarkDto implements Dto {
   @Type(() => Number)
   @IsNumber()
   public stationId!: number; // 정류소 Id
+
+  @ValidateIf((params, v) => params.arsId == null && v == null)
+  @IsNotEmpty()
+  @Type(() => String)
+  @IsString()
+  @Transform(params => {
+    return params.value === '' ? (params.value = '0') : params.value.trim();
+  })
+  public arsId!: string; // 경기도: 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId), 서울시 지하철: 외부 코드(stationFrCode)
 
   @IsNotEmpty()
   @Matches(/B|M/i)
@@ -50,30 +54,6 @@ export class CreateBookMarkDto implements Dto {
   public direction!: string; // 노선 진행방향
 
   @IsNotEmpty()
-  @Matches(/seoul|gyeonggi/i)
-  public type!: 'seoul' | 'gyeonggi'; // api type
-
-  @IsNotEmpty()
-  @IsString()
-  @Transform(params => params.value.trim())
-  public startStationName!: string; // 기점 정류소
-
-  @IsNotEmpty()
-  @IsString()
-  @Transform(params => params.value.trim())
-  public endStationName!: string; // 종점 정류소
-
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  public routeTypeCd!: number; // 노선 종류코드
-
-  @IsNotEmpty()
-  @IsString()
-  @Transform(params => params.value.trim())
-  public routeTypeName!: string; // 노선 종류이름
-
-  @IsNotEmpty()
   @IsString()
   @Transform(params => params.value.trim())
   public regionName!: string; // 노선 운행지역명
@@ -84,32 +64,6 @@ export class CreateBookMarkDto implements Dto {
   public districtCd!: number; // 관할지역코드
 
   @IsNotEmpty()
-  @IsString()
-  @Transform(params => params.value.trim())
-  public districtName!: string; // 관할지역명
-
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  public minTerm!: number; // 최소배차
-
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  public maxTerm!: number; // 최대배차
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  public companyId!: number; // 운수회사 id
-
-  @IsNotEmpty()
-  @IsString()
-  @Transform(params => params.value.trim()) // 운수회사명
-  public companyName!: string;
-
-  @IsOptional()
-  @IsString()
-  @Transform(params => params.value.trim()) // 운수회사 번호
-  public companyTel!: string;
+  @Matches(/seoul|gyeonggi/i)
+  public type!: 'seoul' | 'gyeonggi' | 'data.seoul'; // api type
 }

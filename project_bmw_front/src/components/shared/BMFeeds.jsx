@@ -161,10 +161,10 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
 
     // 버스 feed 생성
     function makeBusFeed(bus) {
-      const { routeId } = bus;
+      const { checkColumn } = bus;
       return (
         <BusFeed //
-          key={routeId}
+          key={checkColumn}
           bus={bus}
           info={false}
           onDeleteClick={onDeleteClick}
@@ -175,10 +175,10 @@ const BMFeeds = memo(({ bmGroupService, busService }) => {
 
     // 자하철 feed 생성
     function makeMetroFeed(metro) {
-      const { routeId } = metro;
+      const { checkColumn } = metro;
       return (
         <MetroFeed //
-          key={routeId}
+          key={checkColumn}
           metro={metro}
           info={false}
           onDeleteClick={onDeleteClick}

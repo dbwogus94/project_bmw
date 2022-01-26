@@ -12,7 +12,7 @@
  *    - 오퍼레이션명(영문): getBusRouteStationList
  */
 export class BusStationDto {
-  arsId: string | number;
+  arsId: string;
   // 정류소ID: 경기도 이 값으로 정류소 상세 데이터 받아온다.
   stationId: string | number;
   // 정류소명
@@ -24,16 +24,16 @@ export class BusStationDto {
   // 노선 ID
   routeId: number;
   // 사용된 API 구분 라벨
-  type: 'seoul' | 'gyeonggi';
+  type: 'seoul' | 'gyeonggi' | 'data.seoul';
 
   constructor(
-    arsId: string | number,
+    arsId: string,
     stationId: string | number,
     stationName: string,
     stationSeq: string | number,
     turnYn: 'Y' | 'N',
     routeId: number,
-    type: 'seoul' | 'gyeonggi',
+    type: 'seoul' | 'gyeonggi' | 'data.seoul',
   ) {
     this.arsId = arsId;
     this.stationId = stationId;

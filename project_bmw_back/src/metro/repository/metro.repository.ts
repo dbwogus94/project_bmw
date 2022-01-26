@@ -7,7 +7,7 @@ export interface IMetroRepository {
   insertMay(metros: CreateMetroDto[]): Promise<InsertResult>;
   findMetros(): Promise<IMetro[]>;
   findMetrosByStationName(stationName: string): Promise<IMetro[]>;
-  findOneByIdToEntityTree(metroId: number): Promise<IMetro | undefined>;
+  findOneByIdToEntityTree(routeId: number): Promise<IMetro | undefined>;
 }
 
 @EntityRepository(Metro)
@@ -46,13 +46,13 @@ export class MetroRepository extends Repository<Metro> implements IMetroReposito
 
   /**
    * metroId에 일치하는 Metro를 Entity Tree 형태로 조회한다.
-   * @param metroId
+   * @param routeId
    * @returns
    */
-  async findOneByIdToEntityTree(metroId: number): Promise<IMetro | undefined> {
+  async findOneByIdToEntityTree(routeId: number): Promise<IMetro | undefined> {
     return this.createQueryBuilder('m')
       .leftJoinAndSelect('m.metroStations', 'ms')
-      .where('m.metroId = :metroId', { metroId })
+      .where('m.routeId = :routeId', { routeId })
       .orderBy('ms.stationSeq', 'ASC')
       .getOne();
   }

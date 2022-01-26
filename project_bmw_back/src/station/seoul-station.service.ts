@@ -54,7 +54,7 @@ export class SeoulStationService implements StationService {
    * @param arsId 버스 고유번호(arsId)
    * @returns
    */
-  async getStopBusListByStationId(arsId: number): Promise<SeoulBusDto[]> {
+  async getStopBusListByStationId(arsId: number | string): Promise<SeoulBusDto[]> {
     const SERVICE = 'getRouteByStation';
     const query = `&arsId=${arsId}`;
     const apiUrl = `${this.HOST}/${SERVICE}?serviceKey=${this.SERVICE_KEY}${query}`;

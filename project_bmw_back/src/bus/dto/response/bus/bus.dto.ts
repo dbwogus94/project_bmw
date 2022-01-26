@@ -27,7 +27,7 @@ export class BusDto {
   // 관할지역명
   districtName!: '서울' | '경기' | '인천';
   // 사용된 API 구분 라벨
-  type!: 'seoul' | 'gyeonggi';
+  type!: 'seoul' | 'gyeonggi' | 'data.seoul';
   // 라벨: B(버스)
   label: 'B' = 'B';
 
@@ -37,7 +37,7 @@ export class BusDto {
     routeTypeCd: number,
     routeTypeName: string,
     districtCd: number,
-    type: 'seoul' | 'gyeonggi',
+    type: 'seoul' | 'gyeonggi' | 'data.seoul',
   ) {
     this.routeId = routeId;
     this.routeName = routeName;
