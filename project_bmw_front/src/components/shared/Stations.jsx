@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { onError } from '../../util/on-error';
 import useQuery from '../../util/url-query-parser';
+import MetroStation from '../station/MetroStation';
 import Banner from './Banner';
 import BookMarkModal from './model/BookMarkModal';
 import Spinner from './Spinner';
@@ -110,9 +111,14 @@ const Stations = memo(({ service, bmGroupService }) => {
         <>
           <div className="bm-info">{makeInfo(info)}</div>
           <ul className="stations">
-            {stations.map(station => (
-              <Station key={station.stationSeq} station={station} onBookMarkClick={onBookMarkClick} />
-            ))}
+            {stations.map(station => {
+              const { label } = station;
+              return label === 'B' ? ( //
+                <Station key={station.stationSeq} station={{ ...station }} onBookMarkClick={onBookMarkClick} />
+              ) : (
+                <MetroStation key={station.stationSeq} station={{ ...station, info }} onBookMarkClick={onBookMarkClick} />
+              );
+            })}
           </ul>
         </>
       )}
