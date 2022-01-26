@@ -4,6 +4,11 @@ export default class MetroService {
     this.http = http;
   }
 
+  /**
+   * 지하철 역 검색
+   * @param {*} stationName
+   * @returns
+   */
   async search(stationName) {
     const metros = stationName
       ? await this.http.fetch(`${this.apiName}?include=stations&q=stationName=${stationName}`, {
@@ -15,22 +20,24 @@ export default class MetroService {
     return metros;
   }
 
+  /**
+   * 노선 id에 해당하는 노선 조회(역 리스트 포함)
+   * @param {number} routeId
+   * @returns {routeId, info, stations}
+   *
+   */
   async searchStationsByRouteId(routeId) {
     const metro = await this.http.fetch(`${this.apiName}/${routeId}/stations`, {
       method: 'GET',
     });
+    const { metroName, metroCd, districtCd, startStationName, endStationName, metroStations } = metro;
 
-    const { metroName, metroCd, districtCd, metroStations } = metro;
-    // 기점 역
-    const startStationName = metroStations[0].stationName;
-    // 종점 역
-    const endStationName = metroStations[metroStations.length - 1].stationName;
     // info 객체 생성
     const info = { routeId, metroName, metroCd, districtCd, startStationName, endStationName };
-    //
+
+    // stations 객체 가공
     const stations = metroStations.map(metroStation => {
-      const { stationFrCode } = metroStation;
-      return { ...metroStation, arsId: stationFrCode, routeId: routeId, routeName: metroName };
+      return { ...metroStation, routeId: routeId, routeName: metroName };
     });
 
     return {

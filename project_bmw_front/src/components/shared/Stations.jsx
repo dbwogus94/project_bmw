@@ -18,25 +18,6 @@ const Stations = memo(({ service, bmGroupService }) => {
   const query = useQuery();
   const type = query.get('type');
 
-  // TODO: 노선이 중복되는 정류소를 지나가는지 체크하기 위한 임시 함수
-  // const chkOverlap = stations => {
-  //   for (let i in stations) {
-  //     let chk = stations[i].stationId;
-  //     let temp = 0;
-  //     let result = stations.some((station, index) => {
-  //       if (index === Number(i)) return false;
-  //       temp = station;
-  //       return station.stationId === chk;
-  //     });
-  //     if (result) {
-  //       console.log('===============================================================================================');
-  //       console.log(`${result}: ${stations[i].stationSeq}번째 정류장과 ${temp.stationSeq}번째 정류장이 중복됩니다.`);
-  //       console.log(`${stations[i].stationSeq}번 정류장 정보:`, stations[i]);
-  //       console.log(`${temp.stationSeq}번 정류장 정보:`, temp);
-  //     }
-  //   }
-  // };
-
   useEffect(() => {
     service
       .searchStationsByRouteId(routeId, type)
@@ -66,42 +47,16 @@ const Stations = memo(({ service, bmGroupService }) => {
 
   // 모달 체크박스에 전달할 이벤트
   const onBookMarkChange = (isChecked, bmGroupId, bookMarkId) => {
-    const { stationSeq, label } = station; // 현재 모달이 열린 정류장 데이터
-    const direction = getDirection(label, stationSeq);
-
     if (isChecked) {
       // 즐겨찾기 추가
-      return bmGroupService.createBookMark({ bmGroupId, ...info, ...station, direction });
+      return bmGroupService.createBookMark({ bmGroupId, ...info, ...station });
     }
 
     if (bookMarkId) {
       // 즐겨찾기 제거
       return bmGroupService.deleteBookMark(bmGroupId, bookMarkId);
     }
-    return;
-
-    // 버스 진행 방향 찾기
-    function getDirection(label, selectSeq) {
-      return label === 'B' ? getBusDirection(selectSeq) : getMetroDirection(selectSeq);
-
-      // 버스 진행 방향 찾기
-      function getBusDirection(selectSeq) {
-        // 회차지 순번 찾기
-        const { stationSeq } = stations.find(station => station.turnYn === 'Y');
-        const { startStationName, endStationName } = info;
-        // 회차지 >= 선택 정류장 순번
-        return stationSeq >= selectSeq //
-          ? endStationName
-          : startStationName;
-      }
-
-      // 지하철 진행 방향 찾기
-      function getMetroDirection(selectSeq) {
-        // const { stationSeq } = stations.find(station => station.turnYn === 'Y');
-        // const { startStationName, endStationName } = info;
-        return '방법을 찾는중!';
-      }
-    }
+    return !isChecked;
   };
 
   /* =================== Make Component =================== */
@@ -156,7 +111,7 @@ const Stations = memo(({ service, bmGroupService }) => {
           <div className="bm-info">{makeInfo(info)}</div>
           <ul className="stations">
             {stations.map(station => (
-              <Station key={station.stationId} station={station} onBookMarkClick={onBookMarkClick} />
+              <Station key={station.stationSeq} station={station} onBookMarkClick={onBookMarkClick} />
             ))}
           </ul>
         </>

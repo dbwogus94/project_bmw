@@ -191,9 +191,11 @@ export default class BmGroupService {
    ```
    */
   async createBookMark(data) {
-    const { bmGroupId } = data;
+    // const { bmGroupId, routeId, stationSeq, stationId, arsId, label, routeName, stationName, direction, regionName, districtCd, inOutTag, type } = data;
+    const { bmGroupId, regionName } = data;
+
     const url = this.getBookMarkApi(bmGroupId);
-    return this.http.fetch(url, { method: 'POST', body: JSON.stringify(data) });
+    return this.http.fetch(url, { method: 'POST', body: JSON.stringify({ ...data, regionName: regionName ? regionName : '' }) });
   }
 
   /**
