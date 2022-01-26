@@ -1,5 +1,5 @@
 const Station = ({ station, onBookMarkClick }) => {
-  const { arsId, stationId, stationName, stationSeq, turnYn, type } = station;
+  const { stationId, stationName, stationSeq, turnYn } = station;
 
   const textWrap = stationName => {
     if (!stationName) return '';
@@ -10,15 +10,15 @@ const Station = ({ station, onBookMarkClick }) => {
 
   return (
     <>
-      <li className={turnYn === 'N' ? 'station' : 'station turnY'}>
+      <li className={turnYn === 'Y' ? 'station turnY' : 'station'}>
         <article className="station-container">
           <div className="station-left">
-            <span>{turnYn === 'N' ? stationSeq : '회차'}</span>
+            <span>{turnYn === 'Y' ? '회차' : stationSeq}</span>
           </div>
           <div className="station-main">
             <p>
               <span className="station-main-name">{textWrap(stationName)}</span>
-              <span className="station-main-id">{type === 'gyeonggi' ? arsId : stationId}</span>
+              <span className="station-main-id">{stationId}</span>
             </p>
           </div>
           <div className="station-right">

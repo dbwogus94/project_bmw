@@ -19,19 +19,19 @@ const Stations = memo(({ service, bmGroupService }) => {
   const type = query.get('type');
 
   // TODO: 노선이 중복되는 정류소를 지나가는지 체크하기 위한 임시 함수
-  // const chkOverlap = stationList => {
-  //   for (let i in stationList) {
-  //     let chk = stationList[i].stationId;
+  // const chkOverlap = stations => {
+  //   for (let i in stations) {
+  //     let chk = stations[i].stationId;
   //     let temp = 0;
-  //     let result = stationList.some((station, index) => {
+  //     let result = stations.some((station, index) => {
   //       if (index === Number(i)) return false;
   //       temp = station;
   //       return station.stationId === chk;
   //     });
   //     if (result) {
   //       console.log('===============================================================================================');
-  //       console.log(`${result}: ${stationList[i].stationSeq}번째 정류장과 ${temp.stationSeq}번째 정류장이 중복됩니다.`);
-  //       console.log(`${stationList[i].stationSeq}번 정류장 정보:`, stationList[i]);
+  //       console.log(`${result}: ${stations[i].stationSeq}번째 정류장과 ${temp.stationSeq}번째 정류장이 중복됩니다.`);
+  //       console.log(`${stations[i].stationSeq}번 정류장 정보:`, stations[i]);
   //       console.log(`${temp.stationSeq}번 정류장 정보:`, temp);
   //     }
   //   }
@@ -41,9 +41,9 @@ const Stations = memo(({ service, bmGroupService }) => {
     service
       .searchStationsByRouteId(routeId, type)
       .then(res => {
-        const { info, stationList } = res;
+        const { info, stations } = res;
         setInfo(info);
-        setStations(stationList);
+        setStations(stations);
         return;
       })
       .catch(err => onError(err, setError, true));
@@ -66,8 +66,8 @@ const Stations = memo(({ service, bmGroupService }) => {
 
   // 모달 체크박스에 전달할 이벤트
   const onBookMarkChange = (isChecked, bmGroupId, bookMarkId) => {
-    const { stationSeq } = station;
-    const direction = getDirection(stationSeq);
+    const { stationSeq, label } = station; // 현재 모달이 열린 정류장 데이터
+    const direction = getDirection(label, stationSeq);
 
     if (isChecked) {
       // 즐겨찾기 추가
@@ -80,15 +80,27 @@ const Stations = memo(({ service, bmGroupService }) => {
     }
     return;
 
-    // 진행 방향 찾기
-    function getDirection(selectSeq) {
-      // 회차지 순번 찾기
-      const { stationSeq } = stations.find(station => station.turnYn === 'Y');
-      const { startStationName, endStationName } = info;
-      // 회차지 >= 선택 정류장 순번
-      return stationSeq >= selectSeq //
-        ? endStationName
-        : startStationName;
+    // 버스 진행 방향 찾기
+    function getDirection(label, selectSeq) {
+      return label === 'B' ? getBusDirection(selectSeq) : getMetroDirection(selectSeq);
+
+      // 버스 진행 방향 찾기
+      function getBusDirection(selectSeq) {
+        // 회차지 순번 찾기
+        const { stationSeq } = stations.find(station => station.turnYn === 'Y');
+        const { startStationName, endStationName } = info;
+        // 회차지 >= 선택 정류장 순번
+        return stationSeq >= selectSeq //
+          ? endStationName
+          : startStationName;
+      }
+
+      // 지하철 진행 방향 찾기
+      function getMetroDirection(selectSeq) {
+        // const { stationSeq } = stations.find(station => station.turnYn === 'Y');
+        // const { startStationName, endStationName } = info;
+        return '방법을 찾는중!';
+      }
     }
   };
 
@@ -122,7 +134,17 @@ const Stations = memo(({ service, bmGroupService }) => {
   };
 
   // label(M): 지하철 정보 생성
-  const makeMetroInfo = info => {};
+  const makeMetroInfo = info => {
+    const { metroName, startStationName, endStationName } = info;
+    return (
+      <>
+        <h2>{metroName}</h2>
+        <p>
+          {startStationName} ↔ {endStationName}
+        </p>
+      </>
+    );
+  };
 
   return (
     <>
