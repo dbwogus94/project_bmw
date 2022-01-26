@@ -7,6 +7,11 @@ export class MetroStationDto {
   stationFrCode!: string; // 지하철 역 외부 코드
   stationSeq!: number;
   label: 'M' = 'M';
+  regionName: '서울' = '서울';
+  type: 'data.seoul' = 'data.seoul';
+
+  // routeId!: number;
+  // routeName!: string;
 
   // constructor(entity: IMetroStation) {
   //   const { stationId, stationName, stationCd, stationFrCode, stationSeq } = entity;

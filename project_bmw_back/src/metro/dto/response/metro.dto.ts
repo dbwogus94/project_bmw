@@ -1,5 +1,5 @@
 import { IMetro } from '@metro/entities/Metro.entity';
-import { plainToClass } from 'class-transformer';
+import { Exclude, plainToClass, Type } from 'class-transformer';
 import { MetroStationDto } from './metro-station.dto';
 
 export class MetroDto {
@@ -7,6 +7,7 @@ export class MetroDto {
   metroName!: string;
   metroCd!: string;
   districtCd!: number;
+  @Type(() => MetroStationDto)
   metroStations?: MetroStationDto[];
 
   // constructor(entity: IMetro) {

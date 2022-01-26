@@ -17,7 +17,7 @@ export class MetroService implements IMetroService {
   async findMetros(): Promise<MetroDto[]> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
     const metros = await metroRepository.findMetros();
-    return plainToClass(MetroDto, metros);
+    return plainToClass(MetroDto, metros, { exposeDefaultValues: true });
   }
 
   /**
@@ -29,7 +29,7 @@ export class MetroService implements IMetroService {
   async searchMetrosByStationName(stationName: string): Promise<MetroDto[]> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
     const metros = await metroRepository.findMetrosByStationName(stationName);
-    return plainToClass(MetroDto, metros);
+    return plainToClass(MetroDto, metros, { exposeDefaultValues: true });
   }
 
   /**
@@ -40,6 +40,6 @@ export class MetroService implements IMetroService {
   async findOneByIdToEntityTree(routeId: number): Promise<MetroDto> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
     const metro = await metroRepository.findOneByIdToEntityTree(routeId);
-    return plainToClass(MetroDto, metro);
+    return plainToClass(MetroDto, metro, { exposeDefaultValues: true });
   }
 }
