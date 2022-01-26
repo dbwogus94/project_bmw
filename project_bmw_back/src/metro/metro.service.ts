@@ -1,6 +1,6 @@
-import { plainToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
 import { MetroDto } from './dto/response/metro.dto';
+import { Metro } from './entities/Metro.entity';
 import { MetroRepository } from './repository/metro.repository';
 
 export interface IMetroService {
@@ -16,8 +16,9 @@ export class MetroService implements IMetroService {
    */
   async findMetros(): Promise<MetroDto[]> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
-    const metros = await metroRepository.findMetros();
-    return plainToClass(MetroDto, metros, { exposeDefaultValues: true });
+    const metros: Metro[] = await metroRepository.findMetros();
+    return metros.map(metro => MetroDto.entityToDto(metro));
+    // return plainToClass(MetroDto, metros, { exposeDefaultValues: true });
   }
 
   /**
@@ -28,8 +29,9 @@ export class MetroService implements IMetroService {
    */
   async searchMetrosByStationName(stationName: string): Promise<MetroDto[]> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
-    const metros = await metroRepository.findMetrosByStationName(stationName);
-    return plainToClass(MetroDto, metros, { exposeDefaultValues: true });
+    const metros: Metro[] = await metroRepository.findMetrosByStationName(stationName);
+    return metros.map(metro => MetroDto.entityToDto(metro));
+    // return plainToClass(MetroDto, metros, { exposeDefaultValues: true });
   }
 
   /**
@@ -37,9 +39,9 @@ export class MetroService implements IMetroService {
    * @param routeId
    * @returns
    */
-  async findOneByIdToEntityTree(routeId: number): Promise<MetroDto> {
+  async findOneByIdToEntityTree(routeId: number): Promise<MetroDto | undefined> {
     const metroRepository: MetroRepository = getCustomRepository(MetroRepository);
-    const metro = await metroRepository.findOneByIdToEntityTree(routeId);
-    return plainToClass(MetroDto, metro, { exposeDefaultValues: true });
+    const metro: Metro | undefined = await metroRepository.findOneByIdToEntityTree(routeId);
+    return metro ? MetroDto.entityTreeToDto(metro) : undefined;
   }
 }
