@@ -113,11 +113,30 @@ export class GyeonggiBusService implements BusService {
       this.errorHandler(resultCode, resultMessage);
     }
 
-    return resultCode === 4
-      ? []
-      : response.msgBody.busRouteStationList.map((bus: any) => {
-          return new GyeonggiBusStationDto(routeId, bus);
-        });
+    if (resultCode === 4) {
+      return [];
+    }
+    const { busRouteStationList } = response.msgBody;
+
+    // inOutTag, direction 부여
+    const { stationSeq, stationName } = busRouteStationList.find((station: any) => station.turnYn === 'Y');
+    const turnStationSeq: number = stationSeq;
+    const turnStationName: string = stationName;
+    const startStationName: string = busRouteStationList[0].stationName;
+
+    const stations: any[] = busRouteStationList.map((station: any) => {
+      const { stationSeq } = station;
+      return {
+        ...station,
+        routeId,
+        // 상행(1) 하행(2) 여부
+        inOutTag: stationSeq < turnStationSeq ? '1' : '2',
+        // 진행 방향
+        direction: stationSeq < turnStationSeq ? turnStationName : startStationName,
+      };
+    });
+
+    return stations.map((station: any) => new GyeonggiBusStationDto(station));
   }
 
   /**

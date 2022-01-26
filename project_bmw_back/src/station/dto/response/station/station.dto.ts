@@ -1,20 +1,20 @@
 import { getDistrictName } from '@src/shared/util';
 
 export class StationDto {
+  // 경기도: 정류소 고유모바일번호(mobileNo) / 서울시: 정류소 고유번호(arsId), 서울시 지하철: 외부 코드(stationFrCode)
+  arsId: string;
   // 정류소ID
   stationId: number;
   // 정류소이름
   stationName: string;
-  // 정류소고유번호
-  arsId: string; // 경기도 api의 고유모바일번호(mobileNo)는 서울시 api의 고유번호(arsId)와 같다
   // 관할지역코드
   districtCd: number;
   // 관할지역명
   districtName: '서울' | '경기' | '인천';
-  // api 타입
-  type: 'seoul' | 'gyeonggi' | 'data.seoul';
   // 구분
   label: 'S' = 'S';
+  // api 타입
+  type: 'seoul' | 'gyeonggi' | 'data.seoul';
 
   constructor(
     stationId: number,

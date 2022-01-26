@@ -7,8 +7,8 @@ import { BusStationDto } from './station.dto';
  *  - 오퍼레이션명(영문): getBusRouteStationList
  */
 export class GyeonggiBusStationDto extends BusStationDto {
-  constructor(routeId: number | number, gyeonggiStationData: any) {
-    const { mobileNo, stationId, stationName, stationSeq, turnYn } = gyeonggiStationData;
-    super(mobileNo, stationId, stationName, stationSeq, turnYn, routeId, 'gyeonggi');
+  constructor(gyeonggiStationData: any) {
+    const { routeId, mobileNo, stationId, stationName, stationSeq, direction, turnYn, inOutTag } = gyeonggiStationData;
+    super(routeId, mobileNo, stationId, stationName, stationSeq, direction, turnYn, inOutTag, 'gyeonggi');
   }
 }

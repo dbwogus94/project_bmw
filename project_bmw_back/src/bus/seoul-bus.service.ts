@@ -94,11 +94,28 @@ export class SeoulBusService implements BusService {
       this.errorHandler(headerCd, headerMsg);
     }
 
-    return headerCd === 4 || headerCd === 8
-      ? []
-      : ServiceResult.msgBody.itemList.map((bus: any) => {
-          return new SeoulBusStationDto(bus);
-        });
+    if (headerCd === 4 || headerCd === 8) {
+      return [];
+    }
+    const { itemList } = ServiceResult.msgBody;
+
+    // inOutTag, direction 부여
+    const { seq, stationNm } = itemList.find((station: any) => station.transYn === 'Y');
+
+    const turnStationSeq: number = seq;
+    const turnStationName: string = stationNm;
+    const startStationName: string = itemList[0].stationNm;
+
+    const stations: any[] = itemList.map((station: any) => {
+      const { seq } = station;
+      return {
+        ...station,
+        inOutTag: seq < turnStationSeq ? '1' : '2',
+        direction: seq < turnStationSeq ? turnStationName : startStationName,
+      };
+    });
+
+    return stations.map((station: any) => new SeoulBusStationDto(station));
   }
 
   async getArrivalInfo(routeId: number, stationId: number, stationSeq: number): Promise<SeoulArrivalDto> {
