@@ -220,7 +220,7 @@ button {
 }
 
 .tweet-name {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   display: inline-block;
   padding-top: 6px;
@@ -923,7 +923,7 @@ button {
   width: 40%;
   font-family: inherit;
   font-weight: inherit;
-  font-size: inherit;
+  font-size: small;
   text-align: right;
   padding-top: 12px;
   color: var(--color-black);

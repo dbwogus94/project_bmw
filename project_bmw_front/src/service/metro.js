@@ -46,4 +46,13 @@ export default class MetroService {
       stations: stations,
     };
   }
+
+  // GET /api/metros/:routeId/stations/:stationId/arrival?inOutTag:inOutTag
+  async getArrivalByBookMark(bookMark) {
+    const { routeId, stationId, inOutTag } = bookMark;
+    const query = `inOutTag=${inOutTag}`;
+    const arrival = await this.http.fetch(`${this.apiName}/${routeId}/stations/${stationId}/arrival?${query}`, { method: 'GET' });
+
+    return { ...bookMark, arrival };
+  }
 }

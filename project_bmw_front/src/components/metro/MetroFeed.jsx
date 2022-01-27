@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const MetroFeed = ({ metro, onfeedClick, onDeleteClick, info, edit }) => {
-  const { routeId, stationName, stationSeq, metroName, bookMarkId } = metro;
+  const { routeId, routeName, stationName, stationSeq, bookMarkId } = metro;
   const [edited, setEdited] = useState(false);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const MetroFeed = ({ metro, onfeedClick, onDeleteClick, info, edit }) => {
           <div className="feed-main" onClick={onfeedClick} data-route-id={routeId} data-station-seq={stationSeq}>
             <p>
               <span className="feed-main-name">{stationName}</span>
-              <span className="feed-main-routeTypeName">{metroName}</span>
+              <span className="feed-main-routeTypeName">{routeName}</span>
             </p>
           </div>
           <div className="feed-info">
