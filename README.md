@@ -4,10 +4,6 @@
 - 프로젝트 bmw는 Bus Metro Walk의 약자로 버스, 지하철을 사용하는 뚜벅이를 위한 심플한 대중교통 정보를 제공하는 프로젝트입니다.
 - 프로젝트 기간: 2021.12 ~ 진행중
 
-## 도메인
-- https:// jaycloud.iptime.org
-(** 임시로 iptime DDNS를 사용중.)
-
 ## 기술 스택
 - api server
   - <code>node.js</code> + <code>typescript</code>
