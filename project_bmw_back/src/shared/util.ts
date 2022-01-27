@@ -16,6 +16,14 @@ export function dateToString(format?: string | undefined, date?: Date | undefine
   return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 
+/**
+ * 오늘에 해당하는 요일을 숫자로 리턴
+ * @returns 0: 일, 1: 월, 2: 화. 3: 수, 4: 목, 5: 금, 6: 토
+ */
+export function getDay(): number {
+  return moment().day();
+}
+
 export function getDistrictName(districtCd: number, type: string) {
   switch (districtCd) {
     case 1:
