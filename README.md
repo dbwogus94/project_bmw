@@ -57,7 +57,7 @@
 - <code>GET</code> /api/stations/:stationId/buses?type=:type
   - 특정 정류소에 정차하는 버스 목록을 조회한다.
 
-### Bm Groups (**모든 요청 쿠키에 엑세스토큰이 필요하다.)
+### Bm Groups (**모든 요청 쿠키에 엑세스토큰 필요.)
 - <code>GET</code> /api/bm-groups
   - 사용자의 bm 그룹 목록을 조회한다.
 - <code>GET</code> /api/bm-groups?include=book-marks
@@ -72,7 +72,7 @@
 - <code>DELETE</code> /api/bm-groups/:bmGroupId
   - 사용자의 특정 bm 그룹을 삭제한다.
   
-### Book Mark (**모든 요청 쿠키에 엑세스토큰이 필요하다.)
+### Book Mark (**모든 요청 쿠키에 엑세스토큰 필요.)
 - <code>GET</code> /api/bm-groups/:bmGroupId/bookmakes?q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId
   - 사용자의 특정 bm 그룹의 북마크 목록을 조회한다.
   - <code>q=routeId=:routeId,stationSeq=:stationSeq,stationId=:stationId</code> 검색 옵션에 의해 일치하는 자원을 가져온다.
