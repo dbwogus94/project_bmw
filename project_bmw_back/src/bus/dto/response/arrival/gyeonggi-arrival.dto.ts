@@ -83,13 +83,13 @@ export class GyeonggiArrivalDto extends ArrivalDto {
         serverTime: `${dateToString('HH:mm')}`,
         /* */
         firstLocation: 0,
-        firstTime: 0,
+        firstTime: 100000,
         isFirstRow: false,
         isFirstActive: false, // 운행여부
         firstState: '운행종료',
         /* */
         secondLocation: 0,
-        secondTime: 0,
+        secondTime: 100000,
         isSecondRow: false,
         isSecondActive: false,
         secondState: '운행종료',

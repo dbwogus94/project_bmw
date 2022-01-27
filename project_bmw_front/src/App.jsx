@@ -63,7 +63,7 @@ function App({ bmGroupService, busService, metroService, stationService }) {
         (
         <>
           {/* 6버전 exact 제거, 복수 라우팅시 /*를 마지막에 붙여야한다. */}
-          <Route path="/" element={<MyBM bmGroupService={bmGroupService} busService={busService} />} />
+          <Route path="/" element={<MyBM bmGroupService={bmGroupService} busService={busService} metroService={metroService} />} />
           <Route path="/bm-groups" element={<EditBM bmGroupService={bmGroupService} busService={busService} />} />
           <Route path="/buses/*" element={<Bus busService={busService} bmGroupService={bmGroupService} />} />
           <Route path="/metros/*" element={<Metro metroService={metroService} bmGroupService={bmGroupService} />} />

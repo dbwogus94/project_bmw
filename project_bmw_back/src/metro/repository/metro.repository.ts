@@ -1,13 +1,14 @@
 import { CreateMetroDto } from '@metro/dto/request/create-metro.dto';
 import { IMetro, Metro } from '@metro/entities/Metro.entity';
-import { MetroStation } from '@metro/entities/MetroStation.entity';
-import { EntityRepository, InsertResult, Like, Repository } from 'typeorm';
+import { dateToString, getDay } from '@shared/util';
+import { EntityRepository, InsertResult, Repository } from 'typeorm';
 
 export interface IMetroRepository {
   insertMay(metros: CreateMetroDto[]): Promise<InsertResult>;
   findMetros(): Promise<IMetro[]>;
   findMetrosByStationName(stationName: string): Promise<IMetro[]>;
   findOneByIdToEntityTree(routeId: number): Promise<IMetro | undefined>;
+  findArrivalInfo(routeId: number, stationId: number, inOutTag: string): Promise<IMetro | undefined>;
 }
 
 @EntityRepository(Metro)
@@ -54,6 +55,25 @@ export class MetroRepository extends Repository<Metro> implements IMetroReposito
       .leftJoinAndSelect('m.metroStations', 'ms')
       .where('m.routeId = :routeId', { routeId })
       .orderBy('ms.stationSeq', 'ASC')
+      .getOne();
+  }
+
+  async findArrivalInfo(routeId: number, stationId: number, inOutTag: string): Promise<IMetro | undefined> {
+    // 공휴일 체크
+    const iskorHoliday = false;
+    // 주말/공휴일(3), 토요일(2), 평일(1)
+    const weekTag = getDay() === 0 || iskorHoliday ? 3 : getDay() === 6 ? 2 : 1;
+    return this.createQueryBuilder('m')
+      .leftJoinAndSelect('m.metroStations', 'ms')
+      .leftJoinAndSelect('ms.metroTimetables', 'mt')
+      .where('m.routeId = :routeId', { routeId })
+      .andWhere('ms.stationId = :stationId', { stationId })
+      .andWhere('mt.inOutTag = :inOutTag', { inOutTag })
+      .andWhere('mt.weekTag = :weekTag', { weekTag })
+      .andWhere('mt.arriveTime > :arriveTime', { arriveTime: dateToString('HH:mm:ss') })
+      .orderBy('mt.arriveTime', 'ASC')
+      .limit(2)
+      .offset(0)
       .getOne();
   }
 }

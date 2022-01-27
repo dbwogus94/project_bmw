@@ -2,11 +2,12 @@ import React, { memo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner from './Banner';
 import SelectBMGroup from './SelectBMGroup';
-import BMCard from './BMCard';
 import { onError } from '../../util/on-error';
 import Spinner from './Spinner';
+import BusCard from '../bus/BusCard';
+import MetroCard from '../metro/MetroCard';
 
-const BMCards = memo(({ bmGroupService, busService }) => {
+const BMCards = memo(({ bmGroupService, busService, metroService }) => {
   const [bookMarks, setBookMarks] = useState([]);
   const [bmGroups, setBmGroups] = useState([]);
   const [bmGroupId, setBmGroupId] = useState(0);
@@ -51,7 +52,13 @@ const BMCards = memo(({ bmGroupService, busService }) => {
           .then(async bmGroup => {
             const { bookMarks } = bmGroup;
             // 2. 조회된 전체 북마크 도착 정보 조회
-            return Promise.all(bookMarks.map(bookMark => busService.getArrivalByBookMark(bookMark))) //
+            return Promise.all(
+              bookMarks.map(bookMark => {
+                return bookMark.label === 'B' //
+                  ? busService.getArrivalByBookMark(bookMark)
+                  : metroService.getArrivalByBookMark(bookMark);
+              })
+            ) //
               .then(bookMarks => {
                 // 3. 도착 시간 빠른 순으로 정렬
                 bookMarks.sort((a, b) => a.arrival.firstTime - b.arrival.firstTime);
@@ -60,11 +67,10 @@ const BMCards = memo(({ bmGroupService, busService }) => {
           })
           .catch(err => onError(err, setError))
           .finally(() => setSpinnerActive(false));
-  }, [bmGroupService, busService, bmGroupId, reloadCnt]);
+  }, [bmGroupService, busService, metroService, bmGroupId, reloadCnt]);
 
-  // 정류장 클릭, TODO: API 정해지면 API URL 적용
-  const onUsernameClick = bookMark => {
-    const { arsId, stationId, districtName, regionName, stationName, label, type } = bookMark;
+  const onStationNameClick = bookMark => {
+    const { routeId, arsId, stationId, districtName, regionName, stationName, label, type } = bookMark;
     // 버스 정류장
     if (label === 'B') {
       const url =
@@ -78,14 +84,15 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
     // 지하철 역
     if (label === 'M') {
+      navigate(`/metros/${routeId}/stations`);
     }
   };
 
-  const onNameClick = bookMark => {
+  const onBmClick = bookMark => {
     const { label, routeId, type } = bookMark;
     return label === 'B'
       ? navigate(`/buses/${routeId}/stations?type=${type}`) // 버스 id로 버스 정보
-      : navigate(`/metro/${routeId}`); // 지하철 id로 역정보
+      : navigate(`/metros/${routeId}/stations`); // 지하철 id로 역정보
   };
 
   // 그룹 select box 변경 이벤트
@@ -130,14 +137,23 @@ const BMCards = memo(({ bmGroupService, busService }) => {
 
       {!spinnerActive && bookMarks && bookMarks.length !== 0 && (
         <ul className="tweets">
-          {bookMarks.map(bookMark => (
-            <BMCard
-              key={bookMark.bookMarkId} //
-              bookMark={bookMark}
-              onBusNameClick={onNameClick}
-              onStationNameClick={onUsernameClick}
-            />
-          ))}
+          {bookMarks.map(bookMark => {
+            return bookMark.label === 'B' ? ( //
+              <BusCard
+                key={bookMark.bookMarkId} //
+                bookMark={bookMark}
+                onBusNameClick={onBmClick}
+                onStationNameClick={onStationNameClick}
+              />
+            ) : (
+              <MetroCard
+                key={bookMark.bookMarkId} //
+                bookMark={bookMark}
+                onMetroNameClick={onBmClick}
+                onStationNameClick={onStationNameClick}
+              />
+            );
+          })}
         </ul>
       )}
     </>

@@ -37,13 +37,13 @@ export class SeoulArrivalDto extends ArrivalDto {
       `${dateToString('HH:mm', new Date(Date.parse(mkTm)))}`, // 'HH시 mm분'
       //
       isFirstActive ? nextLocationNo(Number(staOrd), Number(sectOrd1)) : 0,
-      isFirstActive ? nextLocationTime(kals1) : 0,
+      isFirstActive ? nextLocationTime(kals1) : 100000,
       busType1 === '1' ? true : false,
       isFirstActive,
       getState(arrmsg1),
       //
       isSecondActive ? nextLocationNo(Number(staOrd), Number(sectOrd2)) : 0,
-      isSecondActive ? nextLocationTime(kals2) : 0,
+      isSecondActive ? nextLocationTime(kals2) : 100000,
       busType2 === '1' ? true : false,
       isSecondActive,
       getState(arrmsg2),

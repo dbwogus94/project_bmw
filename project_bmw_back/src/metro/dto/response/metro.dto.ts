@@ -71,7 +71,7 @@ export class MetroDto {
           stationSeq: newStationSeq,
           direction: newStationSeq < endStationSeq ? endStationName : startStationName,
           // 종점 순번 보다 작으면 '1'(상행) 부여, 종점 순번보다 크면 '2'(하행)
-          inOutTag: newStationSeq < endStationSeq ? '1' : '2',
+          inOutTag: getInOutTag(routeId, newStationSeq, endStationSeq),
           // 종점이면 회차지('Y') 부여.
           turnYn: endStationSeq !== newStationSeq ? 'N' : 'Y',
           // bus와 통합용 데이터
@@ -87,6 +87,35 @@ export class MetroDto {
         endStationName,
         metroStations: plainToClass(MetroStationDto, metroStations, { exposeDefaultValues: true }),
       };
+
+      function getInOutTag(routeId: number, newStationSeq: number, endStationSeq: number) {
+        switch (routeId) {
+          case 1: //  1호선: 소요산 => 광운대(인천) 방면이 하행(2)
+          case 3: //  3호선: 대화 => 오금 방면 하행(2)
+          case 4: //  4호선: 당고개 => 사당 하행(2)
+          case 5: //  5호선: 방화 => 마천 하행(2)
+          case 7: //  7호선: 석남 => 장암 상행(2)
+          case 8: //  8호선: 암사 => 모란 하행(2)
+          case 11: // 의정부: 발곡 => 탑석 하행(2)
+          case 13: // 인천2: 검단오류 => 운연 하행(2)
+          case 18: // 신분당: 강남 => 광교 하행(2)
+          case 19: // 경강선: 판교 => 여주 하행(2)
+          case 20: // 용인경전철: 기흥 => 에버랜드 하행(2)
+          case 21: // 우이신설경전철: 신설동 => 북한산우이 하행(2)
+          case 22: // 서해선: 소사 => 원시 하행(2)
+            return newStationSeq < endStationSeq ? '2' : '1';
+          case 2: //  2호선: 시계방향이 내선(1)
+          case 6: //  6호선: 산내 => 응암 상행(1)
+          case 9: //  9호선: 개화 => 증항보훈병원 상행(1)
+          case 10: // 김포골드: 김포공항 => 양촌 상행(1)
+          case 12: // 인천1: 송도달빛축제 => 계양 상행(1)
+          case 14: // 경춘선: 춘천 => 청량리 상행(1)
+          case 15: // 경의: 문산 => 지평 상행(1)
+          case 16: // 공항: 인천공항 => 서울역 상행(1)
+          case 17: // 수인분당: 인천 => 오이도 상행(1)
+            return newStationSeq < endStationSeq ? '1' : '2';
+        }
+      }
     }
   }
 }
