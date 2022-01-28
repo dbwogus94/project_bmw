@@ -1,8 +1,13 @@
 import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
 
-export class OpenApi {
-  private parser: XMLParser;
+export interface IOpenApi {
+  parser: XMLParser;
+  callApi: any;
+}
+
+class OpenApi implements IOpenApi {
+  parser: XMLParser;
 
   constructor(parser: XMLParser) {
     this.parser = parser;
@@ -43,4 +48,12 @@ export class OpenApi {
       throw error;
     }
   }
+}
+
+let openApi: OpenApi;
+export function getOpenApi(): OpenApi {
+  if (!openApi) {
+    openApi = new OpenApi(new XMLParser());
+  }
+  return openApi;
 }

@@ -1,6 +1,6 @@
 import { MetroStation } from '@metro/entities/MetroStation.entity';
 import { MetroStationRepository } from '@metro/repository/metro-station.repository';
-import { OpenApi } from '@shared/open-api';
+import { IOpenApi } from '@shared/open-api';
 import { Between, Connection, getCustomRepository, LessThan } from 'typeorm';
 
 interface TimetableData {
@@ -49,7 +49,7 @@ interface RawTimetableData {
  * - 총 요청 횟수 = (1 ~ 8 역 개수) * 6
  * - 현재 기준: 417 * 6 = 2502번 요청
  */
-export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
+export default async (conn: Connection, api: IOpenApi, apiConfig: any) => {
   const { host, key } = apiConfig.seoul.metro;
 
   const metroStationRepo: MetroStationRepository = getCustomRepository(MetroStationRepository);

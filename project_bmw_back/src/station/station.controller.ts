@@ -1,16 +1,15 @@
-import { HttpError } from '@shared/http.error';
-import { config } from '@src/config';
-import { OpenApi } from '@src/shared/open-api';
 import { NextFunction, Request, Response } from 'express';
-import { XMLParser } from 'fast-xml-parser';
+import { config } from '@src/config';
+import { HttpError } from '@shared/http.error';
+import { getOpenApi, IOpenApi } from '@src/shared/open-api';
 import { GyeonggiStationService } from './gyeonggi-station.service';
 import { SeoulStationService } from './seoul-station.service';
+import { StationService } from './station.service.interface';
 
 const { gyeonggi, seoul } = config.openApi;
-const parser = new XMLParser();
-const openApi = new OpenApi(parser);
-const gyeonggiStationService = new GyeonggiStationService(openApi, gyeonggi.station);
-const seoulStationService = new SeoulStationService(openApi, seoul.station);
+const openApi: IOpenApi = getOpenApi();
+const gyeonggiStationService: StationService = new GyeonggiStationService(openApi, gyeonggi.station);
+const seoulStationService: StationService = new SeoulStationService(openApi, seoul.station);
 
 /**
  * GET /api/stations?stationName=:stationName

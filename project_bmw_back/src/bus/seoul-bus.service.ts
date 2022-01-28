@@ -1,4 +1,4 @@
-import { OpenApi } from '@shared/open-api';
+import { IOpenApi } from '@shared/open-api';
 import { BusService } from '@bus/bus.service.interface';
 import { SeoulBusDto } from '@bus/dto/response/bus/seoul-bus.dto';
 import { SeoulBusInfoDto } from '@bus/dto/response/info/seoul-info.dto';
@@ -6,12 +6,12 @@ import { SeoulBusStationDto } from '@bus/dto/response/station/seoul-station.dto'
 import { SeoulArrivalDto } from './dto/response/arrival/seoul-arrival.dto';
 
 export class SeoulBusService implements BusService {
-  private openApi: OpenApi;
+  private openApi: IOpenApi;
   private HOST: string;
   private ARRIVAL: string;
   private SERVICE_KEY: string;
 
-  constructor(openApi: OpenApi, config: any) {
+  constructor(openApi: IOpenApi, config: any) {
     const { host, key, arrival } = config.bus;
     this.openApi = openApi;
     this.HOST = host;

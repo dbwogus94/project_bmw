@@ -1,14 +1,14 @@
 import { StationService } from './station.service.interface';
-import { OpenApi } from '@shared/open-api';
+import { IOpenApi } from '@shared/open-api';
 import { GyeonggiStationDto } from './dto/response/station/gyeonggi-station.dto';
 import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi-bus.dto';
 
 export class GyeonggiStationService implements StationService {
-  private openApi: OpenApi;
+  private openApi: IOpenApi;
   private HOST: string;
   private SERVICE_KEY: string;
 
-  constructor(openApi: OpenApi, config: { host: string; key: string }) {
+  constructor(openApi: IOpenApi, config: { host: string; key: string }) {
     const { host, key } = config;
     this.openApi = openApi;
     this.HOST = host;

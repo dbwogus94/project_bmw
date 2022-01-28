@@ -1,5 +1,5 @@
 import { Metro } from '@metro/entities/Metro.entity';
-import { dateToString } from '@shared/util';
+import { DateUtil } from '@shared/util';
 
 export class MetroArrivalDto {
   routeId: number;
@@ -62,7 +62,7 @@ export class MetroArrivalDto {
       routeId,
       stationId,
       inOutTag: metroTimetables[0].inOutTag,
-      serverTime: dateToString('HH:mm'),
+      serverTime: DateUtil.dateToString('HH:mm'),
       //
       firstTime: diffTimeToMinute(metroTimetables[0].arriveTime),
       isFirstActive: true,
@@ -78,7 +78,7 @@ export class MetroArrivalDto {
     });
 
     function diffTimeToMinute(arriveTime: string) {
-      const tarrive = Date.parse(`${dateToString('YYYY-MM-DD')} ${arriveTime}`); //.setHours(9);
+      const tarrive = Date.parse(`${DateUtil.dateToString('YYYY-MM-DD')} ${arriveTime}`); //.setHours(9);
       const tnow = Date.now();
       return Math.floor((tarrive - tnow) / (1000 * 60));
     }
@@ -89,7 +89,7 @@ export class MetroArrivalDto {
       routeId,
       stationId,
       inOutTag,
-      serverTime: dateToString('HH:mm'),
+      serverTime: DateUtil.dateToString('HH:mm'),
       //
       firstTime: 100000,
       isFirstActive: false,
