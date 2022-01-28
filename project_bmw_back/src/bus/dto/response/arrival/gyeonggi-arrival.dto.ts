@@ -1,5 +1,5 @@
 import { ArrivalDto } from './arrival.dto';
-import { dateToString } from '@shared/util';
+import { DateUtil } from '@shared/util';
 
 export class GyeonggiArrivalDto extends ArrivalDto {
   constructor(data: any) {
@@ -58,7 +58,7 @@ export class GyeonggiArrivalDto extends ArrivalDto {
         routeId,
         stationId,
         stationSeq: staOrder,
-        serverTime: `${dateToString('HH:mm')}`,
+        serverTime: `${DateUtil.dateToString('HH:mm')}`,
         //
         firstLocation: Number(locationNo1),
         firstTime: Number(predictTime1),
@@ -80,7 +80,7 @@ export class GyeonggiArrivalDto extends ArrivalDto {
         routeId,
         stationId,
         stationSeq,
-        serverTime: `${dateToString('HH:mm')}`,
+        serverTime: `${DateUtil.dateToString('HH:mm')}`,
         /* */
         firstLocation: 0,
         firstTime: 100000,

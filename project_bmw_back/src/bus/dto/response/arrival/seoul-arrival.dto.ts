@@ -1,5 +1,5 @@
 import { ArrivalDto } from './arrival.dto';
-import { dateToString } from '@shared/util';
+import { DateUtil } from '@shared/util';
 
 export class SeoulArrivalDto extends ArrivalDto {
   /* 서울시만 있는 데이터 */
@@ -34,7 +34,7 @@ export class SeoulArrivalDto extends ArrivalDto {
       busRouteId,
       stId,
       staOrd,
-      `${dateToString('HH:mm', new Date(Date.parse(mkTm)))}`, // 'HH시 mm분'
+      `${DateUtil.dateToString('HH:mm', new Date(Date.parse(mkTm)))}`, // 'HH시 mm분'
       //
       isFirstActive ? nextLocationNo(Number(staOrd), Number(sectOrd1)) : 0,
       isFirstActive ? nextLocationTime(kals1) : 100000,
