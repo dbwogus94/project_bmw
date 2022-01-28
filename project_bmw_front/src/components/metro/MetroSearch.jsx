@@ -101,7 +101,7 @@ const MetroSearch = memo(({ metroService, button }) => {
         onSubmit={onSubmit}
         onError={onError}
         // 한글 +숫자 + 영어 + '-' 가능
-        regExp={/[~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]/}
+        regExp={/[~!@#$%^&*()_+|<>?:{}/\\""''``,.;= ]/}
         // 숫자 + 영어 + '-' 가능
         // regExp={/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!@#$%^&*()_+|<>?:{}/\\""''``,.;=]/}
       />
