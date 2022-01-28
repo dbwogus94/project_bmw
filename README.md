@@ -18,6 +18,16 @@
   - Hardware Home PC: CPU(i5-5200U), RAM(8GB), SSD(128GB)
   - Hardware OS with <code>ubuntu</code>
   - <code>docker</code> with <code>docker-compose</code>
+
+## 사용된 OPEN API
+- 공공데이터 포털
+  1. [경기도_버스노선 조회](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15080662)
+  2. [경기도_버스도착정보 조회](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15080346)
+  3. [서울특별시_노선정보조회 서비스](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000193)
+  4. [서울특별시_버스도착정보조회 서비스](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000314)
+- 서울 열린데이터 광장
+  1. [서울시 지하철역 정보 검색 (역명)](https://data.seoul.go.kr/dataList/OA-121/S/1/datasetView.do)
+  2. [서울시 역코드로 지하철역별 열차 시간표 정보 검색](https://data.seoul.go.kr/dataList/OA-101/A/1/datasetView.do)
   
 ## REST API 
 ### Auth
@@ -50,6 +60,8 @@
   - <code>include=stations</code>옵션에 의해 응답 body에 자식 자원인 역 목록을 포함한다.
 - <code>GET</code> /api/metros/:metroId/stations
   - 특정 노선의 역 목록을 조회한다.
+- <code>GET</code> /api/metros/:metroId/stations/:stationId/arrival?inOutTag=:inOutTag
+  - 특정 노선선 특정역의 도착시간을 조회한다.
    
 ### Station
 - <code>GET</code> /api/stations?stationName=:stationName
