@@ -2,6 +2,7 @@ import { CreateMetroDto } from '@metro/dto/request/create-metro.dto';
 import { IMetro, Metro } from '@metro/entities/Metro.entity';
 import { DateUtil } from '@shared/util';
 import { EntityRepository, InsertResult, Repository } from 'typeorm';
+import { isHoliday } from '@shared/scheduler/holiday-job';
 
 const { dateToString, getDayNum } = DateUtil;
 
@@ -62,7 +63,9 @@ export class MetroRepository extends Repository<Metro> implements IMetroReposito
 
   async findArrivalInfo(routeId: number, stationId: number, inOutTag: string): Promise<IMetro | undefined> {
     // 공휴일 체크
-    const iskorHoliday = false;
+    const iskorHoliday = isHoliday();
+    console.log(iskorHoliday);
+
     // 주말/공휴일(3), 토요일(2), 평일(1)
     const weekTag = getDayNum() === 0 || iskorHoliday ? 3 : getDayNum() === 6 ? 2 : 1;
     return this.createQueryBuilder('m')
