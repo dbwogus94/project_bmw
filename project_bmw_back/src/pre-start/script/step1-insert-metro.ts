@@ -1,7 +1,7 @@
 import { promises } from 'fs';
 import { join } from 'path';
 // api
-import { OpenApi } from '@shared/open-api';
+import { IOpenApi } from '@shared/open-api';
 // typeorm
 import { MetroRepository } from '@metro/repository/metro.repository';
 import { Connection, getCustomRepository } from 'typeorm';
@@ -18,7 +18,7 @@ interface StationData {
   stationSeq: number;
 }
 
-export default async (conn: Connection, api: OpenApi, apiConfig: any) => {
+export default async (conn: Connection, api: IOpenApi, apiConfig: any) => {
   const fileName = './seoul-metro-data.ts'; // 동적으로 생성할 파일명
   const { host, key } = apiConfig.seoul.metro;
 
