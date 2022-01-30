@@ -1,14 +1,14 @@
 import { StationService } from './station.service.interface';
-import { OpenApi } from '@src/shared/open-api';
+import { IOpenApi } from '@src/shared/open-api';
 import { SeoulStationDto } from './dto/response/station/seoul-station.dto';
 import { SeoulBusDto } from '@bus/dto/response/bus/seoul-bus.dto';
 
 export class SeoulStationService implements StationService {
-  private openApi: OpenApi;
+  private openApi: IOpenApi;
   private HOST: string;
   private SERVICE_KEY: string;
 
-  constructor(openApi: OpenApi, config: { host: string; key: string }) {
+  constructor(openApi: IOpenApi, config: { host: string; key: string }) {
     const { host, key } = config;
     this.openApi = openApi;
     this.HOST = host;

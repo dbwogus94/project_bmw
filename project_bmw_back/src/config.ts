@@ -102,5 +102,9 @@ export const config = Object.freeze({
         key: required('SEOUL_METRO_OPEN_API_KEY'),
       },
     },
+    holiday: {
+      host: required('KOREA_HOLIDAY_HOST'),
+      key: required('KOREA_HOLIDAY_KEY'),
+    },
   },
 });

@@ -1,4 +1,4 @@
-import { OpenApi } from '@shared/open-api';
+import { IOpenApi } from '@shared/open-api';
 import { BusService } from '@bus/bus.service.interface';
 import { GyeonggiBusDto } from '@bus/dto/response/bus/gyeonggi-bus.dto';
 import { GyeonggiBusInfoDto } from '@bus/dto/response/info/gyeonggi-info.dto';
@@ -7,12 +7,12 @@ import { GyeonggiArrivalDto } from './dto/response/arrival/gyeonggi-arrival.dto'
 import { HttpError } from '@shared/http.error';
 
 export class GyeonggiBusService implements BusService {
-  private openApi: OpenApi;
+  private openApi: IOpenApi;
   private HOST: string;
   private ARRIVAL: string;
   private SERVICE_KEY: string;
 
-  constructor(openApi: OpenApi, config: any) {
+  constructor(openApi: IOpenApi, config: any) {
     const { host, key, arrival } = config.bus;
     this.openApi = openApi;
     this.HOST = host;

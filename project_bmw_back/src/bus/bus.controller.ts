@@ -1,18 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
-import { XMLParser } from 'fast-xml-parser';
 import { config } from '@config';
-import { OpenApi } from '@shared/open-api';
+import { getOpenApi, IOpenApi } from '@shared/open-api';
 import { GyeonggiBusService } from '@bus/gyeonggi-bus.service';
 import { SeoulBusService } from './seoul-bus.service';
 import { HttpError } from '@shared/http.error';
+import { BusService } from './bus.service.interface';
 
 const { gyeonggi, seoul } = config.openApi;
 
 // 의존성 주입
-const parser = new XMLParser();
-const openApi = new OpenApi(parser);
-const gyeonggiBusService = new GyeonggiBusService(openApi, gyeonggi);
-const seoulBusService = new SeoulBusService(openApi, seoul);
+const openApi: IOpenApi = getOpenApi();
+const gyeonggiBusService: BusService = new GyeonggiBusService(openApi, gyeonggi);
+const seoulBusService: BusService = new SeoulBusService(openApi, seoul);
 
 // GET /api/buses?routeName=:routeName
 export const searchBusList = async (req: Request, res: Response, next: NextFunction) => {
