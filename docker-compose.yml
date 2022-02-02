@@ -46,6 +46,7 @@ services:
     expose:
       - '8080'
     depends_on:
+      - mysql
       - redis
     volumes:
       # (필수) 컨테이너에서 모듈과 빌드된 파일을 사용할 수 있도록 알려야함.
